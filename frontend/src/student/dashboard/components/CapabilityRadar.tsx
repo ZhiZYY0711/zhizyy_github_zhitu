@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from 'recharts';
-import { RadarData } from "../../mock/generator";
+import type { RadarData } from "../../mock/generator";
 
 interface CapabilityRadarProps {
   data: RadarData | null;

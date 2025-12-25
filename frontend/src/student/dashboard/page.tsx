@@ -6,7 +6,7 @@ import {
   fetchTasks, 
   fetchRecommendations 
 } from '../services/api';
-import { 
+import type { 
   DashboardStats, 
   RadarData, 
   TaskResponse, 

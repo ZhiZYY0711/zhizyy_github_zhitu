@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CalendarClock, FileText, Briefcase, ChevronRight } from "lucide-react";
-import { TaskItem } from "../../mock/generator";
+import type { TaskItem } from "../../mock/generator";
 
 interface TaskListProps {
   tasks: TaskItem[];
@@ -16,11 +16,11 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, loading }) => {
     return (
       <Card className="col-span-1 h-[400px] animate-pulse">
         <CardHeader>
-           <div className="h-6 w-32 bg-gray-200 rounded"></div>
+          <div className="h-6 w-32 bg-gray-200 rounded"></div>
         </CardHeader>
         <CardContent className="space-y-4">
           {[1, 2, 3].map((i) => (
-             <div key={i} className="h-16 bg-gray-200 rounded"></div>
+            <div key={i} className="h-16 bg-gray-200 rounded"></div>
           ))}
         </CardContent>
       </Card>
@@ -82,7 +82,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, loading }) => {
                   </Badge>
                   <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
                     <a href={task.jump_url}>
-                        <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-4 w-4" />
                     </a>
                   </Button>
                 </div>

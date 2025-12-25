@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Briefcase, Code, BookOpen, ArrowRight } from "lucide-react";
-import { RecommendationItem } from "../../mock/generator";
+import type { RecommendationItem } from "../../mock/generator";
 
 interface RecommendationFeedProps {
   recommendations: RecommendationItem[];
@@ -17,11 +17,11 @@ const RecommendationFeed: React.FC<RecommendationFeedProps> = ({ recommendations
     return (
       <Card className="col-span-1 h-[400px] animate-pulse">
         <CardHeader>
-           <div className="h-6 w-32 bg-gray-200 rounded"></div>
+          <div className="h-6 w-32 bg-gray-200 rounded"></div>
         </CardHeader>
         <CardContent className="space-y-4">
           {[1, 2].map((i) => (
-             <div key={i} className="h-24 bg-gray-200 rounded"></div>
+            <div key={i} className="h-24 bg-gray-200 rounded"></div>
           ))}
         </CardContent>
       </Card>
@@ -45,9 +45,9 @@ const RecommendationFeed: React.FC<RecommendationFeedProps> = ({ recommendations
       </CardHeader>
       <CardContent className="flex-1 overflow-auto space-y-4">
         {recommendations.length === 0 ? (
-           <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-             <p>暂无推荐</p>
-           </div>
+          <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+            <p>暂无推荐</p>
+          </div>
         ) : (
           recommendations.map((item) => {
             const { label, icon, color } = getTypeLabel(item.type);
@@ -64,7 +64,7 @@ const RecommendationFeed: React.FC<RecommendationFeedProps> = ({ recommendations
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-semibold text-lg">{item.title}</h4>
                   {item.company_name && <p className="text-sm text-muted-foreground">{item.company_name}</p>}

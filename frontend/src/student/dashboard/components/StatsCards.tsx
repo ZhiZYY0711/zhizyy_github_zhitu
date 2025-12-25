@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, Clock, Briefcase, Award } from "lucide-react";
-import { DashboardStats } from "../../mock/generator";
+import type { DashboardStats } from "../../mock/generator";
 
 interface StatsCardsProps {
   stats: DashboardStats['stats'] | undefined;

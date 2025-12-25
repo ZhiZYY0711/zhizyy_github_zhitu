@@ -8,7 +8,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/student-portal/v
  * Generic fetch wrapper with fallback to mock data
  */
 async function fetchWithFallback<T>(
-  endpoint: string, 
+  endpoint: string,
   mockFn: () => T,
   options?: RequestInit
 ): Promise<T> {
@@ -17,6 +17,12 @@ async function fetchWithFallback<T>(
     if (!response.ok) {
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
     }
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Received non-JSON response from API (likely HTML fallback)");
+    }
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -42,3 +48,32 @@ export const fetchTasks = async (status: 'pending' | 'completed' = 'pending') =>
 export const fetchRecommendations = async (type: 'all' | 'project' | 'job' | 'course' = 'all') => {
   return fetchWithFallback(`/recommendations?type=${type}`, MockGenerator.getMockRecommendations);
 };
+
+export const fetchProjects = async (filter?: any) => {
+  return fetchWithFallback('/training/projects', MockGenerator.getMockProjects);
+};
+
+export const fetchScrumBoard = async (projectId?: string) => {
+  return fetchWithFallback(`/training/projects/${projectId}/board`, MockGenerator.getMockScrumBoard);
+};
+
+export const fetchJobs = async (filter?: any) => {
+  return fetchWithFallback('/internship/jobs', MockGenerator.getMockJobs);
+};
+
+export const fetchReports = async () => {
+  return fetchWithFallback('/internship/reports/my', MockGenerator.getMockReports);
+};
+
+export const fetchEvaluation = async () => {
+  return fetchWithFallback('/growth/evaluation', MockGenerator.getMockEvaluation);
+};
+
+export const fetchCertificates = async () => {
+  return fetchWithFallback('/growth/certificates', MockGenerator.getMockCertificates);
+};
+
+export const fetchBadges = async () => {
+  return fetchWithFallback('/growth/badges', MockGenerator.getMockBadges);
+};
+
