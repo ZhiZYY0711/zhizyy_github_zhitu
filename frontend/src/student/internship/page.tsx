@@ -13,31 +13,26 @@ const InternshipPage = () => {
   const [activeTab, setActiveTab] = useState("job-hunt");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [reports, setReports] = useState<InternshipReport[]>([]);
-  const [loading, setLoading] = useState(false);
 
   // Mock "Internship Active" state
   const [hasInternship, setHasInternship] = useState(false);
 
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        if (activeTab === 'job-hunt') {
+          const data = await fetchJobs();
+          setJobs(data);
+        } else if (activeTab === 'process') {
+          const data = await fetchReports();
+          setReports(data);
+        }
+      } catch (error) {
+        console.error("Failed to load data", error);
+      }
+    };
     loadData();
   }, [activeTab]);
-
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      if (activeTab === 'job-hunt') {
-        const data = await fetchJobs();
-        setJobs(data);
-      } else if (activeTab === 'process') {
-        const data = await fetchReports();
-        setReports(data);
-      }
-    } catch (error) {
-      console.error("Failed to load data", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleApply = (job: Job) => {
     alert(`已投递: ${job.title}`);
@@ -68,19 +63,19 @@ const InternshipPage = () => {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                 type="search" 
-                 placeholder="搜索职位、公司、城市..." 
-                 className="pl-8"
+                type="search"
+                placeholder="搜索职位、公司、城市..."
+                className="pl-8"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-             {jobs.map(job => (
-               <JobCard key={job.id} job={job} onApply={handleApply} />
-             ))}
+            {jobs.map(job => (
+              <JobCard key={job.id} job={job} onApply={handleApply} />
+            ))}
           </div>
-          
+
           <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="bg-white p-2 rounded shadow-sm">
@@ -97,17 +92,17 @@ const InternshipPage = () => {
 
         <TabsContent value="process" className="flex-1 mt-6">
           {!hasInternship ? (
-             <div className="flex flex-col items-center justify-center h-[400px] border-2 border-dashed rounded-lg bg-gray-50">
-               <h3 className="text-lg font-semibold text-gray-700">暂无进行中的实习</h3>
-               <p className="text-sm text-gray-500 mt-2">签约完成后即可开启过程管理功能</p>
-               <Button variant="link" onClick={() => setActiveTab("job-hunt")}>去求职</Button>
-             </div>
+            <div className="flex flex-col items-center justify-center h-[400px] border-2 border-dashed rounded-lg bg-gray-50">
+              <h3 className="text-lg font-semibold text-gray-700">暂无进行中的实习</h3>
+              <p className="text-sm text-gray-500 mt-2">签约完成后即可开启过程管理功能</p>
+              <Button variant="link" onClick={() => setActiveTab("job-hunt")}>去求职</Button>
+            </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
               <div className="lg:col-span-2 space-y-6">
                 <ReportList reports={reports} onCreate={() => alert("新建周报")} />
               </div>
-              
+
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
@@ -129,7 +124,7 @@ const InternshipPage = () => {
                 </Card>
 
                 <Card>
-                   <CardHeader>
+                  <CardHeader>
                     <CardTitle className="text-base">快捷服务</CardTitle>
                   </CardHeader>
                   <CardContent className="grid grid-cols-2 gap-2">
@@ -137,7 +132,7 @@ const InternshipPage = () => {
                       <Upload className="w-5 h-5" />
                       上传附件
                     </Button>
-                     <Button variant="outline" className="h-20 flex flex-col gap-2">
+                    <Button variant="outline" className="h-20 flex flex-col gap-2">
                       <FileSignature className="w-5 h-5" />
                       请假申请
                     </Button>

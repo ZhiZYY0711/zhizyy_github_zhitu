@@ -1,8 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { LayoutDashboard, Code, Briefcase, Trophy, GraduationCap } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 
 const StudentLayout = () => {
   const navItems = [
@@ -38,21 +36,20 @@ const StudentLayout = () => {
       <aside className="border-r bg-card hidden md:flex flex-col transition-all duration-300 w-16 lg:w-64">
         <div className="h-16 flex items-center justify-center lg:justify-start lg:px-6 border-b">
           <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center shrink-0">
-             <GraduationCap className="h-5 w-5 text-primary-foreground" />
+            <GraduationCap className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="font-bold text-lg tracking-tight ml-2 hidden lg:block">智途·职通</span>
         </div>
-        
+
         <nav className="flex-1 py-4 space-y-2 overflow-y-auto px-2 lg:px-4">
           {navItems.map((item) => (
             <NavLink
               key={item.href}
               to={item.href}
               className={({ isActive }) =>
-                `flex items-center justify-center lg:justify-start px-2 lg:px-4 py-3 text-sm font-medium rounded-md transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                `flex items-center justify-center lg:justify-start px-2 lg:px-4 py-3 text-sm font-medium rounded-md transition-colors ${isActive
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 }`
               }
             >

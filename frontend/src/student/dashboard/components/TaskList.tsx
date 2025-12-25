@@ -36,7 +36,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, loading }) => {
     }
   };
 
-  const getPriorityColor = (priority: TaskItem['priority']) => {
+  const getPriorityColor = (priority: TaskItem['priority']): "destructive" | "default" | "secondary" => {
     switch (priority) {
       case 'high': return "destructive";
       case 'medium': return "default"; // or yellow if custom variant exists
@@ -77,7 +77,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, loading }) => {
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  <Badge variant={getPriorityColor(task.priority) as any} className="text-[10px] px-1.5 py-0.5 h-auto">
+                  <Badge variant={getPriorityColor(task.priority)} className="text-[10px] px-1.5 py-0.5 h-auto">
                     {task.priority.toUpperCase()}
                   </Badge>
                   <Button variant="ghost" size="icon" className="h-6 w-6" asChild>

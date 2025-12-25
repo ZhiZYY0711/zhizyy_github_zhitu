@@ -49,7 +49,7 @@ export const fetchRecommendations = async (type: 'all' | 'project' | 'job' | 'co
   return fetchWithFallback(`/recommendations?type=${type}`, MockGenerator.getMockRecommendations);
 };
 
-export const fetchProjects = async (filter?: any) => {
+export const fetchProjects = async () => {
   return fetchWithFallback('/training/projects', MockGenerator.getMockProjects);
 };
 
@@ -57,7 +57,7 @@ export const fetchScrumBoard = async (projectId?: string) => {
   return fetchWithFallback(`/training/projects/${projectId}/board`, MockGenerator.getMockScrumBoard);
 };
 
-export const fetchJobs = async (filter?: any) => {
+export const fetchJobs = async () => {
   return fetchWithFallback('/internship/jobs', MockGenerator.getMockJobs);
 };
 

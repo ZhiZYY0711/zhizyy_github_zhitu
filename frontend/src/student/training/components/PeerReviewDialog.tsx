@@ -10,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface PeerReviewDialogProps {
@@ -65,19 +64,19 @@ const PeerReviewDialog: React.FC<PeerReviewDialogProps> = ({ open, onOpenChange 
             <Input id="contribution" type="number" min="1" max="10" defaultValue="8" className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-             <Label htmlFor="cooperation" className="text-right">
+            <Label htmlFor="cooperation" className="text-right">
               配合度
             </Label>
             <Input id="cooperation" type="number" min="1" max="10" defaultValue="9" className="col-span-3" />
           </div>
-           <div className="grid grid-cols-4 items-center gap-4">
-             <Label htmlFor="skill" className="text-right">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="skill" className="text-right">
               技术水平
             </Label>
             <Input id="skill" type="number" min="1" max="10" defaultValue="8" className="col-span-3" />
           </div>
-           <div className="grid grid-cols-4 items-center gap-4">
-             <Label htmlFor="comment" className="text-right">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="comment" className="text-right">
               评语
             </Label>
             <Input id="comment" placeholder="请输入简短评语..." className="col-span-3" />

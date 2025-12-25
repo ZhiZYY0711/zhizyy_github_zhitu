@@ -86,10 +86,6 @@ export interface ScrumBoard {
 const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 const getRandomFloat = (min: number, max: number, decimals: number = 1) => parseFloat((Math.random() * (max - min) + min).toFixed(decimals));
 const getRandomArrayItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
-const getRandomSubset = <T>(arr: T[], size: number): T[] => {
-  const shuffled = arr.slice().sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, size);
-};
 
 export const getMockDashboardStats = (): DashboardStats => {
   return {

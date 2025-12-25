@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -43,21 +42,21 @@ const ProjectDetailDialog: React.FC<ProjectDetailDialogProps> = ({ project, open
 
         <div className="space-y-6 py-4">
           <div className="grid grid-cols-2 gap-4">
-             <div className="space-y-1">
-               <span className="text-sm text-muted-foreground">难度等级</span>
-               <div className="flex text-yellow-500">
-                 {Array.from({ length: 5 }).map((_, i) => (
-                    <span key={i} className={i < project.difficulty ? "text-yellow-500" : "text-gray-200"}>★</span>
-                 ))}
-               </div>
-             </div>
-             <div className="space-y-1">
-               <span className="text-sm text-muted-foreground">团队规模</span>
-               <div className="flex items-center">
-                 <Users className="w-4 h-4 mr-2 text-gray-400" />
-                 <span>{project.current_members} / {project.team_size} 人</span>
-               </div>
-             </div>
+            <div className="space-y-1">
+              <span className="text-sm text-muted-foreground">难度等级</span>
+              <div className="flex text-yellow-500">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i} className={i < project.difficulty ? "text-yellow-500" : "text-gray-200"}>★</span>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-1">
+              <span className="text-sm text-muted-foreground">团队规模</span>
+              <div className="flex items-center">
+                <Users className="w-4 h-4 mr-2 text-gray-400" />
+                <span>{project.current_members} / {project.team_size} 人</span>
+              </div>
+            </div>
           </div>
 
           <Separator />
@@ -73,7 +72,7 @@ const ProjectDetailDialog: React.FC<ProjectDetailDialogProps> = ({ project, open
           </div>
 
           <div>
-             <h3 className="font-semibold mb-2 flex items-center">
+            <h3 className="font-semibold mb-2 flex items-center">
               <Code className="w-4 h-4 mr-2 text-primary" />
               技术栈
             </h3>
@@ -85,14 +84,14 @@ const ProjectDetailDialog: React.FC<ProjectDetailDialogProps> = ({ project, open
               ))}
             </div>
           </div>
-          
-           <div>
-             <h3 className="font-semibold mb-2 flex items-center">
+
+          <div>
+            <h3 className="font-semibold mb-2 flex items-center">
               <Calendar className="w-4 h-4 mr-2 text-primary" />
               实训周期
             </h3>
             <p className="text-sm text-gray-600">
-               预计 8 周，每周需投入约 10-15 小时。
+              预计 8 周，每周需投入约 10-15 小时。
             </p>
           </div>
         </div>
