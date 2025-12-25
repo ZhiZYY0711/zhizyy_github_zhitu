@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentLink - 高校管理驾驶舱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .nav-item.active {
+            background-color: #374151;
+            /* gray-700 */
+            color: #ffffff;
+            border-left: 4px solid #10b981;
+            /* emerald-500 */
+        }
+
+        .section-view {
+            display: none;
+        }
+
+        .section-view.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-800 font-sans h-screen flex overflow-hidden">
+
+    <!-- Sidebar (Dark Theme for Admin) -->
+    <aside class="w-64 bg-gray-900 text-gray-300 flex flex-col shadow-xl z-10">
+        <div class="p-6 flex items-center border-b border-gray-800">
+            <i class="fa-solid fa-building-columns text-emerald-500 text-2xl mr-3"></i>
+            <div>
+                <h1 class="text-lg font-bold text-white">高校教务端</h1>
+                <p class="text-xs text-gray-500">TalentLink Education</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 space-y-1">
+            <a href="#" onclick="showSection('dashboard', this)"
+                class="nav-item active flex items-center px-6 py-3 hover:bg-gray-800 transition-colors">
+                <i class="fa-solid fa-gauge-high w-6"></i>
+                <span class="font-medium">管理驾驶舱</span>
+            </a>
+            <a href="#" onclick="showSection('teaching', this)"
+                class="nav-item flex items-center px-6 py-3 hover:bg-gray-800 transition-colors">
+                <i class="fa-solid fa-chalkboard-user w-6"></i>
+                <span class="font-medium">实训教学管理</span>
+            </a>
+            <a href="#" onclick="showSection('internship', this)"
+                class="nav-item flex items-center px-6 py-3 hover:bg-gray-800 transition-colors">
+                <i class="fa-solid fa-map-location-dot w-6"></i>
+                <span class="font-medium">实习过程监管</span>
+            </a>
+            <a href="#" onclick="showSection('bi', this)"
+                class="nav-item flex items-center px-6 py-3 hover:bg-gray-800 transition-colors">
+                <i class="fa-solid fa-chart-line w-6"></i>
+                <span class="font-medium">数据决策 BI</span>
+            </a>
+            <a href="#" onclick="showSection('crm', this)"
+                class="nav-item flex items-center px-6 py-3 hover:bg-gray-800 transition-colors">
+                <i class="fa-solid fa-handshake w-6"></i>
+                <span class="font-medium">企业 CRM</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-800 bg-gray-900">
+            <div class="flex items-center">
+                <img src="https://ui-avatars.com/api/?name=Admin+T&background=10b981&color=fff"
+                    class="w-9 h-9 rounded-full">
+                <div class="ml-3">
+                    <p class="text-sm font-semibold text-white">张主任</p>
+                    <p class="text-xs text-gray-500">软件学院 · 就业办</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto bg-gray-100 p-8">
+
+        <!-- 2.1 高校管理驾驶舱 -->
+        <div id="dashboard" class="section-view active">
+            <header class="mb-8 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">2024届毕业生就业监测大屏</h2>
+                    <p class="text-gray-500 text-sm mt-1">数据更新时间：2024-05-20 14:30:00</p>
+                </div>
+                <div class="flex space-x-3">
+                    <button
+                        class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 shadow-sm text-sm">
+                        <i class="fa-solid fa-download mr-2"></i>导出报表
+                    </button>
+                    <button
+                        class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 shadow-sm text-sm">
+                        <i class="fa-solid fa-bell mr-2"></i>预警通知 (5)
+                    </button>
+                </div>
+            </header>
+
+            <!-- 核心指标卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">总体就业率</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-1">82.5%</h3>
+                        </div>
+                        <span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-arrow-up"></i> 5.2%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-4">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 82.5%"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-emerald-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">实习参与率</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-1">96.8%</h3>
+                        </div>
+                        <span class="text-gray-400 text-sm">持平</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-4">
+                        <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 96.8%"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">专业对口率</p>
+                            <h3 class="text-3xl font-bold text-gray-800 mt-1">78.4%</h3>
+                        </div>
+                        <span class="text-green-500 text-sm font-bold"><i class="fa-solid fa-arrow-up"></i> 2.1%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-4">
+                        <div class="bg-purple-500 h-1.5 rounded-full" style="width: 78.4%"></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500">预警学生数</p>
+                            <h3 class="text-3xl font-bold text-red-600 mt-1">12</h3>
+                        </div>
+                        <span class="text-red-500 text-sm font-bold">需关注</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4">连续未打卡 / 离职 / 长期未就业</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 预警指挥室 -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 mr-2"></i> 预警指挥室
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-4 py-3">学生姓名</th>
+                                    <th class="px-4 py-3">班级</th>
+                                    <th class="px-4 py-3">预警类型</th>
+                                    <th class="px-4 py-3">触发时间</th>
+                                    <th class="px-4 py-3">状态</th>
+                                    <th class="px-4 py-3">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium">张三</td>
+                                    <td class="px-4 py-3">软件2001</td>
+                                    <td class="px-4 py-3"><span
+                                            class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">连续5天未打卡</span>
+                                    </td>
+                                    <td class="px-4 py-3">2024-05-19</td>
+                                    <td class="px-4 py-3 text-red-600">未处理</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-blue-600 hover:underline">联系</button>
+                                        <button class="text-gray-600 ml-2 hover:underline">记录</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium">李四</td>
+                                    <td class="px-4 py-3">计科2002</td>
+                                    <td class="px-4 py-3"><span
+                                            class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">周报缺失x3</span>
+                                    </td>
+                                    <td class="px-4 py-3">2024-05-18</td>
+                                    <td class="px-4 py-3 text-blue-600">跟进中</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-blue-600 hover:underline">详情</button>
+                                    </td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium">王五</td>
+                                    <td class="px-4 py-3">物联网2001</td>
+                                    <td class="px-4 py-3"><span
+                                            class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">离职未更新</span>
+                                    </td>
+                                    <td class="px-4 py-3">2024-05-15</td>
+                                    <td class="px-4 py-3 text-green-600">已解决</td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-gray-400 cursor-not-allowed">归档</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 院系就业分布 -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">各院系就业率 Top 5</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">软件学院</span>
+                                <span class="font-bold text-gray-800">92%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-emerald-500 h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">计算机学院</span>
+                                <span class="font-bold text-gray-800">88%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-emerald-500 h-2 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">电子信息学院</span>
+                                <span class="font-bold text-gray-800">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-emerald-500 h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">经管学院</span>
+                                <span class="font-bold text-gray-800">72%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 72%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2.2 实训教学管理 -->
+        <div id="teaching" class="section-view">
+            <header class="mb-6 flex justify-between">
+                <h2 class="text-2xl font-bold text-gray-800">实训教学与项目监控</h2>
+                <div class="flex space-x-2">
+                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm bg-white">
+                        <option>2024春季学期</option>
+                    </select>
+                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm bg-white">
+                        <option>所有班级</option>
+                        <option>软件2001</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 项目组监控卡片 -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-gray-800">“智慧物流”项目组 (软件2001-A组)</h3>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">进度正常</span>
+                    </div>
+
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">代码提交</p>
+                            <p class="font-bold text-lg">128</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">文档产出</p>
+                            <p class="font-bold text-lg">5</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-xs text-gray-500">平均工时</p>
+                            <p class="font-bold text-lg">6.5h</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded p-3 mb-4">
+                        <p class="text-xs text-gray-500 mb-2">燃尽图 (Burn-down Chart)</p>
+                        <!-- Fake Chart Line -->
+                        <div class="h-16 flex items-end space-x-1">
+                            <div class="w-1/6 bg-blue-200 h-full"></div>
+                            <div class="w-1/6 bg-blue-300 h-4/5"></div>
+                            <div class="w-1/6 bg-blue-400 h-3/5"></div>
+                            <div class="w-1/6 bg-blue-500 h-2/5"></div>
+                            <div class="w-1/6 bg-blue-600 h-1/5"></div>
+                            <div class="w-1/6 bg-gray-200 h-0"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <button
+                            class="px-3 py-1.5 text-xs border border-gray-300 rounded hover:bg-gray-50">查看看板</button>
+                        <button
+                            class="px-3 py-1.5 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700">在线指导</button>
+                    </div>
+                </div>
+
+                <!-- 待评审列表 -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="font-bold text-gray-800 mb-4">待评审成果物</h3>
+                    <div class="space-y-3">
+                        <div
+                            class="flex items-center justify-between p-3 border rounded-lg hover:shadow-sm transition-shadow">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-blue-100 text-blue-600 p-2 rounded"><i class="fa-solid fa-file-code"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold">需求规格说明书 v1.0</p>
+                                    <p class="text-xs text-gray-500">电商中台项目组 • 提交于 2小时前</p>
+                                </div>
+                            </div>
+                            <button
+                                class="text-sm text-emerald-600 border border-emerald-600 px-3 py-1 rounded hover:bg-emerald-50">批阅</button>
+                        </div>
+                        <div
+                            class="flex items-center justify-between p-3 border rounded-lg hover:shadow-sm transition-shadow">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-purple-100 text-purple-600 p-2 rounded"><i
+                                        class="fa-brands fa-github"></i></div>
+                                <div>
+                                    <p class="text-sm font-bold">Merge Request #24: User Auth</p>
+                                    <p class="text-xs text-gray-500">金融风控项目组 • 提交于 4小时前</p>
+                                </div>
+                            </div>
+                            <button
+                                class="text-sm text-emerald-600 border border-emerald-600 px-3 py-1 rounded hover:bg-emerald-50">Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2.3 实习监管 -->
+        <div id="internship" class="section-view">
+            <header class="mb-6 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">实习过程监管</h2>
+                <div class="flex gap-2">
+                    <button class="bg-white border px-3 py-1.5 rounded text-sm"><i class="fa-solid fa-filter mr-1"></i>
+                        筛选</button>
+                    <button class="bg-emerald-600 text-white px-3 py-1.5 rounded text-sm"><i
+                            class="fa-solid fa-video mr-1"></i> 发起云巡视</button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-3 gap-6">
+                <!-- LBS Map Placeholder -->
+                <div class="col-span-2 bg-white rounded-xl shadow-sm p-1 min-h-[400px] relative">
+                    <div class="absolute top-4 left-4 z-10 bg-white/90 p-2 rounded shadow backdrop-blur-sm">
+                        <p class="text-xs font-bold">实习生分布热力图</p>
+                        <p class="text-xs text-gray-500">北京: 152人 | 上海: 89人 | 深圳: 45人</p>
+                    </div>
+                    <!-- Fake Map -->
+                    <div
+                        class="w-full h-full bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_map_blank_without_borders.svg/2000px-World_map_blank_without_borders.svg.png')] bg-cover bg-center opacity-50">
+                        <div class="relative w-full h-full">
+                            <!-- Pins -->
+                            <div class="absolute top-1/3 left-3/4 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+                            <div
+                                class="absolute top-1/3 left-3/4 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow">
+                            </div>
+
+                            <div class="absolute top-1/2 left-3/4 w-3 h-3 bg-blue-500 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 异常监控列表 -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="font-bold text-gray-800 mb-4">实时动态</h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-3 items-start border-b pb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-500 flex-shrink-0">
+                                <i class="fa-solid fa-location-cross"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-800"><span class="font-bold">赵六</span> 打卡位置异常</p>
+                                <p class="text-xs text-gray-500 mt-1">打卡地：河北廊坊 (距离实习地 > 50km)</p>
+                                <p class="text-xs text-gray-400 mt-1">10分钟前</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-3 items-start border-b pb-3">
+                            <div
+                                class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 flex-shrink-0">
+                                <i class="fa-solid fa-comments"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-800">企业导师 <span class="font-bold">王经理</span> 反馈</p>
+                                <p class="text-xs text-gray-500 mt-1">"张三同学本周表现优秀，独立解决了..."</p>
+                                <p class="text-xs text-gray-400 mt-1">30分钟前</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2.4 BI & CRM -->
+        <div id="bi" class="section-view">
+            <header class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">数据决策与质量报告</h2>
+            </header>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="font-bold text-gray-800 mb-4">薪资分布与专业相关性</h3>
+                    <canvas id="salaryChart" height="150"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="font-bold text-gray-800 mb-4">企业人才需求技能 Top 10</h3>
+                    <canvas id="skillsChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="crm" class="section-view">
+            <header class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">企业 CRM 管理</h2>
+            </header>
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-6 py-4 font-medium text-gray-500">企业名称</th>
+                            <th class="px-6 py-4 font-medium text-gray-500">合作等级</th>
+                            <th class="px-6 py-4 font-medium text-gray-500">在岗实习生</th>
+                            <th class="px-6 py-4 font-medium text-gray-500">转正率</th>
+                            <th class="px-6 py-4 font-medium text-gray-500">状态</th>
+                            <th class="px-6 py-4 font-medium text-gray-500">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium flex items-center gap-2">
+                                <div
+                                    class="w-8 h-8 bg-orange-100 rounded text-orange-600 flex items-center justify-center font-bold">
+                                    A</div>
+                                阿里云计算
+                            </td>
+                            <td class="px-6 py-4"><span
+                                    class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs">战略合作伙伴</span></td>
+                            <td class="px-6 py-4">45 人</td>
+                            <td class="px-6 py-4 text-green-600">68%</td>
+                            <td class="px-6 py-4"><span
+                                    class="w-2 h-2 bg-green-500 rounded-full inline-block mr-1"></span> 正常</td>
+                            <td class="px-6 py-4 text-blue-600 cursor-pointer">管理</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium flex items-center gap-2">
+                                <div
+                                    class="w-8 h-8 bg-blue-100 rounded text-blue-600 flex items-center justify-center font-bold">
+                                    B</div>
+                                字节跳动
+                            </td>
+                            <td class="px-6 py-4"><span
+                                    class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">优质企业</span></td>
+                            <td class="px-6 py-4">32 人</td>
+                            <td class="px-6 py-4 text-green-600">55%</td>
+                            <td class="px-6 py-4"><span
+                                    class="w-2 h-2 bg-green-500 rounded-full inline-block mr-1"></span> 正常</td>
+                            <td class="px-6 py-4 text-blue-600 cursor-pointer">管理</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function showSection(sectionId, navElement) {
+            document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active', 'bg-gray-800', 'border-l-4', 'border-emerald-500', 'text-white');
+                el.classList.add('text-gray-300'); // Reset to default inactive text color
+                el.style.backgroundColor = '';
+                el.style.borderLeft = '';
+                el.style.color = '';
+            });
+
+            navElement.classList.add('active');
+        }
+
+        // Charts
+        const salaryCtx = document.getElementById('salaryChart').getContext('2d');
+        new Chart(salaryCtx, {
+            type: 'bar',
+            data: {
+                labels: ['<5k', '5k-8k', '8k-12k', '12k-15k', '>15k'],
+                datasets: [{
+                    label: '薪资分布 (人)',
+                    data: [50, 120, 200, 80, 30],
+                    backgroundColor: '#10b981',
+                    borderRadius: 4
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+        new Chart(skillsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Java', 'Python', 'React', 'Vue', 'Go', '其他'],
+                datasets: [{
+                    data: [30, 20, 15, 15, 10, 10],
+                    backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#ef4444', '#9ca3af']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    </script>
+</body>
+
+</html>
