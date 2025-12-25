@@ -1,15 +1,15 @@
 // f:\projects\zhitu\frontend\src\student\dashboard\components\StatsCards.tsx
-import React from 'react';
+import type { FC } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, Clock, Briefcase, Award } from "lucide-react";
 import type { DashboardStats } from "../../mock/generator";
 
 interface StatsCardsProps {
-  stats: DashboardStats['stats'] | undefined;
+  stats: DashboardStats | null | undefined;
   loading: boolean;
 }
 
-const StatsCards: React.FC<StatsCardsProps> = ({ stats, loading }) => {
+const StatsCards: FC<StatsCardsProps> = ({ stats, loading }) => {
   if (loading) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

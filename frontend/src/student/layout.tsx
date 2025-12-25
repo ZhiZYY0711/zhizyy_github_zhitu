@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { LayoutDashboard, Code, Briefcase, Trophy, GraduationCap } from 'lucide-react';
 
