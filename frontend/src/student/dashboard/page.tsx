@@ -1,4 +1,3 @@
-// f:\projects\zhitu\frontend\src\student\dashboard\page.tsx
 import { useEffect, useState } from 'react';
 import {
   fetchDashboardStats,
