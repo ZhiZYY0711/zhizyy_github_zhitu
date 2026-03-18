@@ -2,50 +2,18 @@ server:
   port: 8086
 
 spring:
-  application:
-    name: zhitu-platform
-
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
-        namespace: dev
-        group: DEFAULT_GROUP
-      config:
-        server-addr: ${spring.cloud.nacos.discovery.server-addr}
-        namespace: ${spring.cloud.nacos.discovery.namespace}
-        group: ${spring.cloud.nacos.discovery.group}
-        file-extension: yaml
-        shared-configs:
-          - data-id: zhitu-db.yaml
-            group: DEFAULT_GROUP
-            refresh: true
-          - data-id: zhitu-redis.yaml
-            group: DEFAULT_GROUP
-            refresh: true
-          - data-id: zhitu-minio.yaml
-            group: DEFAULT_GROUP
-            refresh: true
-
-  # JPA 配置
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
 
-# 安全配置
-security:
-  oauth2:
-    resourceserver:
-      jwt:
-        issuer-uri: http://localhost:8080
-        jwk-set-uri: ${security.oauth2.resourceserver.jwt.issuer-uri}/oauth2/jwks
+zhitu:
+  jwt:
+    secret: zhitu-secret-key-2024-spring-cloud-alibaba-microservices
 
-# 管理端点
 management:
   endpoints:
     web:
@@ -55,17 +23,8 @@ management:
     health:
       show-details: always
 
-# 日志配置
 logging:
   level:
-    com.zhitu.platform: DEBUG
-    org.springframework.web: DEBUG
+    com.zhitu: DEBUG
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-
-# 跨域配置
-cors:
-  allowed-origins: "*"
-  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-  allowed-headers: "*"
-  allow-credentials: true
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

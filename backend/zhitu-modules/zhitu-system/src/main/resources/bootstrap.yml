@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: zhitu-system
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:localhost:8848}
+        namespace: ${NACOS_NAMESPACE:4f0b7113-ce7e-4214-a555-08c983746619}
+        group: DEFAULT_GROUP
+      config:
+        server-addr: ${NACOS_ADDR:localhost:8848}
+        namespace: ${NACOS_NAMESPACE:4f0b7113-ce7e-4214-a555-08c983746619}
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        shared-configs:
+          - data-id: zhitu-db.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: zhitu-redis.yaml
+            group: DEFAULT_GROUP
+            refresh: true
