@@ -1,0 +1,109 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: zhitu-gateway
+  
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: dev
+        group: DEFAULT_GROUP
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        group: ${spring.cloud.nacos.discovery.group}
+        file-extension: yaml
+        shared-configs:
+          - data-id: zhitu-db.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: zhitu-redis.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: zhitu-minio.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+    
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      
+      routes:
+        # 认证服务路由
+        - id: auth-service
+          uri: lb://zhitu-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        
+        # 系统服务路由
+        - id: system-service
+          uri: lb://zhitu-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        
+        # 高校服务路由
+        - id: college-service
+          uri: lb://zhitu-college
+          predicates:
+            - Path=/college/**
+          filters:
+            - StripPrefix=1
+        
+        # 企业服务路由
+        - id: enterprise-service
+          uri: lb://zhitu-enterprise
+          predicates:
+            - Path=/enterprise/**
+          filters:
+            - StripPrefix=1
+        
+        # 学生服务路由
+        - id: student-service
+          uri: lb://zhitu-student
+          predicates:
+            - Path=/student/**
+          filters:
+            - StripPrefix=1
+        
+        # 平台服务路由
+        - id: platform-service
+          uri: lb://zhitu-platform
+          predicates:
+            - Path=/platform/**
+          filters:
+            - StripPrefix=1
+
+# 管理端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,gateway
+  endpoint:
+    health:
+      show-details: always
+
+# 日志配置
+logging:
+  level:
+    com.zhitu.gateway: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 跨域配置
+cors:
+  allowed-origins: "*"
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true

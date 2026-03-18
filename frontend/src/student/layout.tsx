@@ -1,7 +1,15 @@
-import { Outlet, NavLink } from 'react-router-dom';
-import { LayoutDashboard, Code, Briefcase, Trophy, GraduationCap } from 'lucide-react';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, Code, Briefcase, Trophy, GraduationCap, LogOut } from 'lucide-react';
+import { useAuth } from '../auth/context';
 
 const StudentLayout = () => {
+  const { logout, session } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
   const navItems = [
     {
       title: "成长工作台",
@@ -60,14 +68,17 @@ const StudentLayout = () => {
           ))}
         </nav>
         <div className="p-4 border-t flex justify-center lg:justify-start">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full min-w-0">
             <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center text-xs font-bold shrink-0">
-              ST
+              {session?.username?.slice(0, 2).toUpperCase() ?? 'ST'}
             </div>
-            <div className="flex-col hidden lg:flex">
-              <span className="text-sm font-medium">Student User</span>
-              <span className="text-xs text-muted-foreground">Software Eng.</span>
+            <div className="flex-col hidden lg:flex min-w-0 flex-1">
+              <span className="text-sm font-medium truncate">{session?.username ?? 'Student User'}</span>
+              <span className="text-xs text-muted-foreground">学生端</span>
             </div>
+            <button onClick={handleLogout} className="hidden lg:flex items-center justify-center h-7 w-7 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors shrink-0" title="退出登录">
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </aside>

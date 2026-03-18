@@ -1,0 +1,96 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: zhitu-auth
+  
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: dev
+        group: DEFAULT_GROUP
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        group: ${spring.cloud.nacos.discovery.group}
+        file-extension: yaml
+        shared-configs:
+          - data-id: zhitu-db.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: zhitu-redis.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: zhitu-minio.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+  
+  # JPA 配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+# OAuth2 配置
+oauth2:
+  issuer: http://localhost:8080
+  jwk:
+    set-uri: ${oauth2.issuer}/oauth2/jwks
+  # JWT 配置
+  jwt:
+    private-key: classpath:certs/jwt-private.pem
+    public-key: classpath:certs/jwt-public.pem
+    # 如果不想使用文件，可以使用对称密钥
+    secret: zhitu-secret-key-2024-spring-cloud-alibaba-microservices
+    access-token-expiration: 3600  # 1小时
+    refresh-token-expiration: 2592000  # 30天
+
+# 安全配置
+security:
+  oauth2:
+    resourceserver:
+      jwt:
+        issuer-uri: ${oauth2.issuer}
+        jwk-set-uri: ${oauth2.jwk.set-uri}
+  # 默认用户（开发环境）
+  user:
+    name: admin
+    password: admin123
+    roles: SUPER_ADMIN
+
+# 管理端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# 日志配置
+logging:
+  level:
+    com.zhitu.auth: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 跨域配置
+cors:
+  allowed-origins: "*"
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
