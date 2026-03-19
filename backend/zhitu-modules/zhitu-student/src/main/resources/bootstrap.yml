@@ -5,11 +5,11 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:4f0b7113-ce7e-4214-a555-08c983746619}
+        namespace: ${NACOS_NAMESPACE:6491b673-b4c0-4b1e-8560-bc0f98b74a1c}
         group: DEFAULT_GROUP
       config:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:4f0b7113-ce7e-4214-a555-08c983746619}
+        namespace: ${NACOS_NAMESPACE:6491b673-b4c0-4b1e-8560-bc0f98b74a1c}
         group: DEFAULT_GROUP
         file-extension: yaml
         shared-configs:

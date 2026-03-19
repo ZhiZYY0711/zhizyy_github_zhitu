@@ -45,6 +45,8 @@ services:
       - "13306:3306"
     volumes:
       - ./nacos/mysql:/var/lib/mysql
+      - ./mysql-schema.sql:/docker-entrypoint-initdb.d/mysql-schema.sql
+    networks:ql-schema.sql:/docker-entrypoint-initdb.d/mysql-schema.sql
     networks:
       - zhitu-net
     healthcheck:

@@ -40,13 +40,49 @@ spring:
           predicates:
             - Path=/api/student-portal/**
 
-        # 实训服务：/api/training/** → zhitu-student (学生侧) 或按需路由
+        # 实训服务（企业端）：/api/training/v1/enterprise/** → zhitu-enterprise
+        - id: training-enterprise-service
+          uri: lb://zhitu-enterprise
+          predicates:
+            - Path=/api/training/v1/enterprise/**
+
+        # 实训服务（高校端）：/api/training/v1/college/** → zhitu-college
+        - id: training-college-service
+          uri: lb://zhitu-college
+          predicates:
+            - Path=/api/training/v1/college/**
+
+        # 实训服务（导师端）：/api/training/v1/mentor/** → zhitu-enterprise
+        - id: training-mentor-service
+          uri: lb://zhitu-enterprise
+          predicates:
+            - Path=/api/training/v1/mentor/**
+
+        # 实训服务（学生端）：/api/training/** → zhitu-student（兜底）
         - id: training-service
           uri: lb://zhitu-student
           predicates:
             - Path=/api/training/**
 
-        # 实习服务：/api/internship/** → zhitu-student
+        # 实习服务（企业端）：/api/internship/v1/enterprise/** → zhitu-enterprise
+        - id: internship-enterprise-service
+          uri: lb://zhitu-enterprise
+          predicates:
+            - Path=/api/internship/v1/enterprise/**
+
+        # 实习服务（导师端）：/api/internship/v1/mentor/** → zhitu-enterprise
+        - id: internship-mentor-service
+          uri: lb://zhitu-enterprise
+          predicates:
+            - Path=/api/internship/v1/mentor/**
+
+        # 实习服务（高校端）：/api/internship/v1/college/** → zhitu-college
+        - id: internship-college-service
+          uri: lb://zhitu-college
+          predicates:
+            - Path=/api/internship/v1/college/**
+
+        # 实习服务（学生端）：/api/internship/** → zhitu-student（兜底）
         - id: internship-service
           uri: lb://zhitu-student
           predicates:

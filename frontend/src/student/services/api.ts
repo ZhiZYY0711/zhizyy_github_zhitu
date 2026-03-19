@@ -1,79 +1,37 @@
-// f:\projects\zhitu\frontend\src\student\services\api.ts
+import { fetchWithAuth } from '@/lib/http';
 import * as MockGenerator from '../mock/generator';
 
-// Base API URL - environment variable or default
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/student-portal/v1';
+const BASE = import.meta.env.VITE_API_BASE_URL || '/api/student-portal/v1';
 
-/**
- * Generic fetch wrapper with fallback to mock data
- */
-async function fetchWithFallback<T>(
-  endpoint: string,
-  mockFn: () => T,
-  options?: RequestInit
-): Promise<T> {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
-    }
+export const fetchDashboardStats = () =>
+  fetchWithAuth(`${BASE}/dashboard`, MockGenerator.getMockDashboardStats);
 
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("Received non-JSON response from API (likely HTML fallback)");
-    }
+export const fetchRadarData = () =>
+  fetchWithAuth(`${BASE}/capability/radar`, MockGenerator.getMockRadarData);
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.warn(`Fetch failed for ${endpoint}, falling back to mock data.`, error);
-    // Simulate network delay for realistic feel even with mock data
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return mockFn();
-  }
-}
+export const fetchTasks = (status: 'pending' | 'completed' = 'pending') =>
+  fetchWithAuth(`${BASE}/tasks?status=${status}`, MockGenerator.getMockTasks);
 
-export const fetchDashboardStats = async () => {
-  return fetchWithFallback('/dashboard', MockGenerator.getMockDashboardStats);
-};
+export const fetchRecommendations = (type: 'all' | 'project' | 'job' | 'course' = 'all') =>
+  fetchWithAuth(`${BASE}/recommendations?type=${type}`, MockGenerator.getMockRecommendations);
 
-export const fetchRadarData = async () => {
-  return fetchWithFallback('/capability/radar', MockGenerator.getMockRadarData);
-};
+export const fetchProjects = () =>
+  fetchWithAuth(`${BASE}/training/projects`, MockGenerator.getMockProjects);
 
-export const fetchTasks = async (status: 'pending' | 'completed' = 'pending') => {
-  return fetchWithFallback(`/tasks?status=${status}`, MockGenerator.getMockTasks);
-};
+export const fetchScrumBoard = (projectId?: string) =>
+  fetchWithAuth(`${BASE}/training/projects/${projectId}/board`, MockGenerator.getMockScrumBoard);
 
-export const fetchRecommendations = async (type: 'all' | 'project' | 'job' | 'course' = 'all') => {
-  return fetchWithFallback(`/recommendations?type=${type}`, MockGenerator.getMockRecommendations);
-};
+export const fetchJobs = () =>
+  fetchWithAuth(`${BASE}/internship/jobs`, MockGenerator.getMockJobs);
 
-export const fetchProjects = async () => {
-  return fetchWithFallback('/training/projects', MockGenerator.getMockProjects);
-};
+export const fetchReports = () =>
+  fetchWithAuth(`${BASE}/internship/reports/my`, MockGenerator.getMockReports);
 
-export const fetchScrumBoard = async (projectId?: string) => {
-  return fetchWithFallback(`/training/projects/${projectId}/board`, MockGenerator.getMockScrumBoard);
-};
+export const fetchEvaluation = () =>
+  fetchWithAuth(`${BASE}/growth/evaluation`, MockGenerator.getMockEvaluation);
 
-export const fetchJobs = async () => {
-  return fetchWithFallback('/internship/jobs', MockGenerator.getMockJobs);
-};
+export const fetchCertificates = () =>
+  fetchWithAuth(`${BASE}/growth/certificates`, MockGenerator.getMockCertificates);
 
-export const fetchReports = async () => {
-  return fetchWithFallback('/internship/reports/my', MockGenerator.getMockReports);
-};
-
-export const fetchEvaluation = async () => {
-  return fetchWithFallback('/growth/evaluation', MockGenerator.getMockEvaluation);
-};
-
-export const fetchCertificates = async () => {
-  return fetchWithFallback('/growth/certificates', MockGenerator.getMockCertificates);
-};
-
-export const fetchBadges = async () => {
-  return fetchWithFallback('/growth/badges', MockGenerator.getMockBadges);
-};
-
+export const fetchBadges = () =>
+  fetchWithAuth(`${BASE}/growth/badges`, MockGenerator.getMockBadges);
