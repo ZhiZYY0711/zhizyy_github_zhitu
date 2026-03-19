@@ -54,7 +54,12 @@
         <!-- MyBatis Plus -->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+        <!-- MyBatis Plus JSqlParser (PaginationInnerInterceptor moved here in 3.5.9+) -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
         </dependency>
 
         <!-- Apache Commons -->

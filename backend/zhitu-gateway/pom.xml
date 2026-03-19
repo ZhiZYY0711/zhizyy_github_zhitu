@@ -45,6 +45,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
+
+        <!-- 启用 bootstrap.yml 加载（Spring Cloud 2021+ 需要显式引入） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
         
         <!-- Reactive Redis -->
         <dependency>

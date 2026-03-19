@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 /**
  * 平台服务启动类
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.zhitu.platform", "com.zhitu.common"})
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.zhitu")
 public class PlatformApplication {

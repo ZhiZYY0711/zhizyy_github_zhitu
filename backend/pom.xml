@@ -36,7 +36,7 @@
         <lombok.version>1.18.32</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jjwt.version>0.12.5</jjwt.version>
-        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus.version>3.5.9</mybatis-plus.version>
         <minio.version>8.5.10</minio.version>
         <springdoc.version>2.5.0</springdoc.version>
     </properties>
@@ -139,10 +139,15 @@
                 <scope>runtime</scope>
             </dependency>
             
-            <!-- MyBatis Plus -->
+            <!-- MyBatis Plus (Spring Boot 3 专用) -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             

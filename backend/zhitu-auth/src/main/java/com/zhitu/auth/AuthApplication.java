@@ -7,7 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * 认证服务启动类
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.zhitu.auth", "com.zhitu.common"})
 @EnableDiscoveryClient
 public class AuthApplication {
     

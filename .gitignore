@@ -110,4 +110,7 @@ docker/**/pgdata/
 docker/**/postgres-data/
 docker/**/.env
 docker/**/.env.*
+docker/**/*.sock
+docker/**/*.pid
+*.sock
 

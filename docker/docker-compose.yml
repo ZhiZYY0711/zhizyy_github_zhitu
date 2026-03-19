@@ -8,11 +8,11 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "postgres_password"
+      POSTGRES_PASSWORD: "123456"
       POSTGRES_DB: zhitu_cloud
       TZ: Asia/Shanghai
     ports:
-      - "5432:5432"
+      - "15432:5432"
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
       - ./postgres/init:/docker-entrypoint-initdb.d
@@ -24,7 +24,7 @@ services:
     image: redis:7.0
     container_name: zhitu-redis
     restart: always
-    command: redis-server --requirepass zhitu_redis_pwd --appendonly yes
+    command: redis-server --requirepass 123456 --appendonly yes
     ports:
       - "6379:6379"
     volumes:
@@ -32,22 +32,47 @@ services:
     networks:
       - zhitu-net
 
+  # MySQL（Nacos 专用）
+  nacos-mysql:
+    image: mysql:8.0
+    container_name: zhitu-nacos-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: nacos_config
+      TZ: Asia/Shanghai
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./nacos/mysql:/var/lib/mysql
+    networks:
+      - zhitu-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Nacos 注册中心/配置中心
   nacos:
     image: nacos/nacos-server:v2.2.3
     container_name: zhitu-nacos
     restart: always
+    depends_on:
+      nacos-mysql:
+        condition: service_healthy
     environment:
       - MODE=standalone
-      - AUTH_ENABLED=false
       - TZ=Asia/Shanghai
+      - JVM_XMS=256m
+      - JVM_XMX=512m
     ports:
       - "8848:8848"
       - "9848:9848"
       - "9849:9849"
     volumes:
       - ./nacos/logs:/home/nacos/logs
-      - ./nacos/data:/home/nacos/data
+      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
     networks:
       - zhitu-net
 
