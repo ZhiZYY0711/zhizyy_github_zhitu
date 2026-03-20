@@ -99,13 +99,13 @@ services:
   auth:
     build:
       context: ../backend
-      dockerfile: Dockerfile.auth
+      dockerfile: dockerfiles/Dockerfile.auth
     container_name: zhitu-auth
     restart: always
     environment:
-      - NACOS_ADDR=nacos:8848
-      - NACOS_NAMESPACE=9f47ef46-0532-4144-9352-de979a04b191
-      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_ADDR=${NACOS_ADDR}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - TZ=Asia/Shanghai
     ports:
       - "9200:9200"
@@ -123,13 +123,13 @@ services:
   system:
     build:
       context: ../backend
-      dockerfile: Dockerfile.system
+      dockerfile: dockerfiles/Dockerfile.system
     container_name: zhitu-system
     restart: always
     environment:
-      - NACOS_ADDR=nacos:8848
-      - NACOS_NAMESPACE=9f47ef46-0532-4144-9352-de979a04b191
-      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_ADDR=${NACOS_ADDR}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - TZ=Asia/Shanghai
     ports:
       - "9201:9201"
@@ -147,13 +147,13 @@ services:
   college:
     build:
       context: ../backend
-      dockerfile: Dockerfile.college
+      dockerfile: dockerfiles/Dockerfile.college
     container_name: zhitu-college
     restart: always
     environment:
-      - NACOS_ADDR=nacos:8848
-      - NACOS_NAMESPACE=9f47ef46-0532-4144-9352-de979a04b191
-      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_ADDR=${NACOS_ADDR}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - TZ=Asia/Shanghai
     ports:
       - "9202:9202"
@@ -171,13 +171,13 @@ services:
   enterprise:
     build:
       context: ../backend
-      dockerfile: Dockerfile.enterprise
+      dockerfile: dockerfiles/Dockerfile.enterprise
     container_name: zhitu-enterprise
     restart: always
     environment:
-      - NACOS_ADDR=nacos:8848
-      - NACOS_NAMESPACE=9f47ef46-0532-4144-9352-de979a04b191
-      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_ADDR=${NACOS_ADDR}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - TZ=Asia/Shanghai
     ports:
       - "9203:9203"
@@ -195,13 +195,13 @@ services:
   student:
     build:
       context: ../backend
-      dockerfile: Dockerfile.student
+      dockerfile: dockerfiles/Dockerfile.student
     container_name: zhitu-student
     restart: always
     environment:
-      - NACOS_ADDR=nacos:8848
-      - NACOS_NAMESPACE=9f47ef46-0532-4144-9352-de979a04b191
-      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_ADDR=${NACOS_ADDR}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - TZ=Asia/Shanghai
     ports:
       - "9204:9204"
@@ -219,13 +219,13 @@ services:
   platform:
     build:
       context: ../backend
-      dockerfile: Dockerfile.platform
+      dockerfile: dockerfiles/Dockerfile.platform
     container_name: zhitu-platform
     restart: always
     environment:
-      - NACOS_ADDR=nacos:8848
-      - NACOS_NAMESPACE=9f47ef46-0532-4144-9352-de979a04b191
-      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_ADDR=${NACOS_ADDR}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - TZ=Asia/Shanghai
     ports:
       - "9205:9205"
@@ -243,13 +243,13 @@ services:
   gateway:
     build:
       context: ../backend
-      dockerfile: Dockerfile.gateway
+      dockerfile: dockerfiles/Dockerfile.gateway
     container_name: zhitu-gateway
     restart: always
     environment:
-      - NACOS_ADDR=nacos:8848
-      - NACOS_NAMESPACE=9f47ef46-0532-4144-9352-de979a04b191
-      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_ADDR=${NACOS_ADDR}
+      - NACOS_NAMESPACE=${NACOS_NAMESPACE}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
       - TZ=Asia/Shanghai
     ports:
       - "8888:8888"

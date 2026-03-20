@@ -1,15 +1,17 @@
 spring:
   application:
     name: zhitu-enterprise
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   cloud:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:9f47ef46-0532-4144-9352-de979a04b191}
+        namespace: ${NACOS_NAMESPACE:3266317a-4949-4b36-8e49-e2b8ea5609ec}
         group: DEFAULT_GROUP
       config:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:9f47ef46-0532-4144-9352-de979a04b191}
+        namespace: ${NACOS_NAMESPACE:3266317a-4949-4b36-8e49-e2b8ea5609ec}
         group: DEFAULT_GROUP
         file-extension: yaml
         import-check:
