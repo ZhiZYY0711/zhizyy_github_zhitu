@@ -9,7 +9,7 @@ echo.
 echo 【开发环境】(基础设施Docker + 宿主机前后端)
 echo   1. 完整开发环境 (基础设施 + 后端 + 前端)
 echo   2. 仅基础设施服务
-echo   3. 仅后端服务 (含基础设施)
+echo   3. 仅后端服务
 echo   4. 仅前端服务
 echo.
 echo 【生产环境】(全部Docker镜像)

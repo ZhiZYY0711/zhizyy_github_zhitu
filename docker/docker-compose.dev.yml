@@ -65,6 +65,7 @@ services:
       - "9848:9848"
     volumes:
       - ./nacos/logs:/home/nacos/logs
+      - ./nacos/data:/home/nacos/data
     networks:
       - zhitu-net
     healthcheck:

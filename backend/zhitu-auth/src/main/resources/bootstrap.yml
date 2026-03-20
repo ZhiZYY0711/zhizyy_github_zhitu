@@ -7,11 +7,11 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:3266317a-4949-4b36-8e49-e2b8ea5609ec}
+        namespace: ${NACOS_NAMESPACE:c7a0e83d-c02f-42c6-84bf-d3d7ed28272b}
         group: DEFAULT_GROUP
       config:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:3266317a-4949-4b36-8e49-e2b8ea5609ec}
+        namespace: ${NACOS_NAMESPACE:c7a0e83d-c02f-42c6-84bf-d3d7ed28272b}
         group: DEFAULT_GROUP
         file-extension: yaml
         import-check:

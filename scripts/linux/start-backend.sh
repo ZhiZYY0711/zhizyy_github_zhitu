@@ -6,28 +6,9 @@ echo "智途云平台 - 启动后端服务"
 echo "========================================"
 echo ""
 
-echo "[1/3] 检查Docker环境..."
-if ! docker info > /dev/null 2>&1; then
-    echo "[错误] Docker未运行，请先启动Docker"
-    exit 1
-fi
-echo "[✓] Docker运行正常"
-echo ""
-
-echo "[2/3] 启动基础设施服务..."
-cd docker
-docker-compose -f docker-compose.dev.yml up -d
-cd ..
-echo "[✓] 基础设施服务启动成功"
-echo ""
-
-echo "等待服务就绪 (约30秒)..."
-sleep 30
-echo ""
-
 mkdir -p logs
 
-echo "[3/3] 启动各微服务..."
+echo "启动各微服务..."
 echo ""
 
 BASE_DIR=$(pwd)
