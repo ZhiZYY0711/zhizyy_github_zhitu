@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @TableName(schema = "platform_service", value = "sys_dict")
@@ -18,8 +18,8 @@ public class SysDict {
     private String code;
     private String label;
     private Integer sortOrder;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
     @TableLogic(value = "false", delval = "true")
     private Boolean isDeleted;
 }

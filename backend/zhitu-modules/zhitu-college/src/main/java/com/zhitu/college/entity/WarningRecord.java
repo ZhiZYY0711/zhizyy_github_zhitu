@@ -5,7 +5,7 @@ import com.zhitu.common.core.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 预警记录实体 - growth_svc.warning_record
@@ -26,5 +26,5 @@ public class WarningRecord extends BaseEntity {
     private Integer status;
     private String interveneNote;
     private Long intervenedBy;
-    private LocalDateTime intervenedAt;
+    private OffsetDateTime intervenedAt;
 }

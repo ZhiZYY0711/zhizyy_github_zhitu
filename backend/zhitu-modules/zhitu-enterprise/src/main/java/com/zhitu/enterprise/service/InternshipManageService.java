@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Service
@@ -50,7 +50,7 @@ public class InternshipManageService {
         report.setStatus(2);
         report.setReviewComment(req.getReviewComment());
         report.setReviewedBy(reviewerId);
-        report.setReviewedAt(LocalDateTime.now());
+        report.setReviewedAt(OffsetDateTime.now());
         weeklyReportMapper.updateById(report);
     }
 

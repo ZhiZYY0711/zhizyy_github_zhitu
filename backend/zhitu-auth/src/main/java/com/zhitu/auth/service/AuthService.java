@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HexFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -85,13 +85,13 @@ public class AuthService {
         SysRefreshToken tokenRecord = new SysRefreshToken();
         tokenRecord.setUserId(user.getId());
         tokenRecord.setTokenHash(sha256(refreshToken));
-        tokenRecord.setExpiresAt(LocalDateTime.now()
+        tokenRecord.setExpiresAt(OffsetDateTime.now()
                 .plusSeconds(jwtUtils.getRefreshTokenExpiration()));
-        tokenRecord.setCreatedAt(LocalDateTime.now());
+        tokenRecord.setCreatedAt(OffsetDateTime.now());
         refreshTokenMapper.insert(tokenRecord);
 
         // 8. 更新最后登录时间
-        user.setLastLoginAt(LocalDateTime.now());
+        user.setLastLoginAt(OffsetDateTime.now());
         userMapper.updateById(user);
 
         return LoginResponse.builder()
@@ -126,7 +126,7 @@ public class AuthService {
                 new LambdaQueryWrapper<SysRefreshToken>()
                         .eq(SysRefreshToken::getTokenHash, hash));
 
-        if (record == null || record.getExpiresAt().isBefore(LocalDateTime.now())) {
+        if (record == null || record.getExpiresAt().isBefore(OffsetDateTime.now())) {
             throw new BusinessException(ResultCode.REFRESH_TOKEN_INVALID);
         }
 

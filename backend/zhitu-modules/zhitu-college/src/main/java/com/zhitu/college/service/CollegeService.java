@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +97,7 @@ public class CollegeService {
         record.setStatus(1);
         record.setInterveneNote(req.getInterveneNote());
         record.setIntervenedBy(userId);
-        record.setIntervenedAt(LocalDateTime.now());
+        record.setIntervenedAt(OffsetDateTime.now());
         warningRecordMapper.updateById(record);
     }
 

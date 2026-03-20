@@ -9,7 +9,7 @@ import com.zhitu.system.mapper.SysTenantMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @RestController
 @RequestMapping("/api/system/v1")
@@ -25,8 +25,8 @@ public class TenantController {
     public Result<SysTenant> createCollege(@RequestBody SysTenant tenant) {
         tenant.setType(1);
         tenant.setStatus(1);
-        tenant.setCreatedAt(LocalDateTime.now());
-        tenant.setUpdatedAt(LocalDateTime.now());
+        tenant.setCreatedAt(OffsetDateTime.now());
+        tenant.setUpdatedAt(OffsetDateTime.now());
         tenantMapper.insert(tenant);
         return Result.ok(tenant);
     }
@@ -66,7 +66,7 @@ public class TenantController {
         SysTenant tenant = tenantMapper.selectById(id);
         if (tenant != null) {
             tenant.setStatus(status);
-            tenant.setUpdatedAt(LocalDateTime.now());
+            tenant.setUpdatedAt(OffsetDateTime.now());
             tenantMapper.updateById(tenant);
         }
         return Result.ok();

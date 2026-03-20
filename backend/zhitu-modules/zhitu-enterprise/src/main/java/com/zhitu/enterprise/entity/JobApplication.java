@@ -3,7 +3,7 @@ package com.zhitu.enterprise.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 求职申请实体 - internship_svc.job_application
@@ -22,8 +22,8 @@ public class JobApplication {
     private Integer status;
 
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime appliedAt;
+    private OffsetDateTime appliedAt;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 }

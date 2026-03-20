@@ -3,7 +3,7 @@ package com.zhitu.enterprise.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 实习证明实体 - internship_svc.internship_certificate
@@ -22,5 +22,5 @@ public class InternshipCertificate {
     private Long issuedBy;
 
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime issuedAt;
+    private OffsetDateTime issuedAt;
 }

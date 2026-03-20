@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @TableName(schema = "auth_center", value = "sys_refresh_token")
@@ -15,6 +15,6 @@ public class SysRefreshToken {
     private Long id;
     private Long userId;
     private String tokenHash;  // SHA-256 哈希
-    private LocalDateTime expiresAt;
-    private LocalDateTime createdAt;
+    private OffsetDateTime expiresAt;
+    private OffsetDateTime createdAt;
 }

@@ -3,7 +3,7 @@ package com.zhitu.enterprise.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 人才库实体 - enterprise_svc.talent_pool
@@ -20,5 +20,5 @@ public class TalentPool {
     private String remark;
 
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 }

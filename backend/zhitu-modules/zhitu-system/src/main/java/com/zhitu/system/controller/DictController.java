@@ -7,7 +7,7 @@ import com.zhitu.system.mapper.SysDictMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -34,8 +34,8 @@ public class DictController {
      */
     @PostMapping("/tags")
     public Result<SysDict> addTag(@RequestBody SysDict dict) {
-        dict.setCreatedAt(LocalDateTime.now());
-        dict.setUpdatedAt(LocalDateTime.now());
+        dict.setCreatedAt(OffsetDateTime.now());
+        dict.setUpdatedAt(OffsetDateTime.now());
         dictMapper.insert(dict);
         return Result.ok(dict);
     }

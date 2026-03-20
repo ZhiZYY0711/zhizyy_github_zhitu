@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @TableName(schema = "auth_center", value = "sys_user")
@@ -21,9 +21,9 @@ public class SysUser {
     private String role;      // student / enterprise / college / platform
     private String subRole;   // hr/mentor/admin / counselor/dean/admin
     private Integer status;   // 1:正常 2:锁定 3:注销
-    private LocalDateTime lastLoginAt;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private OffsetDateTime lastLoginAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
     @TableLogic(value = "false", delval = "true")
     private Boolean isDeleted;
 }

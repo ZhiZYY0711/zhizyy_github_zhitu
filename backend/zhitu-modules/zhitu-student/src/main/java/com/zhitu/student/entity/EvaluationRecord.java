@@ -3,13 +3,13 @@ package com.zhitu.student.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
- * 评价记录实体 - growth_service.evaluation_record
+ * 评价记录实体 - growth_svc.evaluation_record
  */
 @Data
-@TableName(schema = "growth_service", value = "evaluation_record")
+@TableName(schema = "growth_svc", value = "evaluation_record")
 public class EvaluationRecord {
 
     @TableId(type = IdType.AUTO)
@@ -38,10 +38,10 @@ public class EvaluationRecord {
     private String hireRecommendation;
 
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 
     @TableLogic(value = "false", delval = "true")
     private Boolean isDeleted;

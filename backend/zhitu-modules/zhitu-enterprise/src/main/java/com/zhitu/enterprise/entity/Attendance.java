@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 考勤记录实体 - internship_svc.attendance
@@ -17,8 +17,8 @@ public class Attendance {
     private Long id;
     private Long internshipId;
     private Long studentId;
-    private LocalDateTime clockInTime;
-    private LocalDateTime clockOutTime;
+    private OffsetDateTime clockInTime;
+    private OffsetDateTime clockOutTime;
     private BigDecimal clockInLat;
     private BigDecimal clockInLng;
     /** 0=待审核 1=正常 2=异常 */
@@ -27,5 +27,5 @@ public class Attendance {
     private Long auditedBy;
 
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 }

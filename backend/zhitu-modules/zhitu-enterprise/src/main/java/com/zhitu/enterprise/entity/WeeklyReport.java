@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 实习周报实体 - internship_svc.weekly_report
@@ -26,11 +26,11 @@ public class WeeklyReport {
     private Integer status;
     private String reviewComment;
     private Long reviewedBy;
-    private LocalDateTime reviewedAt;
+    private OffsetDateTime reviewedAt;
 
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedAt;
+    private OffsetDateTime updatedAt;
 }
