@@ -35,7 +35,7 @@ const LoginPage = () => {
     // Simulate async login
     await new Promise(r => setTimeout(r, 600));
 
-    const result = login({ username, password, role });
+    const result = await login({ username, password, role });
     setLoading(false);
 
     if (!result.success) {

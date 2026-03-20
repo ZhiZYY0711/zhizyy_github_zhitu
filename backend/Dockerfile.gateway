@@ -1,0 +1,28 @@
+# 多阶段构建 - Gateway 服务
+FROM maven:3.9-eclipse-temurin-17 AS builder
+
+WORKDIR /app
+
+# 复制父 POM 和所有模块（Maven 需要所有声明的子模块目录存在）
+COPY pom.xml .
+COPY zhitu-common ./zhitu-common
+COPY zhitu-auth ./zhitu-auth
+COPY zhitu-gateway ./zhitu-gateway
+COPY zhitu-modules ./zhitu-modules
+
+# 构建项目（跳过测试）
+RUN mvn clean package -pl zhitu-gateway -am -DskipTests
+
+# 运行阶段
+FROM eclipse-temurin:17-jre-alpine
+
+WORKDIR /app
+
+# 复制构建产物
+COPY --from=builder /app/zhitu-gateway/target/*.jar app.jar
+
+# 暴露端口
+EXPOSE 8888
+
+# 启动应用
+ENTRYPOINT ["java", "-jar", "app.jar"]

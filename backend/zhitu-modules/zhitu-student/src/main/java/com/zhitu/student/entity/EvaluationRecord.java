@@ -43,6 +43,6 @@ public class EvaluationRecord {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
-    @TableLogic
+    @TableLogic(value = "false", delval = "true")
     private Boolean isDeleted;
 }

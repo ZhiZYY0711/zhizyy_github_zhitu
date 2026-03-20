@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { getMockCurrentUser, filterNavItemsByRole } from './utils/auth';
+import { getMockCurrentUser } from './utils/auth';
 import { UserRole } from './types';
 import { useAuth } from '../auth/context';
 

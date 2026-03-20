@@ -24,6 +24,6 @@ public class SysUser {
     private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    @TableLogic
+    @TableLogic(value = "false", delval = "true")
     private Boolean isDeleted;
 }

@@ -5,13 +5,15 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:6491b673-b4c0-4b1e-8560-bc0f98b74a1c}
+        namespace: ${NACOS_NAMESPACE:9f47ef46-0532-4144-9352-de979a04b191}
         group: DEFAULT_GROUP
       config:
         server-addr: ${NACOS_ADDR:localhost:8848}
-        namespace: ${NACOS_NAMESPACE:6491b673-b4c0-4b1e-8560-bc0f98b74a1c}
+        namespace: ${NACOS_NAMESPACE:9f47ef46-0532-4144-9352-de979a04b191}
         group: DEFAULT_GROUP
         file-extension: yaml
+        import-check:
+          enabled: false
         shared-configs:
           - data-id: zhitu-redis.yaml
             group: DEFAULT_GROUP

@@ -20,6 +20,6 @@ public class SysDict {
     private Integer sortOrder;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    @TableLogic
+    @TableLogic(value = "false", delval = "true")
     private Boolean isDeleted;
 }

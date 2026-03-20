@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Award, CheckCircle, XCircle } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { fetchInterns, sendOffer, issueCertificate } from '../../services/api';
+import { fetchInterns, issueCertificate } from '../../services/api';
 import type { Intern } from '../../types';
 
 const STATUS_CONFIG = {
