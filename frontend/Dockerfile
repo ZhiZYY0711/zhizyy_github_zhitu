@@ -3,8 +3,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+# 安装pnpm
+RUN npm install -g pnpm
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
@@ -12,7 +15,7 @@ COPY . .
 ARG VITE_API_BASE_URL=http://gateway:8888
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-RUN npm run build
+RUN pnpm run build
 
 # 生产阶段：nginx 反向代理
 FROM nginx:alpine

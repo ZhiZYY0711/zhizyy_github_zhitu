@@ -1,60 +1,37 @@
 @echo off
 chcp 65001 >nul
-echo ==========================================
-echo Zhitu Cloud Platform - Start All Services
-echo ==========================================
+:menu
+cls
+echo ========================================
+echo 智途云平台 - 启动服务
+echo ========================================
+echo.
+echo 【开发环境】(基础设施Docker + 宿主机前后端)
+echo   1. 完整开发环境 (基础设施 + 后端 + 前端)
+echo   2. 仅基础设施服务
+echo   3. 仅后端服务 (含基础设施)
+echo   4. 仅前端服务
+echo.
+echo 【生产环境】(全部Docker镜像)
+echo   5. 启动生产环境
+echo   6. 构建生产镜像 (重新构建所有镜像)
+echo.
+echo   0. 退出
+echo.
+echo ========================================
+set /p choice=请输入选项 (0-6): 
 
-REM Check if Docker is running
-docker info >nul 2>&1
-if errorlevel 1 (
-    echo [ERROR] Docker is not running. Please start Docker Desktop first.
-    pause
-    exit /b 1
-)
+if "%choice%"=="1" ( cls & call windows\start-all.bat & goto menu )
+if "%choice%"=="2" ( cls & call windows\start-infra.bat & goto menu )
+if "%choice%"=="3" ( cls & call windows\start-backend.bat & goto menu )
+if "%choice%"=="4" ( cls & call windows\start-frontend.bat & goto menu )
+if "%choice%"=="5" ( cls & call windows\prod-start.bat & goto menu )
+if "%choice%"=="6" ( cls & call windows\prod-build.bat & goto menu )
+if "%choice%"=="0" goto end
 
-REM Check Docker Compose
-docker-compose version >nul 2>&1
-if errorlevel 1 (
-    echo [ERROR] Docker Compose is not available.
-    pause
-    exit /b 1
-)
+echo 无效选项，请重新选择
+timeout /t 2 >nul
+goto menu
 
-echo [OK] Docker environment check passed
-echo.
-
-REM Navigate to docker directory
-cd /d "%~dp0..\docker"
-
-echo [INFO] Building and starting all services...
-echo [INFO] This may take 5-10 minutes on first run...
-echo.
-
-REM Build and start all services
-docker-compose up -d --build
-
-echo.
-echo ==========================================
-echo [SUCCESS] All services started!
-echo ==========================================
-echo.
-echo [服务访问地址]
-echo   Frontend:        http://localhost
-echo   API Gateway:     http://localhost:8888
-echo   Nacos Console:   http://localhost:8848/nacos
-echo   MinIO Console:   http://localhost:9001
-echo.
-echo [Default Credentials]
-echo   Nacos:  nacos / nacos
-echo   MinIO:  minioadmin / minioadmin
-echo.
-echo [Common Commands]
-echo   View status: cd docker ^&^& docker-compose ps
-echo   View logs:   cd docker ^&^& docker-compose logs -f [service]
-echo   Stop all:    cd docker ^&^& docker-compose down
-echo.
-echo [Note] First startup needs 5-10 minutes to build images
-echo        Backend services will register to Nacos after it starts
-echo ==========================================
-echo.
-pause
+:end
+exit

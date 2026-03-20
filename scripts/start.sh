@@ -1,52 +1,34 @@
 #!/bin/bash
 
-echo "=========================================="
-echo "智途云平台 - 一键启动脚本"
-echo "=========================================="
+while true; do
+    clear
+    echo "========================================"
+    echo "智途云平台 - 启动服务"
+    echo "========================================"
+    echo ""
+    echo "【开发环境】(基础设施Docker + 宿主机前后端)"
+    echo "  1. 完整开发环境 (基础设施 + 后端 + 前端)"
+    echo "  2. 仅基础设施服务"
+    echo "  3. 仅后端服务 (含基础设施)"
+    echo "  4. 仅前端服务"
+    echo ""
+    echo "【生产环境】(全部Docker镜像)"
+    echo "  5. 启动生产环境"
+    echo "  6. 构建生产镜像 (重新构建所有镜像)"
+    echo ""
+    echo "  0. 退出"
+    echo ""
+    echo "========================================"
+    read -p "请输入选项 (0-6): " choice
 
-# 检查 Docker 是否运行
-if ! docker info > /dev/null 2>&1; then
-    echo "❌ Docker 未运行，请先启动 Docker"
-    exit 1
-fi
-
-# 检查 Docker Compose 是否安装
-if ! command -v docker-compose &> /dev/null; then
-    echo "❌ Docker Compose 未安装"
-    exit 1
-fi
-
-echo "✅ Docker 环境检查通过"
-echo ""
-
-# 进入 docker 目录
-cd "$(dirname "$0")/../docker"
-
-echo "🚀 开始构建和启动所有服务..."
-echo ""
-
-# 构建并启动所有服务
-docker-compose up -d --build
-
-echo ""
-echo "=========================================="
-echo "✅ 所有服务已启动！"
-echo "=========================================="
-echo ""
-echo "📋 服务访问地址："
-echo "  前端应用:        http://localhost"
-echo "  API 网关:        http://localhost:8888"
-echo "  Nacos 控制台:    http://localhost:8848/nacos"
-echo "  MinIO 控制台:    http://localhost:9001"
-echo ""
-echo "🔑 默认账号密码："
-echo "  Nacos:  nacos / nacos"
-echo "  MinIO:  minioadmin / minioadmin"
-echo ""
-echo "📊 查看服务状态: cd docker && docker-compose ps"
-echo "📝 查看服务日志: cd docker && docker-compose logs -f [服务名]"
-echo "🛑 停止所有服务: cd docker && docker-compose down"
-echo ""
-echo "⏳ 提示：首次启动需要构建镜像，请等待 5-10 分钟"
-echo "   后端服务需要等待 Nacos 完全启动后才能正常注册"
-echo "=========================================="
+    case $choice in
+        1) clear; bash linux/start-all.sh; read -p "按Enter键继续..." ;;
+        2) clear; bash linux/start-infra.sh; read -p "按Enter键继续..." ;;
+        3) clear; bash linux/start-backend.sh; read -p "按Enter键继续..." ;;
+        4) clear; bash linux/start-frontend.sh; read -p "按Enter键继续..." ;;
+        5) clear; bash linux/prod-start.sh; read -p "按Enter键继续..." ;;
+        6) clear; bash linux/prod-build.sh; read -p "按Enter键继续..." ;;
+        0) exit 0 ;;
+        *) echo "无效选项，请重新选择"; sleep 2 ;;
+    esac
+done
