@@ -1,46 +1,61 @@
 package com.zhitu.platform.controller;
 
 import com.zhitu.common.core.result.Result;
+import com.zhitu.platform.dto.OnlineUserTrendResponseDTO;
+import com.zhitu.platform.dto.ServiceHealthDTO;
+import com.zhitu.platform.dto.SystemHealthDTO;
+import com.zhitu.platform.service.PlatformMonitorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * 平台监控接口
- * GET /api/monitor/v1/health           - 系统健康状态
- * GET /api/monitor/v1/users/online-trend - 在线用户趋势
+ * 平台监控接口（/api/monitor/v1）
+ * Requirements: 29.1-29.7
  */
 @RestController
 @RequestMapping("/api/monitor/v1")
 @RequiredArgsConstructor
 public class PlatformMonitorController {
 
+    private final PlatformMonitorService platformMonitorService;
+
+    /**
+     * 获取系统健康状态
+     * GET /api/monitor/v1/health
+     * 
+     * Requirements: 29.1, 29.4, 29.5
+     * - 29.4: Include status (healthy, degraded, down) for each microservice
+     * - 29.5: Include response time, error rate, and CPU usage for each microservice
+     */
     @GetMapping("/health")
-    public Result<Map<String, String>> health() {
-        return Result.ok(Map.of("status", "UP", "service", "zhitu-platform"));
+    public Result<SystemHealthDTO> health() {
+        return Result.ok(platformMonitorService.getHealth());
     }
 
+    /**
+     * 获取在线用户趋势（过去24小时）
+     * GET /api/monitor/v1/users/online-trend
+     * 
+     * Requirements: 29.2, 29.6
+     * - 29.6: Include online user count trend for the past 24 hours
+     */
     @GetMapping("/users/online-trend")
-    public Result<Object> onlineTrend() {
-        // TODO: 接入 Redis 统计在线用户数趋势
-        return Result.ok(Map.of("message", "online trend data"));
+    public Result<OnlineUserTrendResponseDTO> onlineTrend() {
+        return Result.ok(platformMonitorService.getOnlineUserTrend());
     }
 
+    /**
+     * 获取所有微服务健康状态详情
+     * GET /api/monitor/v1/services
+     * 
+     * Requirements: 29.3, 29.4, 29.5
+     */
     @GetMapping("/services")
-    public Result<List<Map<String, Object>>> getServiceStatuses() {
-        List<Map<String, Object>> services = List.of(
-                Map.of("name", "zhitu-auth", "status", "UP"),
-                Map.of("name", "zhitu-gateway", "status", "UP"),
-                Map.of("name", "zhitu-enterprise", "status", "UP"),
-                Map.of("name", "zhitu-college", "status", "UP"),
-                Map.of("name", "zhitu-platform", "status", "UP"),
-                Map.of("name", "zhitu-student", "status", "UP"),
-                Map.of("name", "zhitu-system", "status", "UP")
-        );
-        return Result.ok(services);
+    public Result<List<ServiceHealthDTO>> getServiceStatuses() {
+        return Result.ok(platformMonitorService.getServices());
     }
 }

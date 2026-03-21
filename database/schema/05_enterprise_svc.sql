@@ -92,3 +92,83 @@ CREATE INDEX idx_talent_tenant ON enterprise_svc.talent_pool(tenant_id);
 CREATE INDEX idx_talent_student ON enterprise_svc.talent_pool(student_id);
 
 COMMENT ON TABLE enterprise_svc.talent_pool IS '企业人才库';
+
+-- =====================================================
+-- Table: enterprise_activity
+-- Description: Activity feed for enterprise portal
+-- =====================================================
+CREATE TABLE enterprise_svc.enterprise_activity (
+    id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL,
+    activity_type VARCHAR(30) NOT NULL COMMENT 'application/interview/report_submitted/evaluation',
+    description TEXT NOT NULL,
+    ref_type VARCHAR(20) COMMENT 'job/application/intern',
+    ref_id BIGINT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_activity_tenant FOREIGN KEY (tenant_id) REFERENCES auth_center.sys_tenant(id)
+);
+
+CREATE INDEX idx_activity_tenant ON enterprise_svc.enterprise_activity(tenant_id);
+CREATE INDEX idx_activity_created ON enterprise_svc.enterprise_activity(created_at);
+
+COMMENT ON TABLE enterprise_svc.enterprise_activity IS '企业活动动态表';
+
+-- =====================================================
+-- Table: enterprise_todo
+-- Description: Todo list for enterprise users
+-- =====================================================
+CREATE TABLE enterprise_svc.enterprise_todo (
+    id BIGSERIAL PRIMARY KEY,
+    tenant_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    todo_type VARCHAR(30) NOT NULL COMMENT 'application_review/interview_schedule/report_review/evaluation_pending',
+    ref_type VARCHAR(20),
+    ref_id BIGINT,
+    title VARCHAR(200) NOT NULL,
+    priority SMALLINT DEFAULT 2,
+    due_date TIMESTAMPTZ,
+    status SMALLINT NOT NULL DEFAULT 0 COMMENT '0=pending, 1=completed',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_todo_tenant FOREIGN KEY (tenant_id) REFERENCES auth_center.sys_tenant(id),
+    CONSTRAINT fk_todo_user FOREIGN KEY (user_id) REFERENCES auth_center.sys_user(id),
+    CONSTRAINT chk_todo_priority CHECK (priority IN (1, 2, 3)),
+    CONSTRAINT chk_todo_status CHECK (status IN (0, 1))
+);
+
+CREATE INDEX idx_todo_user ON enterprise_svc.enterprise_todo(user_id) WHERE status = 0;
+CREATE INDEX idx_todo_due ON enterprise_svc.enterprise_todo(due_date) WHERE status = 0;
+
+COMMENT ON TABLE enterprise_svc.enterprise_todo IS '企业待办事项表';
+
+-- =====================================================
+-- Table: interview_schedule
+-- Description: Interview scheduling and management
+-- =====================================================
+CREATE TABLE enterprise_svc.interview_schedule (
+    id BIGSERIAL PRIMARY KEY,
+    application_id BIGINT NOT NULL,
+    student_id BIGINT NOT NULL,
+    enterprise_id BIGINT NOT NULL,
+    interview_time TIMESTAMPTZ NOT NULL,
+    location VARCHAR(200),
+    interviewer_id BIGINT,
+    interview_type VARCHAR(20) COMMENT 'phone/video/onsite',
+    status SMALLINT NOT NULL DEFAULT 0 COMMENT '0=scheduled, 1=completed, 2=cancelled',
+    notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT fk_interview_application FOREIGN KEY (application_id) REFERENCES internship_svc.job_application(id),
+    CONSTRAINT fk_interview_student FOREIGN KEY (student_id) REFERENCES student_svc.student_info(id),
+    CONSTRAINT fk_interview_enterprise FOREIGN KEY (enterprise_id) REFERENCES auth_center.sys_tenant(id),
+    CONSTRAINT fk_interview_interviewer FOREIGN KEY (interviewer_id) REFERENCES auth_center.sys_user(id),
+    CONSTRAINT chk_interview_status CHECK (status IN (0, 1, 2))
+);
+
+CREATE INDEX idx_interview_application ON enterprise_svc.interview_schedule(application_id);
+CREATE INDEX idx_interview_student ON enterprise_svc.interview_schedule(student_id);
+CREATE INDEX idx_interview_time ON enterprise_svc.interview_schedule(interview_time);
+
+COMMENT ON TABLE enterprise_svc.interview_schedule IS '面试安排表';

@@ -80,6 +80,13 @@
             <optional>true</optional>
         </dependency>
         
+        <!-- Spring Security (optional，用于异常处理) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <optional>true</optional>
+        </dependency>
+        
         <!-- 测试 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

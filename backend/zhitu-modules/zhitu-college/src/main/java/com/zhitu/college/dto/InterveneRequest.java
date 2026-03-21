@@ -7,4 +7,6 @@ import lombok.Data;
 public class InterveneRequest {
     @NotBlank
     private String interveneNote;
+    
+    private String expectedOutcome;
 }

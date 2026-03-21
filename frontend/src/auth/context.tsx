@@ -30,16 +30,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (res.ok) {
         const data = await res.json();
-        // 后端返回: { code, message, data: { access_token, refresh_token, expires_in, user } }
+        // 后端返回: { code, message, data: { accessToken, refreshToken, expiresIn, userInfo } }
         const payload = data.data ?? data;
         const newSession: AuthSession = {
-          username: payload.user?.username ?? username.trim(),
-          role: payload.user?.role ?? role,
+          username: payload.userInfo?.username ?? username.trim(),
+          role: payload.userInfo?.role ?? role,
           loginAt: Date.now(),
-          accessToken: payload.access_token,
-          refreshToken: payload.refresh_token,
-          expiresAt: payload.expires_in ? Date.now() + payload.expires_in * 1000 : undefined,
-          userInfo: payload.user,
+          accessToken: payload.accessToken,
+          refreshToken: payload.refreshToken,
+          expiresAt: payload.expiresIn ? Date.now() + payload.expiresIn * 1000 : undefined,
+          userInfo: payload.userInfo,
         };
         saveSession(newSession);
         setSession(newSession);

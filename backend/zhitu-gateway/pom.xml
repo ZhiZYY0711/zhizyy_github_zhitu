@@ -119,6 +119,14 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Embedded Redis for tests -->
+        <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.7.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

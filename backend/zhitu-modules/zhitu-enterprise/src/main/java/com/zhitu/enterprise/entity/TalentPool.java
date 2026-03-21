@@ -21,4 +21,7 @@ public class TalentPool {
 
     @TableField(fill = FieldFill.INSERT)
     private OffsetDateTime createdAt;
+
+    @TableLogic
+    private Boolean isDeleted;
 }

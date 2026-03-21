@@ -1,0 +1,94 @@
+server:
+  port: 0  # Random port for tests
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false  # Disable service discovery in tests
+      redis-rate-limiter:
+        include-headers: true
+        config:
+          user-rate-limit:
+            replenish-rate: 1000
+            burst-capacity: 1200
+            requested-tokens: 1
+          ip-rate-limit:
+            replenish-rate: 100
+            burst-capacity: 120
+            requested-tokens: 1
+      routes:
+        - id: student-portal-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/student-portal/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
+        
+        - id: enterprise-portal-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/portal-enterprise/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
+        
+        - id: college-portal-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/portal-college/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
+        
+        - id: system-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/system/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
+        
+        - id: auth-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/auth/**
+
+  # Embedded Redis for tests
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+zhitu:
+  jwt:
+    secret: test-secret-key-for-unit-tests-only-do-not-use-in-production
+  security:
+    white-list:
+      - /api/auth/v1/login
+      - /api/auth/v1/token/refresh
+      - /actuator/**
+
+logging:
+  level:
+    com.zhitu: DEBUG
+    org.springframework.cloud.gateway: DEBUG

@@ -24,14 +24,16 @@ async function refreshAccessToken(): Promise<string | null> {
     const res = await fetch('/api/auth/v1/token/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: session.refreshToken }),
+      body: JSON.stringify({ refreshToken: session.refreshToken }),
     });
     if (!res.ok) throw new Error('Refresh failed');
 
-    const { access_token, expires_in } = await res.json();
-    updateAccessToken(access_token, expires_in);
-    pendingQueue.forEach(cb => cb(access_token));
-    return access_token;
+    const data = await res.json();
+    // 后端返回: { code, message, data: { accessToken, refreshToken, expiresIn, userInfo } }
+    const payload = data.data ?? data;
+    updateAccessToken(payload.accessToken, payload.expiresIn);
+    pendingQueue.forEach(cb => cb(payload.accessToken));
+    return payload.accessToken;
   } catch {
     pendingQueue.forEach(cb => cb(null));
     clearSession();

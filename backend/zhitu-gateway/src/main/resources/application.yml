@@ -15,6 +15,21 @@ spring:
             allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"
             allowedHeaders: "*"
             allowCredentials: true
+      # Redis-based rate limiting configuration
+      redis-rate-limiter:
+        # Sliding window implementation
+        include-headers: true
+        config:
+          # Default configuration for authenticated users
+          user-rate-limit:
+            replenish-rate: 1000  # Tokens added per hour
+            burst-capacity: 1200   # Maximum burst (20% buffer)
+            requested-tokens: 1    # Tokens per request
+          # Configuration for unauthenticated/IP-based requests
+          ip-rate-limit:
+            replenish-rate: 100    # Tokens added per hour
+            burst-capacity: 120     # Maximum burst (20% buffer)
+            requested-tokens: 1     # Tokens per request
       routes:
         # 认证服务：/api/auth/** → zhitu-auth
         - id: auth-service
@@ -33,12 +48,26 @@ spring:
           uri: lb://zhitu-system
           predicates:
             - Path=/api/system/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
 
         # 学生门户：/api/student-portal/** → zhitu-student
         - id: student-portal-service
           uri: lb://zhitu-student
           predicates:
             - Path=/api/student-portal/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
 
         # 实训服务（企业端）：/api/training/v1/enterprise/** → zhitu-enterprise
         - id: training-enterprise-service
@@ -69,6 +98,13 @@ spring:
           uri: lb://zhitu-enterprise
           predicates:
             - Path=/api/internship/v1/enterprise/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
 
         # 实习服务（导师端）：/api/internship/v1/mentor/** → zhitu-enterprise
         - id: internship-mentor-service
@@ -99,18 +135,39 @@ spring:
           uri: lb://zhitu-enterprise
           predicates:
             - Path=/api/portal-enterprise/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
 
         # 高校门户：/api/portal-college/** → zhitu-college
         - id: college-portal-service
           uri: lb://zhitu-college
           predicates:
             - Path=/api/portal-college/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
 
         # 平台门户：/api/portal-platform/** → zhitu-platform
         - id: platform-portal-service
           uri: lb://zhitu-platform
           predicates:
             - Path=/api/portal-platform/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1000
+                redis-rate-limiter.burstCapacity: 1200
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@userKeyResolver}"
 
         # 监控服务：/api/monitor/** → zhitu-platform
         - id: monitor-service

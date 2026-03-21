@@ -60,15 +60,18 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
+        log.debug("请求路径: {}", path);
 
         // 白名单放行
         if (isWhiteListed(path)) {
+            log.debug("白名单路径，直接放行: {}", path);
             return chain.filter(exchange);
         }
 
         // 提取 token
         String token = extractToken(exchange.getRequest());
         if (token == null) {
+            log.warn("缺少 Authorization 请求头，路径: {}", path);
             return unauthorized(exchange, "缺少 Authorization 请求头");
         }
 
@@ -76,19 +79,35 @@ public class AuthFilter implements GlobalFilter, Ordered {
         Claims claims;
         try {
             claims = parseToken(token);
+            log.debug("Token 签名验证成功，userId: {}", claims.getSubject());
         } catch (JwtException e) {
+            log.warn("Token 签名验证失败: {}", e.getMessage());
             return unauthorized(exchange, "Token 无效或已过期");
         }
 
         String userId = claims.getSubject();
+        log.debug("开始验证 Redis 中的 token，userId: {}, key: {}", userId, TOKEN_KEY_PREFIX + userId);
 
         // 验证 Redis 中 token 是否有效
         return reactiveRedisTemplate.opsForValue()
                 .get(TOKEN_KEY_PREFIX + userId)
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.warn("Redis 中没有找到 token，userId: {}, key: {}", userId, TOKEN_KEY_PREFIX + userId);
+                    return Mono.error(new RuntimeException("Token not found in Redis"));
+                }))
                 .flatMap(storedToken -> {
+                    log.debug("Redis 中找到 token，长度: {}", storedToken != null ? storedToken.length() : 0);
+                    log.debug("请求 token 长度: {}", token.length());
+                    log.debug("Token 前20字符 - 请求: {}, Redis: {}", 
+                        token.substring(0, Math.min(20, token.length())),
+                        storedToken.substring(0, Math.min(20, storedToken.length())));
+                    
                     if (!token.equals(storedToken)) {
+                        log.warn("Token 不匹配！userId: {}", userId);
                         return unauthorized(exchange, "Token 已失效，请重新登录");
                     }
+                    
+                    log.debug("Token 验证通过，注入用户信息头");
                     // 将用户信息注入请求头
                     ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                             .header("X-User-Id", userId)
@@ -100,7 +119,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
                             .build();
                     return chain.filter(exchange.mutate().request(mutatedRequest).build());
                 })
-                .switchIfEmpty(unauthorized(exchange, "Token 已失效，请重新登录"));
+                .onErrorResume(e -> {
+                    log.warn("Token 验证失败: {}", e.getMessage());
+                    return unauthorized(exchange, "Token 已失效，请重新登录");
+                });
     }
 
     private boolean isWhiteListed(String path) {

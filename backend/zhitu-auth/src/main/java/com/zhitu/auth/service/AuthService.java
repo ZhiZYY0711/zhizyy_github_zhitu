@@ -12,10 +12,10 @@ import com.zhitu.auth.mapper.SysTenantMapper;
 import com.zhitu.auth.mapper.SysUserMapper;
 import com.zhitu.common.core.exception.BusinessException;
 import com.zhitu.common.core.result.ResultCode;
-import com.zhitu.common.redis.util.RedisUtils;
 import com.zhitu.common.security.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +38,7 @@ public class AuthService {
     private final SysRefreshTokenMapper refreshTokenMapper;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
-    private final RedisUtils redisUtils;
+    private final RedisTemplate<String, String> stringRedisTemplate;
 
     /**
      * 统一登录
@@ -77,9 +77,15 @@ public class AuthService {
                 user.getId(), user.getRole(), user.getSubRole(), user.getTenantId());
         String refreshToken = jwtUtils.generateRefreshToken(user.getId());
 
+        log.info("用户登录成功: userId={}, username={}, role={}", user.getId(), user.getUsername(), user.getRole());
+        log.debug("生成的 accessToken 前20字符: {}", accessToken.substring(0, Math.min(20, accessToken.length())));
+
         // 6. 存 access_token 到 Redis（用于主动吊销）
-        redisUtils.set(TOKEN_KEY_PREFIX + user.getId(), accessToken,
+        String redisKey = TOKEN_KEY_PREFIX + user.getId();
+        log.debug("存储 token 到 Redis: key={}, expiresIn={}秒", redisKey, jwtUtils.getAccessTokenExpiration());
+        stringRedisTemplate.opsForValue().set(redisKey, accessToken,
                 jwtUtils.getAccessTokenExpiration(), TimeUnit.SECONDS);
+        log.info("Token 已存储到 Redis: key={}", redisKey);
 
         // 7. 存 refresh_token 哈希到数据库
         SysRefreshToken tokenRecord = new SysRefreshToken();
@@ -141,7 +147,7 @@ public class AuthService {
                 user.getId(), user.getRole(), user.getSubRole(), user.getTenantId());
 
         // 5. 更新 Redis
-        redisUtils.set(TOKEN_KEY_PREFIX + user.getId(), newAccessToken,
+        stringRedisTemplate.opsForValue().set(TOKEN_KEY_PREFIX + user.getId(), newAccessToken,
                 jwtUtils.getAccessTokenExpiration(), TimeUnit.SECONDS);
 
         return LoginResponse.builder()
@@ -164,7 +170,7 @@ public class AuthService {
     @Transactional
     public void logout(Long userId, String refreshToken) {
         // 删除 Redis 中的 access_token
-        redisUtils.delete(TOKEN_KEY_PREFIX + userId);
+        stringRedisTemplate.delete(TOKEN_KEY_PREFIX + userId);
 
         // 删除数据库中的 refresh_token
         if (refreshToken != null) {
