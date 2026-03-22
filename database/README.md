@@ -1,264 +1,378 @@
-# Zhitu Database Schema
+# 智途平台 - 数据库文档
 
-Complete PostgreSQL database schema for the Zhitu (智图) Internship Management Platform.
+## 概述
 
-## Overview
+智途平台采用PostgreSQL 15+数据库，使用多Schema架构设计，支持多租户隔离和微服务架构。
 
-This database uses PostgreSQL 15+ with schema-based isolation for microservices architecture. Each service has its own schema to support future database splitting if needed.
+## 目录结构
 
-## Schemas
+```
+database/
+├── README.md                    # 本文件 - 总体说明
+├── v1.0.0-init/                 # 初始化版本
+│   ├── README.md                # 初始化说明
+│   ├── 01_auth_center.sql       # 认证中心schema
+│   ├── 02_platform_service.sql  # 平台服务schema
+│   ├── 03_student_svc.sql       # 学生服务schema
+│   ├── 04_college_svc.sql       # 高校服务schema
+│   ├── 05_enterprise_svc.sql    # 企业服务schema
+│   ├── 06_internship_svc.sql    # 实习服务schema
+│   ├── 07_training_svc.sql      # 实训服务schema
+│   ├── 08_growth_svc.sql        # 成长服务schema
+│   └── test_data.sql            # 测试数据
+├── v1.1.0-missing-api/          # 缺失API表补充
+│   ├── README.md                # 迁移说明
+│   ├── upgrade.sql              # 升级脚本
+│   └── rollback.sql             # 回滚脚本
+├── v1.2.0-talent-pool/          # 人才库软删除
+│   ├── README.md                # 迁移说明
+│   └── upgrade.sql              # 升级脚本
+└── v1.3.0-growth-fix/           # 职业成长模块修复
+    ├── README.md                # 迁移说明
+    ├── upgrade.sql              # 升级脚本
+    ├── rollback.sql             # 回滚脚本
+    └── verify.sql               # 验证脚本
+```
 
-| Schema | Description | Tables |
-|--------|-------------|--------|
-| `auth_center` | Authentication and tenant management | sys_user, sys_tenant, sys_refresh_token |
-| `platform_service` | Platform-wide services | sys_dict |
-| `student_svc` | Student profiles | student_info |
-| `college_svc` | College management | college_info, organization |
-| `enterprise_svc` | Enterprise management | enterprise_info, enterprise_staff, talent_pool |
-| `internship_svc` | Internship lifecycle | internship_job, job_application, internship_offer, internship_record, weekly_report, attendance, internship_certificate |
-| `training_svc` | Training projects | training_project, training_plan |
-| `growth_svc` | Student growth tracking | evaluation_record, growth_badge, warning_record |
+## 版本历史
 
-## Installation
+| 版本 | 发布日期 | 说明 | 状态 |
+|------|----------|------|------|
+| [v1.0.0](#v100---初始化版本) | 2025-03-22 | 数据库初始化 | ✅ 稳定 |
+| [v1.1.0](#v110---缺失api表补充) | 2025-03-22 | 补充22个缺失的API表 | ✅ 稳定 |
+| [v1.2.0](#v120---人才库软删除) | 2025-03-22 | 人才库添加软删除 | ✅ 稳定 |
+| [v1.3.0](#v130---职业成长模块修复) | 2025-03-22 | 修复职业成长API | ✅ 稳定 |
 
-### Prerequisites
-- PostgreSQL 15 or higher
-- Database user with CREATE SCHEMA privileges
+## 快速开始
 
-### Quick Start
+### 全新安装
 
 ```bash
-# Create database
-createdb zhitu_cloud
+# 1. 创建数据库
+createdb -U postgres zhitu_cloud
 
-# Initialize all schemas and tables
-psql -d zhitu_cloud -f init_database.sql
+# 2. 执行初始化脚本
+cd database/v1.0.0-init
+for file in 0*.sql; do
+  psql -U zhitu_user -d zhitu_cloud -f "$file"
+done
 
-# Or execute individual schema files
-psql -d zhitu_cloud -f schema/01_auth_center.sql
-psql -d zhitu_cloud -f schema/02_platform_service.sql
-# ... etc
+# 3. 导入测试数据（可选）
+psql -U zhitu_user -d zhitu_cloud -f test_data.sql
+
+# 4. 执行所有迁移
+cd ../v1.1.0-missing-api
+psql -U zhitu_user -d zhitu_cloud -f upgrade.sql
+
+cd ../v1.2.0-talent-pool
+psql -U zhitu_user -d zhitu_cloud -f upgrade.sql
+
+cd ../v1.3.0-growth-fix
+psql -U zhitu_user -d zhitu_cloud -f upgrade.sql
 ```
 
-### Production Setup
+### 从特定版本升级
 
-1. Update passwords in `init_database.sql`:
-   ```sql
-   CREATE ROLE zhitu_app_user LOGIN PASSWORD 'your_secure_password';
-   CREATE ROLE zhitu_readonly LOGIN PASSWORD 'your_secure_password';
-   ```
+```bash
+# 例如：从v1.1.0升级到v1.3.0
+cd database/v1.2.0-talent-pool
+psql -U zhitu_user -d zhitu_cloud -f upgrade.sql
 
-2. Configure connection pooling (recommended: PgBouncer)
-
-3. Set up backup strategy:
-   ```bash
-   # Daily backup example
-   pg_dump -Fc zhitu_cloud > backup_$(date +%Y%m%d).dump
-   ```
-
-## Schema Files
-
-- `01_auth_center.sql` - Authentication and user management
-- `02_platform_service.sql` - Platform services and dictionaries
-- `03_student_svc.sql` - Student information
-- `04_college_svc.sql` - College/university management
-- `05_enterprise_svc.sql` - Enterprise management
-- `06_internship_svc.sql` - Internship management (largest schema)
-- `07_training_svc.sql` - Training project management
-- `08_growth_svc.sql` - Student growth and evaluation
-- `init_database.sql` - Master initialization script
-
-## Key Features
-
-### Multi-Tenancy
-- Tenant isolation via `tenant_id` foreign keys
-- Separate schemas for service boundaries
-- Row-level security ready (can be enabled per table)
-
-### Soft Delete
-- All tables include `is_deleted` boolean column
-- Indexes exclude deleted records: `WHERE is_deleted = FALSE`
-- Allows data recovery and audit trails
-
-### Timestamps
-- `created_at` - Auto-set on INSERT
-- `updated_at` - Auto-updated on UPDATE via trigger
-- All timestamps use `TIMESTAMPTZ` for timezone awareness
-
-### Data Types
-- **BIGSERIAL** for primary keys (supports high volume)
-- **TEXT** for JSON storage (evaluation scores, config)
-- **DECIMAL** for precise numeric values (coordinates, hours)
-- **TIMESTAMPTZ** for timezone-aware timestamps
-
-### Indexes
-- Primary keys on all `id` columns
-- Foreign key indexes for join performance
-- Composite indexes for common query patterns
-- Partial indexes excluding soft-deleted records
-
-### Constraints
-- Foreign key constraints for referential integrity
-- Check constraints for enum-like values
-- Unique constraints for business rules
-- Date validation constraints
-
-## Common Queries
-
-### Get active students in a class
-```sql
-SELECT s.* 
-FROM student_svc.student_info s
-WHERE s.class_id = ? 
-  AND s.is_deleted = FALSE;
+cd ../v1.3.0-growth-fix
+psql -U zhitu_user -d zhitu_cloud -f upgrade.sql
 ```
 
-### Get active internships for a student
+## 版本详情
+
+### v1.0.0 - 初始化版本
+
+**发布日期：** 2025-03-22
+
+**内容：**
+- 8个Schema的完整定义
+- 50+个数据库表
+- 完整的测试数据
+
+**Schema列表：**
+- auth_center - 认证中心
+- platform_service - 平台服务
+- student_svc - 学生服务
+- college_svc - 高校服务
+- enterprise_svc - 企业服务
+- internship_svc - 实习服务
+- training_svc - 实训服务
+- growth_svc - 成长服务
+
+**详细文档：** [v1.0.0-init/README.md](v1.0.0-init/README.md)
+
+---
+
+### v1.1.0 - 缺失API表补充
+
+**发布日期：** 2025-03-22  
+**依赖版本：** v1.0.0
+
+**内容：**
+- 新增22个数据库表
+- 完善API端点数据模型
+- 支持更多业务功能
+
+**新增表分类：**
+- student_svc: 3个表（任务、能力、推荐）
+- training_svc: 2个表（项目任务、注册）
+- enterprise_svc: 3个表（活动、待办、面试）
+- college_svc: 4个表（关系、拜访、审核、巡查）
+- platform_service: 10个表（标签、技能树、模板、日志、监控）
+
+**详细文档：** [v1.1.0-missing-api/README.md](v1.1.0-missing-api/README.md)
+
+---
+
+### v1.2.0 - 人才库软删除
+
+**发布日期：** 2025-03-22  
+**依赖版本：** v1.1.0
+
+**内容：**
+- 为talent_pool表添加软删除功能
+- 支持数据恢复和审计追踪
+
+**变更：**
+- 新增字段：is_deleted
+- 新增索引：idx_talent_pool_deleted
+
+**详细文档：** [v1.2.0-talent-pool/README.md](v1.2.0-talent-pool/README.md)
+
+---
+
+### v1.3.0 - 职业成长模块修复
+
+**发布日期：** 2025-03-22  
+**依赖版本：** v1.2.0
+
+**内容：**
+- 修复职业成长模块API 500错误
+- 补充评价记录和徽章证书测试数据
+
+**新增数据：**
+- 2条评价记录（企业评价 + 校方评价）
+- 4条徽章证书（1个证书 + 3个徽章）
+
+**配套修复：**
+- 后端代码类型转换修复
+- 前端组件渲染优化
+
+**详细文档：** [v1.3.0-growth-fix/README.md](v1.3.0-growth-fix/README.md)
+
+---
+
+## 数据库架构
+
+### Schema设计原则
+
+1. **按业务领域划分**：每个微服务对应一个Schema
+2. **多租户隔离**：通过tenant_id实现数据隔离
+3. **软删除支持**：所有表支持is_deleted软删除
+4. **时间戳管理**：created_at和updated_at自动管理
+5. **外键约束**：确保数据完整性
+6. **索引优化**：为常用查询字段添加索引
+
+### 表命名规范
+
+- 使用小写字母和下划线
+- 表名使用单数形式
+- 关联表使用两个表名组合
+
+### 字段命名规范
+
+- 主键：id (BIGSERIAL)
+- 外键：{table}_id
+- 时间戳：created_at, updated_at
+- 软删除：is_deleted
+- 状态字段：status
+- 类型字段：type
+
+## 测试账号
+
+所有测试账号的密码统一为：`123456`
+
+### 平台管理员
+- **用户名：** admin
+- **角色：** platform/admin
+
+### 高校账号
+- **清华管理员：** tsinghua_admin
+- **清华辅导员：** tsinghua_counselor
+- **北大管理员：** pku_admin
+
+### 企业账号
+- **字节跳动HR：** bytedance_hr
+- **字节跳动导师：** bytedance_mentor
+- **阿里巴巴HR：** alibaba_hr
+- **阿里巴巴导师：** alibaba_mentor
+- **腾讯HR：** tencent_hr
+
+### 学生账号
+- **学生1：** student01 (清华大学)
+- **学生2：** student02 (清华大学)
+- **学生3：** student03 (清华大学)
+- **学生4：** student04 (北京大学)
+- **学生5：** student05 (北京大学)
+
+## 迁移指南
+
+### 创建新迁移
+
+1. 创建版本文件夹：`database/vX.Y.Z-description/`
+2. 创建README.md说明文档
+3. 创建upgrade.sql升级脚本
+4. 创建rollback.sql回滚脚本（如需要）
+5. 创建verify.sql验证脚本（如需要）
+6. 更新本README的版本历史
+
+### 迁移脚本规范
+
+**upgrade.sql：**
 ```sql
-SELECT ir.*, ij.job_title, ei.enterprise_name
-FROM internship_svc.internship_record ir
-JOIN internship_svc.internship_job ij ON ir.job_id = ij.id
-JOIN enterprise_svc.enterprise_info ei ON ir.enterprise_id = ei.tenant_id
-WHERE ir.student_id = ? 
-  AND ir.status = 1;
+-- =====================================================
+-- Migration: vX.Y.Z - Description
+-- Date: YYYY-MM-DD
+-- =====================================================
+
+-- 变更内容
+ALTER TABLE ...;
+
+-- 验证
+SELECT ...;
 ```
 
-### Get student evaluations
+**rollback.sql：**
 ```sql
-SELECT er.*, u.username as evaluator_name
-FROM growth_svc.evaluation_record er
-JOIN auth_center.sys_user u ON er.evaluator_id = u.id
-WHERE er.student_id = ? 
-  AND er.is_deleted = FALSE
-ORDER BY er.created_at DESC;
+-- =====================================================
+-- Rollback: vX.Y.Z - Description
+-- Date: YYYY-MM-DD
+-- =====================================================
+
+-- 回滚操作
+ALTER TABLE ...;
 ```
 
-## Maintenance
+### 迁移最佳实践
 
-### Vacuum and Analyze
+1. **向后兼容**：尽量保持向后兼容
+2. **事务管理**：使用事务确保原子性
+3. **备份数据**：迁移前备份数据库
+4. **测试环境**：先在测试环境验证
+5. **文档完整**：提供详细的README文档
+6. **回滚方案**：准备回滚脚本
+
+## 维护指南
+
+### 日常维护
+
 ```sql
--- Regular maintenance
-VACUUM ANALYZE;
-
--- Per schema
-VACUUM ANALYZE auth_center.sys_user;
-```
-
-### Index Monitoring
-```sql
--- Find unused indexes
-SELECT schemaname, tablename, indexname, idx_scan
-FROM pg_stat_user_indexes
-WHERE schemaname IN ('auth_center', 'student_svc', 'internship_svc')
-  AND idx_scan = 0
-ORDER BY schemaname, tablename;
-```
-
-### Table Size Monitoring
-```sql
+-- 1. 检查表大小
 SELECT 
     schemaname,
     tablename,
     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) AS size
 FROM pg_tables
-WHERE schemaname IN (
-    'auth_center', 'platform_service', 'student_svc', 
-    'college_svc', 'enterprise_svc', 'internship_svc', 
-    'training_svc', 'growth_svc'
-)
+WHERE schemaname IN ('auth_center', 'platform_service', 'student_svc', 
+                     'college_svc', 'enterprise_svc', 'internship_svc', 
+                     'training_svc', 'growth_svc')
 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
-```
 
-## Migration Strategy
-
-### From Development to Production
-1. Export schema only: `pg_dump -s zhitu_cloud > schema.sql`
-2. Review and test on staging
-3. Apply to production during maintenance window
-4. Verify with test queries
-
-### Schema Updates
-1. Create migration script with version number
-2. Test on development database
-3. Apply to staging
-4. Document rollback procedure
-5. Apply to production
-
-### Example Migration Script
-```sql
--- migration_v1.1.0_add_student_status.sql
-BEGIN;
-
-ALTER TABLE student_svc.student_info 
-ADD COLUMN status SMALLINT DEFAULT 1 
-CHECK (status IN (1, 2, 3));
-
-COMMENT ON COLUMN student_svc.student_info.status IS '1=在读 2=实习中 3=已毕业';
-
-CREATE INDEX idx_student_status ON student_svc.student_info(status) 
-WHERE is_deleted = FALSE;
-
-COMMIT;
-```
-
-## Performance Tuning
-
-### Recommended PostgreSQL Settings
-```ini
-# postgresql.conf
-shared_buffers = 256MB          # 25% of RAM
-effective_cache_size = 1GB      # 50-75% of RAM
-work_mem = 16MB                 # Per operation
-maintenance_work_mem = 128MB    # For VACUUM, CREATE INDEX
-max_connections = 100           # Adjust based on load
-```
-
-### Connection Pooling
-Use PgBouncer or similar:
-```ini
-# pgbouncer.ini
-[databases]
-zhitu_cloud = host=localhost port=5432 dbname=zhitu_cloud
-
-[pgbouncer]
-pool_mode = transaction
-max_client_conn = 1000
-default_pool_size = 25
-```
-
-## Troubleshooting
-
-### Slow Queries
-```sql
--- Enable query logging
-ALTER DATABASE zhitu_cloud SET log_min_duration_statement = 1000;
-
--- Check slow queries
-SELECT query, calls, total_time, mean_time
-FROM pg_stat_statements
-ORDER BY mean_time DESC
-LIMIT 10;
-```
-
-### Lock Monitoring
-```sql
+-- 2. 检查索引使用情况
 SELECT 
-    pid,
-    usename,
-    pg_blocking_pids(pid) as blocked_by,
-    query
-FROM pg_stat_activity
-WHERE cardinality(pg_blocking_pids(pid)) > 0;
+    schemaname,
+    tablename,
+    indexname,
+    idx_scan,
+    idx_tup_read,
+    idx_tup_fetch
+FROM pg_stat_user_indexes
+WHERE schemaname IN ('auth_center', 'platform_service', 'student_svc', 
+                     'college_svc', 'enterprise_svc', 'internship_svc', 
+                     'training_svc', 'growth_svc')
+ORDER BY idx_scan DESC;
+
+-- 3. 清理软删除数据（谨慎操作）
+-- DELETE FROM table_name WHERE is_deleted = TRUE AND updated_at < NOW() - INTERVAL '90 days';
 ```
 
-## Support
+### 性能优化
 
-For issues or questions:
-1. Check application logs
-2. Review PostgreSQL logs
-3. Verify schema matches entity classes
-4. Check foreign key constraints
+1. **定期VACUUM**：清理死元组
+2. **ANALYZE统计**：更新表统计信息
+3. **索引维护**：检查和重建索引
+4. **查询优化**：使用EXPLAIN分析慢查询
 
-## License
+### 备份策略
 
-Internal use only - Zhitu Platform
+```bash
+# 全量备份
+pg_dump -U zhitu_user -d zhitu_cloud -F c -f zhitu_cloud_backup_$(date +%Y%m%d).dump
+
+# 仅备份schema
+pg_dump -U zhitu_user -d zhitu_cloud -s -f zhitu_cloud_schema_$(date +%Y%m%d).sql
+
+# 仅备份数据
+pg_dump -U zhitu_user -d zhitu_cloud -a -f zhitu_cloud_data_$(date +%Y%m%d).sql
+```
+
+## 故障排查
+
+### 常见问题
+
+**1. 连接失败**
+```bash
+# 检查PostgreSQL服务状态
+systemctl status postgresql
+
+# 检查连接配置
+psql -U zhitu_user -d zhitu_cloud -h localhost
+```
+
+**2. 权限问题**
+```sql
+-- 授予权限
+GRANT ALL PRIVILEGES ON DATABASE zhitu_cloud TO zhitu_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA auth_center TO zhitu_user;
+```
+
+**3. 迁移失败**
+```bash
+# 查看错误日志
+tail -f /var/log/postgresql/postgresql-15-main.log
+
+# 回滚迁移
+psql -U zhitu_user -d zhitu_cloud -f rollback.sql
+```
+
+## 相关文档
+
+- [ER图](ER_DIAGRAM.md) - 实体关系图
+- [迁移指南](MIGRATION_GUIDE.md) - 详细迁移说明
+- [测试报告](../test/测试报告_学生端功能测试_2025-03-22.md) - 功能测试报告
+- [修复报告](../test/修复报告_学生端功能测试_2025-03-22.md) - 问题修复报告
+
+## 技术栈
+
+- **数据库：** PostgreSQL 15+
+- **字符集：** UTF-8
+- **时区：** Asia/Shanghai
+- **连接池：** HikariCP
+- **ORM：** MyBatis-Plus
+
+## 联系方式
+
+如有问题，请联系：
+- **数据库管理员：** [DBA邮箱]
+- **技术负责人：** [技术负责人邮箱]
+- **项目经理：** [项目经理邮箱]
+
+---
+
+**最后更新：** 2025-03-22  
+**当前版本：** v1.3.0  
+**数据库：** PostgreSQL 15+

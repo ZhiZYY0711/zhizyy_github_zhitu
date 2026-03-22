@@ -63,6 +63,8 @@ const InternshipPage = () => {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
+                id="job-search"
+                name="job-search"
                 type="search"
                 placeholder="搜索职位、公司、城市..."
                 className="pl-8"

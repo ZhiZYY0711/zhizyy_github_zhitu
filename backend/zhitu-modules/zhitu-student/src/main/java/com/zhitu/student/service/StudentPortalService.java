@@ -652,47 +652,55 @@ public class StudentPortalService {
         Long userId = UserContext.getUserId();
         log.debug("Getting evaluation summary for user: {}", userId);
 
-        // 获取学生ID
-        Long studentId = getStudentIdByUserId(userId);
-        if (studentId == null) {
-            log.warn("Student not found for user: {}", userId);
+        try {
+            // 获取学生ID
+            Long studentId = getStudentIdByUserId(userId);
+            if (studentId == null) {
+                log.warn("Student not found for user: {}", userId);
+                return new EvaluationSummaryDTO(BigDecimal.ZERO, new ArrayList<>());
+            }
+
+            // 查询评价记录
+            String sql = "SELECT er.id, er.source_type, er.scores, er.comment, er.created_at, " +
+                    "u.real_name as evaluator_name " +
+                    "FROM growth_svc.evaluation_record er " +
+                    "LEFT JOIN auth_center.sys_user u ON er.evaluator_id = u.id " +
+                    "WHERE er.student_id = ? AND er.is_deleted = false " +
+                    "ORDER BY er.created_at DESC";
+
+            List<EvaluationSummaryDTO.EvaluationItemDTO> evaluations = jdbcTemplate.query(sql, (rs, rowNum) -> {
+                EvaluationSummaryDTO.EvaluationItemDTO item = new EvaluationSummaryDTO.EvaluationItemDTO();
+                item.setEvaluatorName(rs.getString("evaluator_name"));
+                item.setSourceType(rs.getString("source_type"));
+                
+                // 修复：使用Timestamp转换而不是直接getObject
+                item.setEvaluationDate(rs.getTimestamp("created_at").toLocalDateTime());
+                
+                // 解析scores JSON并计算平均分
+                String scoresJson = rs.getString("scores");
+                int avgScore = calculateAverageScore(scoresJson);
+                item.setScore(avgScore);
+                
+                item.setComment(rs.getString("comment"));
+                return item;
+            }, studentId);
+
+            // 计算总平均分
+            BigDecimal averageScore = BigDecimal.ZERO;
+            if (!evaluations.isEmpty()) {
+                double sum = evaluations.stream()
+                        .mapToInt(EvaluationSummaryDTO.EvaluationItemDTO::getScore)
+                        .average()
+                        .orElse(0.0);
+                // 修复：使用RoundingMode而不是已弃用的BigDecimal常量
+                averageScore = BigDecimal.valueOf(sum).setScale(1, java.math.RoundingMode.HALF_UP);
+            }
+
+            return new EvaluationSummaryDTO(averageScore, evaluations);
+        } catch (Exception e) {
+            log.error("Failed to get evaluation summary for user: {}", userId, e);
             return new EvaluationSummaryDTO(BigDecimal.ZERO, new ArrayList<>());
         }
-
-        // 查询评价记录
-        String sql = "SELECT er.id, er.source_type, er.scores, er.comment, er.created_at, " +
-                "u.real_name as evaluator_name " +
-                "FROM growth_svc.evaluation_record er " +
-                "LEFT JOIN auth_center.sys_user u ON er.evaluator_id = u.id " +
-                "WHERE er.student_id = ? " +
-                "ORDER BY er.created_at DESC";
-
-        List<EvaluationSummaryDTO.EvaluationItemDTO> evaluations = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            EvaluationSummaryDTO.EvaluationItemDTO item = new EvaluationSummaryDTO.EvaluationItemDTO();
-            item.setEvaluatorName(rs.getString("evaluator_name"));
-            item.setSourceType(rs.getString("source_type"));
-            item.setEvaluationDate(rs.getObject("created_at", LocalDateTime.class));
-            
-            // 解析scores JSON并计算平均分
-            String scoresJson = rs.getString("scores");
-            int avgScore = calculateAverageScore(scoresJson);
-            item.setScore(avgScore);
-            
-            item.setComment(rs.getString("comment"));
-            return item;
-        }, studentId);
-
-        // 计算总平均分
-        BigDecimal averageScore = BigDecimal.ZERO;
-        if (!evaluations.isEmpty()) {
-            double sum = evaluations.stream()
-                    .mapToInt(EvaluationSummaryDTO.EvaluationItemDTO::getScore)
-                    .average()
-                    .orElse(0.0);
-            averageScore = BigDecimal.valueOf(sum).setScale(1, BigDecimal.ROUND_HALF_UP);
-        }
-
-        return new EvaluationSummaryDTO(averageScore, evaluations);
     }
 
     /**
@@ -738,44 +746,51 @@ public class StudentPortalService {
         Long userId = UserContext.getUserId();
         log.debug("Getting certificates for user: {}, page: {}, size: {}", userId, page, size);
 
-        // 获取学生ID
-        Long studentId = getStudentIdByUserId(userId);
-        if (studentId == null) {
-            log.warn("Student not found for user: {}", userId);
+        try {
+            // 获取学生ID
+            Long studentId = getStudentIdByUserId(userId);
+            if (studentId == null) {
+                log.warn("Student not found for user: {}", userId);
+                return PageResult.of(0L, new ArrayList<>(), page, size);
+            }
+
+            // 查询证书
+            String sql = "SELECT id, type, name, issue_date, image_url, blockchain_hash, created_at " +
+                    "FROM growth_svc.growth_badge " +
+                    "WHERE student_id = ? AND type = 'certificate' AND is_deleted = false " +
+                    "ORDER BY issue_date DESC " +
+                    "LIMIT ? OFFSET ?";
+
+            int offset = (page - 1) * size;
+            List<CertificateDTO> certificates = jdbcTemplate.query(sql, (rs, rowNum) -> {
+                CertificateDTO dto = new CertificateDTO();
+                dto.setId(rs.getLong("id"));
+                dto.setType(rs.getString("type"));
+                dto.setName(rs.getString("name"));
+                dto.setIssueDate(rs.getObject("issue_date", LocalDate.class));
+                dto.setImageUrl(rs.getString("image_url"));
+                
+                // 生成PDF下载链接（假设有一个证书下载服务）
+                String downloadUrl = "/api/student-portal/v1/growth/certificates/" + rs.getLong("id") + "/download";
+                dto.setDownloadUrl(downloadUrl);
+                
+                dto.setBlockchainHash(rs.getString("blockchain_hash"));
+                
+                // 修复：使用OffsetDateTime而不是LocalDateTime
+                dto.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                return dto;
+            }, studentId, size, offset);
+
+            // 查询总数
+            String countSql = "SELECT COUNT(*) FROM growth_svc.growth_badge " +
+                    "WHERE student_id = ? AND type = 'certificate' AND is_deleted = false";
+            Long total = jdbcTemplate.queryForObject(countSql, Long.class, studentId);
+
+            return PageResult.of(total != null ? total : 0L, certificates, page, size);
+        } catch (Exception e) {
+            log.error("Failed to get certificates for user: {}", userId, e);
             return PageResult.of(0L, new ArrayList<>(), page, size);
         }
-
-        // 查询证书
-        String sql = "SELECT id, type, name, issue_date, image_url, blockchain_hash, created_at " +
-                "FROM growth_svc.growth_badge " +
-                "WHERE student_id = ? AND type = 'certificate' AND is_deleted = false " +
-                "ORDER BY issue_date DESC " +
-                "LIMIT ? OFFSET ?";
-
-        int offset = (page - 1) * size;
-        List<CertificateDTO> certificates = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            CertificateDTO dto = new CertificateDTO();
-            dto.setId(rs.getLong("id"));
-            dto.setType(rs.getString("type"));
-            dto.setName(rs.getString("name"));
-            dto.setIssueDate(rs.getObject("issue_date", LocalDate.class));
-            dto.setImageUrl(rs.getString("image_url"));
-            
-            // 生成PDF下载链接（假设有一个证书下载服务）
-            String downloadUrl = "/api/student-portal/v1/growth/certificates/" + rs.getLong("id") + "/download";
-            dto.setDownloadUrl(downloadUrl);
-            
-            dto.setBlockchainHash(rs.getString("blockchain_hash"));
-            dto.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-            return dto;
-        }, studentId, size, offset);
-
-        // 查询总数
-        String countSql = "SELECT COUNT(*) FROM growth_svc.growth_badge " +
-                "WHERE student_id = ? AND type = 'certificate' AND is_deleted = false";
-        Long total = jdbcTemplate.queryForObject(countSql, Long.class, studentId);
-
-        return PageResult.of(total, certificates, page, size);
     }
 
     /**
@@ -790,37 +805,44 @@ public class StudentPortalService {
         Long userId = UserContext.getUserId();
         log.debug("Getting badges for user: {}, page: {}, size: {}", userId, page, size);
 
-        // 获取学生ID
-        Long studentId = getStudentIdByUserId(userId);
-        if (studentId == null) {
-            log.warn("Student not found for user: {}", userId);
+        try {
+            // 获取学生ID
+            Long studentId = getStudentIdByUserId(userId);
+            if (studentId == null) {
+                log.warn("Student not found for user: {}", userId);
+                return PageResult.of(0L, new ArrayList<>(), page, size);
+            }
+
+            // 查询徽章
+            String sql = "SELECT id, type, name, issue_date, image_url, created_at " +
+                    "FROM growth_svc.growth_badge " +
+                    "WHERE student_id = ? AND type = 'badge' AND is_deleted = false " +
+                    "ORDER BY issue_date DESC " +
+                    "LIMIT ? OFFSET ?";
+
+            int offset = (page - 1) * size;
+            List<BadgeDTO> badges = jdbcTemplate.query(sql, (rs, rowNum) -> {
+                BadgeDTO dto = new BadgeDTO();
+                dto.setId(rs.getLong("id"));
+                dto.setType(rs.getString("type"));
+                dto.setName(rs.getString("name"));
+                dto.setIssueDate(rs.getObject("issue_date", LocalDate.class));
+                dto.setImageUrl(rs.getString("image_url"));
+                
+                // 修复：使用OffsetDateTime而不是LocalDateTime
+                dto.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                return dto;
+            }, studentId, size, offset);
+
+            // 查询总数
+            String countSql = "SELECT COUNT(*) FROM growth_svc.growth_badge " +
+                    "WHERE student_id = ? AND type = 'badge' AND is_deleted = false";
+            Long total = jdbcTemplate.queryForObject(countSql, Long.class, studentId);
+
+            return PageResult.of(total != null ? total : 0L, badges, page, size);
+        } catch (Exception e) {
+            log.error("Failed to get badges for user: {}", userId, e);
             return PageResult.of(0L, new ArrayList<>(), page, size);
         }
-
-        // 查询徽章
-        String sql = "SELECT id, type, name, issue_date, image_url, created_at " +
-                "FROM growth_svc.growth_badge " +
-                "WHERE student_id = ? AND type = 'badge' AND is_deleted = false " +
-                "ORDER BY issue_date DESC " +
-                "LIMIT ? OFFSET ?";
-
-        int offset = (page - 1) * size;
-        List<BadgeDTO> badges = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            BadgeDTO dto = new BadgeDTO();
-            dto.setId(rs.getLong("id"));
-            dto.setType(rs.getString("type"));
-            dto.setName(rs.getString("name"));
-            dto.setIssueDate(rs.getObject("issue_date", LocalDate.class));
-            dto.setImageUrl(rs.getString("image_url"));
-            dto.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-            return dto;
-        }, studentId, size, offset);
-
-        // 查询总数
-        String countSql = "SELECT COUNT(*) FROM growth_svc.growth_badge " +
-                "WHERE student_id = ? AND type = 'badge' AND is_deleted = false";
-        Long total = jdbcTemplate.queryForObject(countSql, Long.class, studentId);
-
-        return PageResult.of(total, badges, page, size);
     }
 }

@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find F:/projects/zhitu -maxdepth 2 -type f \\\\\\(-name *.md -o -name start.* -o -name run.* \\\\\\))",
-      "Bash(npm install:*)",
-      "Bash(npx playwright:*)"
-    ]
-  }
-}

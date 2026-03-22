@@ -94,6 +94,8 @@ const TrainingPage = () => {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
+                id="project-search"
+                name="project-search"
                 type="search"
                 placeholder="搜索项目、技术栈..."
                 className="pl-8"

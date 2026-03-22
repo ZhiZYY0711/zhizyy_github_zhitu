@@ -23,7 +23,21 @@ const CapabilityRadar: React.FC<CapabilityRadarProps> = ({ data, loading }) => {
     );
   }
 
-  if (!data || !data.dimensions || data.dimensions.length === 0) return null;
+  if (!data || !data.dimensions || data.dimensions.length === 0) {
+    return (
+      <Card className="col-span-1">
+        <CardHeader>
+          <CardTitle>能力雷达画像</CardTitle>
+          <CardDescription>六维能力评估与同专业对比</CardDescription>
+        </CardHeader>
+        <CardContent className="pb-4">
+          <div className="h-[300px] w-full flex items-center justify-center text-gray-400">
+            暂无能力数据
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const hasPeerData = data.peer_average && Array.isArray(data.peer_average) && data.peer_average.length > 0;
 
@@ -41,8 +55,8 @@ const CapabilityRadar: React.FC<CapabilityRadarProps> = ({ data, loading }) => {
         <CardDescription>六维能力评估与同专业对比</CardDescription>
       </CardHeader>
       <CardContent className="pb-4">
-        <div className="h-[300px] w-full min-h-[300px]">
-          <ResponsiveContainer width="100%" height="100%" minHeight={300}>
+        <div className="w-full" style={{ height: '300px', minHeight: '300px' }}>
+          <ResponsiveContainer width="100%" height={300}>
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
               <PolarGrid />
               <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
