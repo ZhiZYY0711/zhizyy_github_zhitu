@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 /**
  * 学生门户服务
@@ -409,7 +410,9 @@ public class StudentPortalService {
                 dto.setStartDate(rs.getObject("start_date", LocalDate.class));
                 dto.setEndDate(rs.getObject("end_date", LocalDate.class));
                 dto.setStatus(rs.getInt("status"));
-                dto.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+                // TIMESTAMPTZ 需要先转为 OffsetDateTime 再转为 LocalDateTime
+                OffsetDateTime createdAtOffset = rs.getObject("created_at", OffsetDateTime.class);
+                dto.setCreatedAt(createdAtOffset != null ? createdAtOffset.toLocalDateTime() : null);
                 
                 // 设置报名状态
                 Long enrollmentId = rs.getObject("enrollment_id", Long.class);

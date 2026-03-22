@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -46,7 +47,8 @@ public class RedisConfig {
      * 使用 StringRedisSerializer 避免 JSON 序列化带来的引号问题
      */
     @Bean
-    public RedisTemplate<String, String> stringRedisTemplate(RedisConnectionFactory factory) {
+    @Primary
+    public RedisTemplate<String, String> tokenRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
 

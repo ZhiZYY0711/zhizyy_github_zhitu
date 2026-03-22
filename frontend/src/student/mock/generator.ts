@@ -64,6 +64,29 @@ export interface Project {
   description?: string;
 }
 
+// Backend API response types
+export interface ProjectApiResponse {
+  id: number;
+  projectName: string;
+  description: string;
+  techStack: string[];
+  industry: string;
+  maxTeams: number;
+  maxMembers: number;
+  startDate: string;
+  endDate: string;
+  status: number; // 1=recruiting, 2=ongoing, 3=finished
+  enrollmentStatus: number | null;
+  createdAt: string;
+}
+
+export interface PaginatedResponse<T> {
+  total: number;
+  records: T[];
+  page: number;
+  size: number;
+}
+
 export interface ScrumTask {
   id: string;
   title: string;
