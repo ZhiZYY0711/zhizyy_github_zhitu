@@ -182,7 +182,7 @@ public class EnterpriseAnalyticsService {
                 "INNER JOIN internship_svc.internship_record ir ON er.student_id = ir.student_id " +
                 "WHERE ir.enterprise_id = ? " +
                 "AND er.source_type = 'enterprise' " +
-                "AND er.is_deleted = false";
+                "AND er.is_deleted IS FALSE";
 
         List<AnalyticsDTO.InternPerformanceMetrics> results = jdbcTemplate.query(evalSql, (rs, rowNum) -> {
             Integer evaluatedCount = rs.getInt("evaluated_count");
@@ -213,8 +213,8 @@ public class EnterpriseAnalyticsService {
                 "FROM training_svc.project_task pt " +
                 "INNER JOIN training_svc.training_project tp ON pt.project_id = tp.id " +
                 "WHERE tp.enterprise_id = ? " +
-                "AND pt.is_deleted = false " +
-                "AND tp.is_deleted = false";
+                "AND pt.is_deleted IS FALSE " +
+                "AND tp.is_deleted IS FALSE";
 
         List<Double> results = jdbcTemplate.query(sql, (rs, rowNum) -> {
             int completedTasks = rs.getInt("completed_tasks");
@@ -243,8 +243,8 @@ public class EnterpriseAnalyticsService {
                 "WHERE es.tenant_id = ? " +
                 "AND es.is_mentor = true " +
                 "AND er.source_type = 'enterprise' " +
-                "AND er.is_deleted = false " +
-                "AND es.is_deleted = false";
+                "AND er.is_deleted IS FALSE " +
+                "AND es.is_deleted IS FALSE";
 
         List<Double> results = jdbcTemplate.query(sql, (rs, rowNum) -> {
             Double avgScore = rs.getDouble("avg_score");

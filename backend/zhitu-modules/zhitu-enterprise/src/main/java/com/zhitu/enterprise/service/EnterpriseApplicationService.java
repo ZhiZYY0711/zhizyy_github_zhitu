@@ -60,7 +60,7 @@ public class EnterpriseApplicationService {
             "FROM internship_svc.job_application a " +
             "INNER JOIN internship_svc.internship_job j ON a.job_id = j.id " +
             "INNER JOIN student_svc.student_info s ON a.student_id = s.id " +
-            "WHERE j.enterprise_id = ? AND j.is_deleted = false AND s.is_deleted = false"
+            "WHERE j.enterprise_id = ? AND j.is_deleted IS FALSE AND s.is_deleted IS FALSE"
         );
 
         List<Object> params = new ArrayList<>();
@@ -99,7 +99,7 @@ public class EnterpriseApplicationService {
         StringBuilder countSql = new StringBuilder(
             "SELECT COUNT(*) FROM internship_svc.job_application a " +
             "INNER JOIN internship_svc.internship_job j ON a.job_id = j.id " +
-            "WHERE j.enterprise_id = ? AND j.is_deleted = false"
+            "WHERE j.enterprise_id = ? AND j.is_deleted IS FALSE"
         );
         
         List<Object> countParams = new ArrayList<>();

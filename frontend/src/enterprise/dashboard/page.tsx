@@ -47,7 +47,11 @@ export default function DashboardPage() {
 
   useEffect(() => {
     Promise.all([fetchDashboardStats(), fetchTodos(), fetchActivities()])
-      .then(([s, t, a]) => { setStats(s); setTodos(t); setActivities(a); })
+      .then(([s, t, a]) => { 
+        setStats(s); 
+        setTodos(Array.isArray(t) ? t : t.records || []); 
+        setActivities(Array.isArray(a) ? a : a.records || []); 
+      })
       .finally(() => setLoading(false));
   }, []);
 

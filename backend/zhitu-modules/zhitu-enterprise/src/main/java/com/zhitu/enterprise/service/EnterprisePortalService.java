@@ -103,7 +103,7 @@ public class EnterprisePortalService {
      */
     private Integer countActiveJobs(Long tenantId) {
         String sql = "SELECT COUNT(*) FROM internship_svc.internship_job " +
-                "WHERE enterprise_id = ? AND status = 1 AND is_deleted = false";
+                "WHERE enterprise_id = ? AND status = 1 AND is_deleted IS FALSE";
         return jdbcTemplate.queryForObject(sql, Integer.class, tenantId);
     }
 
@@ -140,7 +140,7 @@ public class EnterprisePortalService {
      */
     private Integer countTrainingProjects(Long tenantId) {
         String sql = "SELECT COUNT(*) FROM training_svc.training_project " +
-                "WHERE enterprise_id = ? AND is_deleted = false";
+                "WHERE enterprise_id = ? AND is_deleted IS FALSE";
         return jdbcTemplate.queryForObject(sql, Integer.class, tenantId);
     }
 
@@ -297,7 +297,7 @@ public class EnterprisePortalService {
                 "si.real_name, si.student_no, si.major_id, si.grade, si.skills " +
                 "FROM enterprise_svc.talent_pool tp " +
                 "INNER JOIN student_svc.student_info si ON tp.student_id = si.id " +
-                "WHERE tp.tenant_id = ? AND tp.is_deleted = false " +
+                "WHERE tp.tenant_id = ? AND tp.is_deleted IS FALSE " +
                 "ORDER BY tp.created_at DESC " +
                 "LIMIT ? OFFSET ?";
 
@@ -321,7 +321,7 @@ public class EnterprisePortalService {
 
         // 查询总数
         String countSql = "SELECT COUNT(*) FROM enterprise_svc.talent_pool " +
-                "WHERE tenant_id = ? AND is_deleted = false";
+                "WHERE tenant_id = ? AND is_deleted IS FALSE";
         Long total = jdbcTemplate.queryForObject(countSql, Long.class, tenantId);
 
         return PageResult.of(total != null ? total : 0L, talents, page, size);

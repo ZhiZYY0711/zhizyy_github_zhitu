@@ -47,9 +47,9 @@ const StatsCards: FC<StatsCardsProps> = ({ stats, loading }) => {
           <Award className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.gpa}</div>
+          <div className="text-2xl font-bold">{stats.gpa || 0}</div>
           <p className="text-xs text-muted-foreground">
-            学业表现优秀
+            {stats.gpa > 0 ? '学业表现优秀' : '暂无数据'}
           </p>
         </CardContent>
       </Card>
@@ -59,7 +59,7 @@ const StatsCards: FC<StatsCardsProps> = ({ stats, loading }) => {
           <GraduationCap className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.credit_completed}</div>
+          <div className="text-2xl font-bold">{stats.credit_completed || 0}</div>
           <p className="text-xs text-muted-foreground">
             / 160 总学分
           </p>
@@ -71,7 +71,7 @@ const StatsCards: FC<StatsCardsProps> = ({ stats, loading }) => {
           <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.training_hours}h</div>
+          <div className="text-2xl font-bold">{stats.training_hours || 0}h</div>
           <p className="text-xs text-muted-foreground">
             本学期累计
           </p>
@@ -83,7 +83,7 @@ const StatsCards: FC<StatsCardsProps> = ({ stats, loading }) => {
           <Briefcase className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{getInternshipStatusLabel(stats.internship_status)}</div>
+          <div className="text-2xl font-bold">{getInternshipStatusLabel(stats.internship_status || 0)}</div>
           <p className="text-xs text-muted-foreground">
             点击查看详情
           </p>

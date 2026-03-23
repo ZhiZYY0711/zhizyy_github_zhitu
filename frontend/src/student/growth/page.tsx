@@ -27,8 +27,8 @@ const GrowthPage = () => {
           fetchBadges()
         ]);
         setEvaluation(evalData);
-        setCertificates(certData);
-        setBadges(badgeData);
+        setCertificates(Array.isArray(certData) ? certData : []);
+        setBadges(Array.isArray(badgeData) ? badgeData : []);
       } catch (error) {
         console.error("Failed to load growth data:", error);
       } finally {

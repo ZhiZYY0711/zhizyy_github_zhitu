@@ -49,10 +49,11 @@ const RecommendationFeed: React.FC<RecommendationFeedProps> = ({ recommendations
             <p>暂无推荐</p>
           </div>
         ) : (
-          recommendations.map((item) => {
-            const { label, icon, color } = getTypeLabel(item.type);
-            return (
-              <div key={item.rec_id} className="border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
+          <>
+            {recommendations.map((item) => {
+              const { label, icon, color } = getTypeLabel(item.type);
+              return (
+                <div key={item.rec_id} className="border rounded-lg p-4 space-y-3 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start">
                   <div className={`flex items-center px-2 py-1 rounded text-xs font-medium ${color}`}>
                     {icon} {label}
@@ -89,7 +90,8 @@ const RecommendationFeed: React.FC<RecommendationFeedProps> = ({ recommendations
                 </Button>
               </div>
             );
-          })
+          })}
+          </>
         )}
       </CardContent>
     </Card>

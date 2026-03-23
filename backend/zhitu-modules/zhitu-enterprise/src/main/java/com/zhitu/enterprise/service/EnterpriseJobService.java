@@ -59,7 +59,7 @@ public class EnterpriseJobService {
             "SELECT id, job_title, job_type, description, requirements, tech_stack, " +
             "city, salary_min, salary_max, headcount, start_date, end_date, status, created_at " +
             "FROM internship_svc.internship_job " +
-            "WHERE enterprise_id = ? AND is_deleted = false"
+            "WHERE enterprise_id = ? AND is_deleted IS FALSE"
         );
 
         List<Object> params = new ArrayList<>();
@@ -110,7 +110,7 @@ public class EnterpriseJobService {
         // 查询总数
         StringBuilder countSql = new StringBuilder(
             "SELECT COUNT(*) FROM internship_svc.internship_job " +
-            "WHERE enterprise_id = ? AND is_deleted = false"
+            "WHERE enterprise_id = ? AND is_deleted IS FALSE"
         );
         
         List<Object> countParams = new ArrayList<>();
@@ -214,7 +214,7 @@ public class EnterpriseJobService {
         // 更新岗位状态为关闭（0）
         String sql = "UPDATE internship_svc.internship_job " +
             "SET status = 0, updated_at = CURRENT_TIMESTAMP " +
-            "WHERE id = ? AND enterprise_id = ? AND is_deleted = false";
+            "WHERE id = ? AND enterprise_id = ? AND is_deleted IS FALSE";
 
         int updated = jdbcTemplate.update(sql, jobId, tenantId);
         

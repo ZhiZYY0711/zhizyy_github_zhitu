@@ -54,7 +54,7 @@ const EvaluationChart: React.FC<EvaluationChartProps> = ({ data }) => {
         <div className="mt-6 pt-4 border-t">
           <h4 className="text-sm font-semibold mb-2">导师评语</h4>
           <div className="space-y-3">
-            {data.comments.map((comment) => (
+            {data.comments && Array.isArray(data.comments) && data.comments.map((comment) => (
               <div key={comment.id} className="bg-muted/50 p-3 rounded-lg text-sm">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-medium text-xs">{comment.author}</span>

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -88,7 +89,7 @@ public class StudentPortalService {
      * 根据用户ID获取学生ID
      */
     private Long getStudentIdByUserId(Long userId) {
-        String sql = "SELECT id FROM student_svc.student_info WHERE user_id = ? AND is_deleted = false";
+        String sql = "SELECT id FROM student_svc.student_info WHERE user_id = ? AND is_deleted IS FALSE";
         List<Long> results = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), userId);
         return results.isEmpty() ? null : results.get(0);
     }
@@ -107,7 +108,7 @@ public class StudentPortalService {
      */
     private Integer countInternshipJobs() {
         String sql = "SELECT COUNT(*) FROM internship_svc.internship_job " +
-                "WHERE status = 1 AND is_deleted = false";
+                "WHERE status = 1 AND is_deleted IS FALSE";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
@@ -384,7 +385,7 @@ public class StudentPortalService {
                     "FROM training_svc.training_project tp " +
                     "LEFT JOIN training_svc.project_enrollment pe ON tp.id = pe.project_id " +
                     "AND pe.student_id = ? AND pe.status = 1 " +
-                    "WHERE tp.status IN (1, 2) AND tp.is_deleted = false " +
+                    "WHERE tp.status IN (1, 2) AND tp.is_deleted IS FALSE " +
                     "ORDER BY tp.created_at DESC " +
                     "LIMIT ? OFFSET ?";
 
@@ -423,7 +424,7 @@ public class StudentPortalService {
 
             // 查询总数
             String countSql = "SELECT COUNT(*) FROM training_svc.training_project " +
-                    "WHERE status IN (1, 2) AND is_deleted = false";
+                    "WHERE status IN (1, 2) AND is_deleted IS FALSE";
             Long total = jdbcTemplate.queryForObject(countSql, Long.class);
 
             return PageResult.of(total, projects, page, size);
@@ -462,7 +463,7 @@ public class StudentPortalService {
                 "pt.priority, pt.story_points, u.real_name as assignee_name " +
                 "FROM training_svc.project_task pt " +
                 "LEFT JOIN auth_center.sys_user u ON pt.assignee_id = u.id " +
-                "WHERE pt.project_id = ? AND pt.is_deleted = false " +
+                "WHERE pt.project_id = ? AND pt.is_deleted IS FALSE " +
                 "ORDER BY pt.priority DESC, pt.created_at ASC";
 
         List<TaskItemDTO> allTasks = jdbcTemplate.query(taskSql, (rs, rowNum) -> {
@@ -524,7 +525,7 @@ public class StudentPortalService {
             String sql = "SELECT ij.id, ij.job_title, ij.job_type, ij.description, ij.requirements, " +
                     "ij.tech_stack, ij.city, ij.salary_min, ij.salary_max, ij.headcount, " +
                     "ij.start_date, ij.end_date, ij.status, ij.created_at, " +
-                    "t.tenant_name as enterprise_name, " +
+                    "t.name as enterprise_name, " +
                     "ja.id as application_id, ja.status as application_status " +
                     "FROM internship_svc.internship_job ij " +
                     "LEFT JOIN auth_center.sys_tenant t ON ij.enterprise_id = t.id " +
@@ -559,7 +560,9 @@ public class StudentPortalService {
                 dto.setStartDate(rs.getObject("start_date", LocalDate.class));
                 dto.setEndDate(rs.getObject("end_date", LocalDate.class));
                 dto.setStatus(rs.getInt("status"));
-                dto.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+                // Convert TIMESTAMPTZ to LocalDateTime by getting the timestamp and converting to local time
+                Timestamp timestamp = rs.getTimestamp("created_at");
+                dto.setCreatedAt(timestamp != null ? timestamp.toLocalDateTime() : null);
                 
                 // 设置申请状态
                 Long applicationId = rs.getObject("application_id", Long.class);
@@ -582,7 +585,7 @@ public class StudentPortalService {
 
             // 查询总数
             String countSql = "SELECT COUNT(*) FROM internship_svc.internship_job " +
-                    "WHERE status = 1 AND is_deleted = false";
+                    "WHERE status = 1 AND is_deleted IS FALSE";
             Long total = jdbcTemplate.queryForObject(countSql, Long.class);
 
             return PageResult.of(total, jobs, page, size);
@@ -665,7 +668,7 @@ public class StudentPortalService {
                     "u.real_name as evaluator_name " +
                     "FROM growth_svc.evaluation_record er " +
                     "LEFT JOIN auth_center.sys_user u ON er.evaluator_id = u.id " +
-                    "WHERE er.student_id = ? AND er.is_deleted = false " +
+                    "WHERE er.student_id = ? AND er.is_deleted IS FALSE " +
                     "ORDER BY er.created_at DESC";
 
             List<EvaluationSummaryDTO.EvaluationItemDTO> evaluations = jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -757,7 +760,7 @@ public class StudentPortalService {
             // 查询证书
             String sql = "SELECT id, type, name, issue_date, image_url, blockchain_hash, created_at " +
                     "FROM growth_svc.growth_badge " +
-                    "WHERE student_id = ? AND type = 'certificate' AND is_deleted = false " +
+                    "WHERE student_id = ? AND type = 'certificate' AND is_deleted IS FALSE " +
                     "ORDER BY issue_date DESC " +
                     "LIMIT ? OFFSET ?";
 
@@ -783,7 +786,7 @@ public class StudentPortalService {
 
             // 查询总数
             String countSql = "SELECT COUNT(*) FROM growth_svc.growth_badge " +
-                    "WHERE student_id = ? AND type = 'certificate' AND is_deleted = false";
+                    "WHERE student_id = ? AND type = 'certificate' AND is_deleted IS FALSE";
             Long total = jdbcTemplate.queryForObject(countSql, Long.class, studentId);
 
             return PageResult.of(total != null ? total : 0L, certificates, page, size);
@@ -816,7 +819,7 @@ public class StudentPortalService {
             // 查询徽章
             String sql = "SELECT id, type, name, issue_date, image_url, created_at " +
                     "FROM growth_svc.growth_badge " +
-                    "WHERE student_id = ? AND type = 'badge' AND is_deleted = false " +
+                    "WHERE student_id = ? AND type = 'badge' AND is_deleted IS FALSE " +
                     "ORDER BY issue_date DESC " +
                     "LIMIT ? OFFSET ?";
 
@@ -836,7 +839,7 @@ public class StudentPortalService {
 
             // 查询总数
             String countSql = "SELECT COUNT(*) FROM growth_svc.growth_badge " +
-                    "WHERE student_id = ? AND type = 'badge' AND is_deleted = false";
+                    "WHERE student_id = ? AND type = 'badge' AND is_deleted IS FALSE";
             Long total = jdbcTemplate.queryForObject(countSql, Long.class, studentId);
 
             return PageResult.of(total != null ? total : 0L, badges, page, size);
