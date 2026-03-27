@@ -1,0 +1,28 @@
+# Test Environment Configuration
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  # Swagger UI 配置
+  swagger-ui:
+    enabled: true
+
+# Swagger 聚合配置
+swagger:
+  # 启用 Swagger UI
+  enabled: true
+  # 访问控制配置
+  access-control:
+    # 测试环境启用访问控制
+    enabled: true
+    # 允许访问的角色列表
+    allowed-roles:
+      - ADMIN
+      - DEVELOPER
+      - TESTER
+    # 启用审计日志
+    audit-enabled: true
+
+logging:
+  level:
+    com.zhitu: DEBUG
+    org.springframework.cloud.gateway: INFO

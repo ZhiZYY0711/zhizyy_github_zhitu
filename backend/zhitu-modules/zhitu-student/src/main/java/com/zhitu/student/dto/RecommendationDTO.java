@@ -1,5 +1,6 @@
 package com.zhitu.student.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,35 +14,25 @@ import java.time.OffsetDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "推荐信息")
 public class RecommendationDTO {
 
-    /**
-     * 推荐ID
-     */
+    @Schema(description = "推荐ID", example = "1")
     private Long id;
 
-    /**
-     * 推荐类型：project / job / course
-     */
+    @Schema(description = "推荐类型", example = "project", 
+            allowableValues = {"project", "job", "course"})
     private String recType;
 
-    /**
-     * 引用ID（项目ID、岗位ID或课程ID）
-     */
+    @Schema(description = "引用ID（项目ID、岗位ID或课程ID）", example = "2001")
     private Long refId;
 
-    /**
-     * 推荐分数
-     */
+    @Schema(description = "推荐分数", example = "92.5")
     private BigDecimal score;
 
-    /**
-     * 推荐理由
-     */
+    @Schema(description = "推荐理由", example = "根据您的技能匹配度，推荐此项目")
     private String reason;
 
-    /**
-     * 创建时间
-     */
+    @Schema(description = "创建时间", example = "2024-01-15T10:30:00+08:00")
     private OffsetDateTime createdAt;
 }

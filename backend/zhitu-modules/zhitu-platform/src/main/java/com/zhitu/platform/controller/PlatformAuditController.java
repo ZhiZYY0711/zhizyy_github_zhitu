@@ -7,6 +7,14 @@ import com.zhitu.platform.dto.AuditProjectRequest;
 import com.zhitu.platform.dto.EnterpriseAuditDTO;
 import com.zhitu.platform.dto.ProjectAuditDTO;
 import com.zhitu.platform.service.PlatformAuditService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
  * GET  /api/system/v1/audits/enterprises             - 企业审核列表
  * POST /api/system/v1/audits/enterprises/{id}        - 审核企业
  */
+@Tag(name = "审核管理", description = "平台审核管理相关接口")
 @RestController
 @RequiredArgsConstructor
 public class PlatformAuditController {
@@ -35,10 +44,47 @@ public class PlatformAuditController {
      * - 32.3: Support filtering audits by status query parameter
      * - 32.7: Include project name, creator, submission date, and description in audit record
      */
+    @Operation(
+        summary = "获取项目审核列表",
+        description = "分页查询待审核的实训项目列表，支持按状态筛选"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "查询成功",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Result.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "参数校验失败",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 422, \"message\": \"参数校验失败\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "服务器内部错误",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 500, \"message\": \"服务器内部错误\", \"data\": null}"
+                )
+            )
+        )
+    })
     @GetMapping("/api/portal-platform/v1/audits/projects")
     public Result<IPage<ProjectAuditDTO>> getPendingProjects(
+            @Parameter(description = "审核状态：0-待审核，1-已通过，2-已拒绝", example = "0")
             @RequestParam(value = "status", required = false) Integer status,
+            @Parameter(description = "页码，从1开始", example = "1")
             @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @Parameter(description = "每页记录数", example = "10")
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return Result.ok(platformAuditService.getProjectAudits(status, page, size));
     }
@@ -53,9 +99,58 @@ public class PlatformAuditController {
      * - 32.5: Support optional quality_rating parameter on approval
      * - 32.6: Require reject_reason when rejecting
      */
+    @Operation(
+        summary = "审核实训项目",
+        description = "对指定的实训项目进行审核，可以通过或拒绝"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "审核成功",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 200, \"message\": \"操作成功\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "参数校验失败",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 422, \"message\": \"参数校验失败\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "项目不存在",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 404, \"message\": \"项目不存在\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "服务器内部错误",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 500, \"message\": \"服务器内部错误\", \"data\": null}"
+                )
+            )
+        )
+    })
     @PostMapping("/api/portal-platform/v1/audits/projects/{id}")
-    public Result<Void> auditProject(@PathVariable Long id,
-                                     @Valid @RequestBody AuditProjectRequest req) {
+    public Result<Void> auditProject(
+            @Parameter(description = "项目ID", required = true, example = "1")
+            @PathVariable Long id,
+            @Parameter(description = "审核请求信息", required = true)
+            @Valid @RequestBody AuditProjectRequest req) {
         platformAuditService.auditProject(id, req);
         return Result.ok();
     }
@@ -68,10 +163,47 @@ public class PlatformAuditController {
      * - 31.1: Expose GET /api/system/v1/audits/enterprises endpoint
      * - 31.3: Support filtering audits by status query parameter
      */
+    @Operation(
+        summary = "获取企业审核列表",
+        description = "分页查询待审核的企业注册列表，支持按状态筛选"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "查询成功",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Result.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "参数校验失败",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 422, \"message\": \"参数校验失败\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "服务器内部错误",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 500, \"message\": \"服务器内部错误\", \"data\": null}"
+                )
+            )
+        )
+    })
     @GetMapping("/api/system/v1/audits/enterprises")
     public Result<IPage<EnterpriseAuditDTO>> getEnterpriseAudits(
+            @Parameter(description = "审核状态：0-待审核，1-已通过，2-已拒绝", example = "0")
             @RequestParam(value = "status", required = false) Integer status,
+            @Parameter(description = "页码，从1开始", example = "1")
             @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @Parameter(description = "每页记录数", example = "10")
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
         return Result.ok(platformAuditService.getEnterpriseAudits(status, page, size));
     }
@@ -86,9 +218,57 @@ public class PlatformAuditController {
      * - 31.5: Require reject_reason parameter when rejecting
      * - 31.6: Activate enterprise account and send notification on approval
      */
+    @Operation(
+        summary = "审核企业注册",
+        description = "对指定的企业注册申请进行审核，可以通过或拒绝"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "审核成功",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 200, \"message\": \"操作成功\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "参数校验失败",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 422, \"message\": \"参数校验失败\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "企业不存在",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 404, \"message\": \"企业不存在\", \"data\": null}"
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "服务器内部错误",
+            content = @Content(
+                mediaType = "application/json",
+                examples = @ExampleObject(
+                    value = "{\"code\": 500, \"message\": \"服务器内部错误\", \"data\": null}"
+                )
+            )
+        )
+    })
     @PostMapping("/api/system/v1/audits/enterprises/{id}")
     public Result<Void> auditEnterprise(
+            @Parameter(description = "企业ID", required = true, example = "1")
             @PathVariable Long id,
+            @Parameter(description = "审核请求信息", required = true)
             @Valid @RequestBody AuditEnterpriseRequest request) {
         platformAuditService.auditEnterprise(id, request);
         return Result.ok();

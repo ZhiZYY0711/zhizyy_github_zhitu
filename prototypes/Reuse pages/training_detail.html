@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实训详情页 - Web前端开发实训</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <button onclick="history.back()" class="mr-4 p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-xl font-semibold text-gray-900">实训详情</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </button>
+                    <button class="p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.432 0m9.032-4.026A9.001 9.001 0 0112 3c-4.474 0-8.268 3.12-9.032 7.326m9.032 4.026A9.001 9.001 0 012.968 10.326m7.432 7.432a3 3 0 01-4.732 0m4.732 0a3 3 0 004.732 0"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- 基础信息区域 -->
+        <section class="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 左侧主要内容 -->
+                <div class="lg:col-span-2">
+                    <div class="mb-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <h1 class="text-3xl font-bold text-gray-900">Web前端开发实训</h1>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">报名中</span>
+                        </div>
+                        <p class="text-gray-600 text-lg">阿里巴巴集团 · 技术培训部</p>
+                    </div>
+
+                    <!-- 实训概要 -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                        <div class="text-center">
+                            <div class="bg-blue-50 rounded-lg p-4">
+                                <svg class="w-8 h-8 text-blue-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <p class="text-sm text-gray-600">实训周期</p>
+                                <p class="font-semibold text-gray-900">8周</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <svg class="w-8 h-8 text-green-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <p class="text-sm text-gray-600">实训地点</p>
+                                <p class="font-semibold text-gray-900">杭州</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-purple-50 rounded-lg p-4">
+                                <svg class="w-8 h-8 text-purple-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <p class="text-sm text-gray-600">招募人数</p>
+                                <p class="font-semibold text-gray-900">20人</p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-orange-50 rounded-lg p-4">
+                                <svg class="w-8 h-8 text-orange-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <p class="text-sm text-gray-600">实训费用</p>
+                                <p class="font-semibold text-gray-900">免费</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 实训介绍 -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">实训介绍</h2>
+                        <div class="prose max-w-none text-gray-700">
+                            <p class="mb-4">
+                                本次Web前端开发实训由阿里巴巴集团技术培训部精心设计，旨在帮助学员掌握现代前端开发的核心技术和实战经验。通过8周的密集训练，学员将深入学习React、Vue等主流前端框架，参与真实企业项目开发，全面提升前端开发能力。
+                            </p>
+                            <p>
+                                实训采用理论+实践的教学模式，每周包含技术讲解、项目实战、代码评审等环节。学员将在阿里巴巴资深工程师的指导下，完成从需求分析到项目上线的完整开发流程，为未来职业发展奠定坚实基础。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 学习目标 -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">学习目标</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-1">掌握现代前端框架</h3>
+                                    <p class="text-gray-600 text-sm">深入学习React、Vue等主流框架的核心概念和最佳实践</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-1">实战项目开发经验</h3>
+                                    <p class="text-gray-600 text-sm">参与真实企业项目，掌握完整的项目开发流程</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-1">工程化开发能力</h3>
+                                    <p class="text-gray-600 text-sm">学习Webpack、Git等工具，掌握现代化开发流程</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900 mb-1">团队协作技能</h3>
+                                    <p class="text-gray-600 text-sm">学习敏捷开发、代码评审等团队协作最佳实践</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 课程大纲 -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">课程大纲</h2>
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-blue-500 pl-4">
+                                <h3 class="font-semibold text-gray-900 mb-2">第1-2周：前端基础强化</h3>
+                                <ul class="text-gray-600 text-sm space-y-1">
+                                    <li>• HTML5/CSS3高级特性</li>
+                                    <li>• JavaScript ES6+核心语法</li>
+                                    <li>• TypeScript类型系统</li>
+                                    <li>• 前端工程化工具配置</li>
+                                </ul>
+                            </div>
+                            <div class="border-l-4 border-green-500 pl-4">
+                                <h3 class="font-semibold text-gray-900 mb-2">第3-4周：React框架深入</h3>
+                                <ul class="text-gray-600 text-sm space-y-1">
+                                    <li>• React组件设计与状态管理</li>
+                                    <li>• Hooks使用与自定义Hook开发</li>
+                                    <li>• React Router路由管理</li>
+                                    <li>• Redux状态管理实践</li>
+                                </ul>
+                            </div>
+                            <div class="border-l-4 border-purple-500 pl-4">
+                                <h3 class="font-semibold text-gray-900 mb-2">第5-6周：Vue框架实战</h3>
+                                <ul class="text-gray-600 text-sm space-y-1">
+                                    <li>• Vue3 Composition API</li>
+                                    <li>• Vuex/Pinia状态管理</li>
+                                    <li>• Vue Router高级用法</li>
+                                    <li>• 组件库开发与封装</li>
+                                </ul>
+                            </div>
+                            <div class="border-l-4 border-orange-500 pl-4">
+                                <h3 class="font-semibold text-gray-900 mb-2">第7-8周：项目实战与部署</h3>
+                                <ul class="text-gray-600 text-sm space-y-1">
+                                    <li>• 企业级项目架构设计</li>
+                                    <li>• 性能优化与调试技巧</li>
+                                    <li>• 自动化测试与CI/CD</li>
+                                    <li>• 项目部署与上线</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 成果形式 -->
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">成果形式</h2>
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="text-center">
+                                    <div class="bg-white rounded-lg p-4 shadow-sm">
+                                        <svg class="w-12 h-12 text-blue-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        <h3 class="font-semibold text-gray-900 mb-2">项目作品</h3>
+                                        <p class="text-gray-600 text-sm">完成1-2个完整的前端项目，包含源码和部署文档</p>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white rounded-lg p-4 shadow-sm">
+                                        <svg class="w-12 h-12 text-green-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                                        </svg>
+                                        <h3 class="font-semibold text-gray-900 mb-2">结业证书</h3>
+                                        <p class="text-gray-600 text-sm">获得阿里巴巴认证的实训结业证书</p>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="bg-white rounded-lg p-4 shadow-sm">
+                                        <svg class="w-12 h-12 text-purple-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                        </svg>
+                                        <h3 class="font-semibold text-gray-900 mb-2">就业推荐</h3>
+                                        <p class="text-gray-600 text-sm">优秀学员可获得阿里巴巴及合作企业内推机会</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧信息栏 -->
+                <div class="lg:col-span-1">
+                    <!-- 报名信息卡片 -->
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 mb-6">
+                        <div class="text-center mb-6">
+                            <div class="text-3xl font-bold text-gray-900 mb-2">15/20</div>
+                            <p class="text-gray-600">已报名人数</p>
+                        </div>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-600">报名开始</span>
+                                <span class="font-medium">2024-03-15</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-600">报名截止</span>
+                                <span class="font-medium">2024-03-30</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-600">开课时间</span>
+                                <span class="font-medium">2024-04-01</span>
+                            </div>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                            立即报名
+                        </button>
+                    </div>
+
+                    <!-- 师资力量 -->
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">师资力量</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <img src="https://via.placeholder.com/48x48" alt="导师" class="w-12 h-12 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">张明</h4>
+                                    <p class="text-sm text-gray-600">前端技术专家</p>
+                                    <p class="text-xs text-gray-500 mt-1">阿里巴巴前端架构师，10年前端开发经验，负责淘宝前端技术架构。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <img src="https://via.placeholder.com/48x48" alt="导师" class="w-12 h-12 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">李华</h4>
+                                    <p class="text-sm text-gray-600">高级前端工程师</p>
+                                    <p class="text-xs text-gray-500 mt-1">React技术专家，参与多个大型项目开发，在组件化开发方面有丰富经验。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <img src="https://via.placeholder.com/48x48" alt="导师" class="w-12 h-12 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">王芳</h4>
+                                    <p class="text-sm text-gray-600">前端技术经理</p>
+                                    <p class="text-xs text-gray-500 mt-1">Vue.js贡献者，专注于前端工程化和性能优化，著有《Vue.js实战》。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center text-gray-600">
+                <p class="mb-2">如有疑问，请联系：training@alibaba.com</p>
+                <p class="text-sm">© 2024 阿里巴巴集团 版权所有</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

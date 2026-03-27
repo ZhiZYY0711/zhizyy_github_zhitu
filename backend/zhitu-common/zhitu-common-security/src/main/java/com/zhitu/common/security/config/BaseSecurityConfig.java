@@ -26,6 +26,11 @@ public abstract class BaseSecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/actuator/**").permitAll();
+                // Swagger/OpenAPI paths - 支持完整路径和相对路径
+                auth.requestMatchers("/v3/api-docs/**").permitAll();
+                auth.requestMatchers("/api/*/v3/api-docs/**").permitAll();
+                auth.requestMatchers("/swagger-ui/**").permitAll();
+                auth.requestMatchers("/swagger-ui.html").permitAll();
                 for (String path : additionalWhiteList) {
                     auth.requestMatchers(path).permitAll();
                 }

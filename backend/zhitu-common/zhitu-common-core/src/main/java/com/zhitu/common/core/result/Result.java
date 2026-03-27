@@ -1,6 +1,7 @@
 package com.zhitu.common.core.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,10 +11,16 @@ import java.io.Serializable;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "统一响应体")
 public class Result<T> implements Serializable {
 
+    @Schema(description = "响应状态码，200表示成功", example = "200", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer code;
+    
+    @Schema(description = "响应消息", example = "操作成功", requiredMode = Schema.RequiredMode.REQUIRED)
     private String message;
+    
+    @Schema(description = "响应数据")
     private T data;
 
     private Result(Integer code, String message, T data) {

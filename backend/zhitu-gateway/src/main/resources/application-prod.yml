@@ -1,0 +1,26 @@
+# Production Environment Configuration
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  # Swagger UI 配置 - 生产环境禁用
+  swagger-ui:
+    enabled: false
+
+# Swagger 聚合配置
+swagger:
+  # 生产环境禁用 Swagger UI
+  enabled: false
+  # 访问控制配置
+  access-control:
+    # 启用访问控制
+    enabled: true
+    # 仅允许管理员访问（如果意外启用）
+    allowed-roles:
+      - ADMIN
+    # 启用审计日志
+    audit-enabled: true
+
+logging:
+  level:
+    com.zhitu: INFO
+    org.springframework.cloud.gateway: WARN

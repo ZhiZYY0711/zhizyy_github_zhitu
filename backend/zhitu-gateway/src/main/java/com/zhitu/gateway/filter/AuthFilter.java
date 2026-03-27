@@ -28,6 +28,7 @@ import reactor.core.publisher.Mono;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,13 +61,15 @@ public class AuthFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
-        log.debug("请求路径: {}", path);
+        log.debug("AuthFilter 处理请求路径: {}", path);
 
         // 白名单放行
         if (isWhiteListed(path)) {
             log.debug("白名单路径，直接放行: {}", path);
             return chain.filter(exchange);
         }
+
+        log.debug("非白名单路径，需要验证 token: {}", path);
 
         // 提取 token
         String token = extractToken(exchange.getRequest());
@@ -126,8 +129,23 @@ public class AuthFilter implements GlobalFilter, Ordered {
     }
 
     private boolean isWhiteListed(String path) {
-        return securityProperties.getWhiteList().stream()
-                .anyMatch(pattern -> PATH_MATCHER.match(pattern, path));
+        List<String> whiteList = securityProperties.getWhiteList();
+        log.debug("当前白名单配置: {}", whiteList);
+        
+        boolean matched = whiteList.stream()
+                .anyMatch(pattern -> {
+                    boolean isMatch = PATH_MATCHER.match(pattern, path);
+                    if (isMatch) {
+                        log.debug("路径 {} 匹配白名单模式: {}", path, pattern);
+                    }
+                    return isMatch;
+                });
+        
+        if (!matched) {
+            log.debug("路径 {} 不匹配任何白名单模式", path);
+        }
+        
+        return matched;
     }
 
     private String extractToken(ServerHttpRequest request) {

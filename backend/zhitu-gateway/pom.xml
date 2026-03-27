@@ -100,6 +100,12 @@
             <optional>true</optional>
         </dependency>
         
+        <!-- SpringDoc OpenAPI (WebFlux for Gateway) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+        </dependency>
+        
         <!-- 开发工具 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

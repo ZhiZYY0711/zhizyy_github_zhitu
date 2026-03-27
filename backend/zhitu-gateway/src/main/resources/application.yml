@@ -31,17 +31,36 @@ spring:
             burst-capacity: 120     # Maximum burst (20% buffer)
             requested-tokens: 1     # Tokens per request
       routes:
+        # 认证服务 API 文档：/api/auth/v3/api-docs → zhitu-auth/v3/api-docs
+        - id: auth-service-api-docs
+          uri: lb://zhitu-auth
+          predicates:
+            - Path=/api/auth/v3/api-docs/**
+          filters:
+            - RewritePath=/api/auth/(?<segment>.*), /$\{segment}
+          order: 1
+
         # 认证服务：/api/auth/** → zhitu-auth
         - id: auth-service
           uri: lb://zhitu-auth
           predicates:
             - Path=/api/auth/**
+          order: 2
 
         # 用户服务：/api/user/** → zhitu-system
         - id: user-service
           uri: lb://zhitu-system
           predicates:
             - Path=/api/user/**
+
+        # 系统服务 API 文档：/api/system/v3/api-docs → zhitu-system/v3/api-docs
+        - id: system-service-api-docs
+          uri: lb://zhitu-system
+          predicates:
+            - Path=/api/system/v3/api-docs/**
+          filters:
+            - RewritePath=/api/system/(?<segment>.*), /$\{segment}
+          order: 1
 
         # 系统服务：/api/system/** → zhitu-system
         - id: system-service
@@ -55,6 +74,16 @@ spring:
                 redis-rate-limiter.burstCapacity: 1200
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@userKeyResolver}"
+          order: 2
+
+        # 学生门户 API 文档：/api/student-portal/v3/api-docs → zhitu-student/v3/api-docs
+        - id: student-portal-api-docs
+          uri: lb://zhitu-student
+          predicates:
+            - Path=/api/student-portal/v3/api-docs/**
+          filters:
+            - RewritePath=/api/student-portal/(?<segment>.*), /$\{segment}
+          order: 1
 
         # 学生门户：/api/student-portal/** → zhitu-student
         - id: student-portal-service
@@ -68,6 +97,7 @@ spring:
                 redis-rate-limiter.burstCapacity: 1200
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@userKeyResolver}"
+          order: 2
 
         # 实训服务（企业端）：/api/training/v1/enterprise/** → zhitu-enterprise
         - id: training-enterprise-service
@@ -130,6 +160,15 @@ spring:
           predicates:
             - Path=/api/growth/**
 
+        # 企业门户 API 文档：/api/portal-enterprise/v3/api-docs → zhitu-enterprise/v3/api-docs
+        - id: enterprise-portal-api-docs
+          uri: lb://zhitu-enterprise
+          predicates:
+            - Path=/api/portal-enterprise/v3/api-docs/**
+          filters:
+            - RewritePath=/api/portal-enterprise/(?<segment>.*), /$\{segment}
+          order: 1
+
         # 企业门户：/api/portal-enterprise/** → zhitu-enterprise
         - id: enterprise-portal-service
           uri: lb://zhitu-enterprise
@@ -142,6 +181,16 @@ spring:
                 redis-rate-limiter.burstCapacity: 1200
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@userKeyResolver}"
+          order: 2
+
+        # 高校门户 API 文档：/api/portal-college/v3/api-docs → zhitu-college/v3/api-docs
+        - id: college-portal-api-docs
+          uri: lb://zhitu-college
+          predicates:
+            - Path=/api/portal-college/v3/api-docs/**
+          filters:
+            - RewritePath=/api/portal-college/(?<segment>.*), /$\{segment}
+          order: 1
 
         # 高校门户：/api/portal-college/** → zhitu-college
         - id: college-portal-service
@@ -155,6 +204,16 @@ spring:
                 redis-rate-limiter.burstCapacity: 1200
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@userKeyResolver}"
+          order: 2
+
+        # 平台门户 API 文档：/api/portal-platform/v3/api-docs → zhitu-platform/v3/api-docs
+        - id: platform-portal-api-docs
+          uri: lb://zhitu-platform
+          predicates:
+            - Path=/api/portal-platform/v3/api-docs/**
+          filters:
+            - RewritePath=/api/portal-platform/(?<segment>.*), /$\{segment}
+          order: 1
 
         # 平台门户：/api/portal-platform/** → zhitu-platform
         - id: platform-portal-service
@@ -168,6 +227,7 @@ spring:
                 redis-rate-limiter.burstCapacity: 1200
                 redis-rate-limiter.requestedTokens: 1
                 key-resolver: "#{@userKeyResolver}"
+          order: 2
 
         # 监控服务：/api/monitor/** → zhitu-platform
         - id: monitor-service
@@ -185,6 +245,23 @@ zhitu:
       - /api/auth/v1/login
       - /api/auth/v1/token/refresh
       - /actuator/**
+      - /swagger-ui.html
+      - /swagger-ui/**
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /api/auth/v3/api-docs
+      - /api/auth/v3/api-docs/**
+      - /api/system/v3/api-docs
+      - /api/system/v3/api-docs/**
+      - /api/student-portal/v3/api-docs
+      - /api/student-portal/v3/api-docs/**
+      - /api/portal-enterprise/v3/api-docs
+      - /api/portal-enterprise/v3/api-docs/**
+      - /api/portal-college/v3/api-docs
+      - /api/portal-college/v3/api-docs/**
+      - /api/portal-platform/v3/api-docs
+      - /api/portal-platform/v3/api-docs/**
+      - /webjars/**
 
 management:
   endpoints:
@@ -194,6 +271,79 @@ management:
   endpoint:
     health:
       show-details: always
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  # 启用 API 文档
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  # Swagger UI 配置
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    # 配置各微服务的 OpenAPI 端点
+    urls:
+      - name: zhitu-auth
+        url: /api/auth/v3/api-docs
+      - name: zhitu-system
+        url: /api/system/v3/api-docs
+      - name: zhitu-student
+        url: /api/student-portal/v3/api-docs
+      - name: zhitu-enterprise
+        url: /api/portal-enterprise/v3/api-docs
+      - name: zhitu-college
+        url: /api/portal-college/v3/api-docs
+      - name: zhitu-platform
+        url: /api/portal-platform/v3/api-docs
+    # 默认显示的服务
+    urls-primary-name: zhitu-auth
+    # 启用深度链接
+    deep-linking: true
+    # 显示请求持续时间
+    display-request-duration: true
+    # 启用过滤器
+    filter: true
+    # 操作排序
+    operations-sorter: alpha
+    # 标签排序
+    tags-sorter: alpha
+    # 启用尝试功能
+    try-it-out-enabled: true
+
+# Swagger 聚合配置
+swagger:
+  # 启用 Swagger UI
+  enabled: true
+  # 启用文档聚合功能
+  aggregation-enabled: true
+  # 微服务文档配置列表
+  services:
+    - name: zhitu-auth
+      version: 1.0.0
+      enabled: true
+    - name: zhitu-system
+      version: 1.0.0
+      enabled: true
+    - name: zhitu-student
+      version: 1.0.0
+      enabled: true
+    - name: zhitu-enterprise
+      version: 1.0.0
+      enabled: true
+    - name: zhitu-college
+      version: 1.0.0
+      enabled: true
+    - name: zhitu-platform
+      version: 1.0.0
+      enabled: true
+  # 访问控制配置
+  access-control:
+    enabled: false
+    allowed-roles:
+      - ROLE_ADMIN
+      - ROLE_DEVELOPER
+    audit-enabled: true
 
 logging:
   level:

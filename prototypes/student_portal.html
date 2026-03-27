@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智途学生端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .radar-chart {
+            max-width: 300px;
+            max-height: 300px;
+        }
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        .sidebar-item:hover {
+            transform: translateX(4px);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen">
+        <!-- 左侧菜单栏 -->
+        <aside class="w-64 bg-white shadow-lg">
+            <div class="p-6">
+                <h1 class="text-xl font-bold text-gray-900">智途学生端</h1>
+                <p class="text-sm text-gray-600 mt-1">欢迎，张同学</p>
+            </div>
+            
+            <nav class="mt-6">
+                <div class="px-4 space-y-2">
+                    <button onclick="switchSection('dashboard')" class="sidebar-item w-full text-left px-4 py-3 rounded-lg bg-blue-50 text-blue-600 font-medium" id="menu-dashboard">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            仪表盘
+                        </div>
+                    </button>
+                    
+                    <button onclick="switchSection('training')" class="sidebar-item w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700" id="menu-training">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            实训板块
+                        </div>
+                    </button>
+                    
+                    <button onclick="switchSection('internship')" class="sidebar-item w-full text-left px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700" id="menu-internship">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            实习板块
+                        </div>
+                    </button>
+                </div>
+            </nav>
+            
+            <div class="absolute bottom-0 w-64 p-4 border-t">
+                <div class="flex items-center">
+                    <img src="https://via.placeholder.com/40x40" alt="头像" class="w-10 h-10 rounded-full">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">张同学</p>
+                        <p class="text-xs text-gray-500">计算机科学与技术</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white shadow-sm border-b">
+                <div class="px-6 py-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-gray-900" id="page-title">仪表盘</h2>
+                        <div class="flex items-center space-x-4">
+                            <button class="relative p-2 text-gray-600 hover:text-gray-900">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                                </svg>
+                                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                            <button class="p-2 text-gray-600 hover:text-gray-900">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 仪表盘内容 -->
+            <section id="dashboard" class="content-section active p-6">
+                <!-- 学生信息卡片区域 -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <!-- 绩点卡片 -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-blue-100 rounded-full">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">当前绩点</p>
+                                <p class="text-2xl font-bold text-gray-900">3.85</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 已修学分卡片 -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-green-100 rounded-full">
+                                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">已修学分</p>
+                                <p class="text-2xl font-bold text-gray-900">128</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 实习时长卡片 -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-purple-100 rounded-full">
+                                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">实习时长</p>
+                                <p class="text-2xl font-bold text-gray-900">360h</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 实习状态卡片 -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 bg-orange-100 rounded-full">
+                                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">实习状态</p>
+                                <p class="text-2xl font-bold text-green-600">进行中</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- 能力雷达画像 -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">能力雷达画像</h3>
+                            <div class="flex justify-center">
+                                <canvas id="radarChart" class="radar-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 任务指挥中心 -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">任务指挥中心</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <!-- 实习工作任务 -->
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 hover:bg-blue-100 cursor-pointer transition-colors">
+                                    <div class="flex flex-col items-center text-center">
+                                        <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <h4 class="font-medium text-gray-900">实习工作任务</h4>
+                                        <p class="text-sm text-gray-600 mt-1">5个待完成</p>
+                                    </div>
+                                </div>
+
+                                <!-- AI智能推荐课程 -->
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-4 hover:bg-green-100 cursor-pointer transition-colors">
+                                    <div class="flex flex-col items-center text-center">
+                                        <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                        <h4 class="font-medium text-gray-900">AI智能推荐课程</h4>
+                                        <p class="text-sm text-gray-600 mt-1">3门推荐</p>
+                                    </div>
+                                </div>
+
+                                <!-- 科目作业 -->
+                                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 hover:bg-purple-100 cursor-pointer transition-colors">
+                                    <div class="flex flex-col items-center text-center">
+                                        <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        <h4 class="font-medium text-gray-900">科目作业</h4>
+                                        <p class="text-sm text-gray-600 mt-1">2个待提交</p>
+                                    </div>
+                                </div>
+
+                                <!-- 实训项目任务 -->
+                                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 hover:bg-orange-100 cursor-pointer transition-colors">
+                                    <div class="flex flex-col items-center text-center">
+                                        <svg class="w-8 h-8 text-orange-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                        </svg>
+                                        <h4 class="font-medium text-gray-900">实训项目任务</h4>
+                                        <p class="text-sm text-gray-600 mt-1">1个进行中</p>
+                                    </div>
+                                </div>
+
+                                <!-- 学院/企业导师评价 -->
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-4 hover:bg-red-100 cursor-pointer transition-colors">
+                                    <div class="flex flex-col items-center text-center">
+                                        <svg class="w-8 h-8 text-red-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                                        </svg>
+                                        <h4 class="font-medium text-gray-900">导师评价</h4>
+                                        <p class="text-sm text-gray-600 mt-1">1条新评价</p>
+                                    </div>
+                                </div>
+
+                                <!-- 实习周报内容 -->
+                                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 hover:bg-indigo-100 cursor-pointer transition-colors">
+                                    <div class="flex flex-col items-center text-center">
+                                        <svg class="w-8 h-8 text-indigo-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        <h4 class="font-medium text-gray-900">实习周报</h4>
+                                        <p class="text-sm text-gray-600 mt-1">本周待提交</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 推荐流 -->
+                <div class="mt-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">推荐岗位</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- 推荐岗位1 -->
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h4 class="font-medium text-gray-900">前端开发实习生</h4>
+                                        <p class="text-sm text-gray-600 mt-1">阿里巴巴</p>
+                                        <p class="text-xs text-gray-500 mt-2">杭州 · 3-6个月 · 本科</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">匹配度95%</span>
+                                </div>
+                                <div class="mt-3 flex flex-wrap gap-1">
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">React</span>
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">TypeScript</span>
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Node.js</span>
+                                </div>
+                            </div>
+
+                            <!-- 推荐岗位2 -->
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h4 class="font-medium text-gray-900">UI/UX设计实习生</h4>
+                                        <p class="text-sm text-gray-600 mt-1">腾讯科技</p>
+                                        <p class="text-xs text-gray-500 mt-2">深圳 · 4-6个月 · 本科</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">匹配度88%</span>
+                                </div>
+                                <div class="mt-3 flex flex-wrap gap-1">
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Figma</span>
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Sketch</span>
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">原型设计</span>
+                                </div>
+                            </div>
+
+                            <!-- 推荐岗位3 -->
+                            <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h4 class="font-medium text-gray-900">数据分析实习生</h4>
+                                        <p class="text-sm text-gray-600 mt-1">字节跳动</p>
+                                        <p class="text-xs text-gray-500 mt-2">北京 · 3-6个月 · 本科</p>
+                                    </div>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">匹配度82%</span>
+                                </div>
+                                <div class="mt-3 flex flex-wrap gap-1">
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Python</span>
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">SQL</span>
+                                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">数据可视化</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 实训板块内容 -->
+            <section id="training" class="content-section p-6">
+                <!-- Tab切换 -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="-mb-px flex">
+                            <button class="py-3 px-6 border-b-2 border-blue-500 font-medium text-sm text-blue-600" id="training-tab-square">
+                                实训项目广场
+                            </button>
+                            <button class="py-3 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" id="training-tab-my">
+                                我的实训
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- 实训项目广场内容 -->
+                    <div id="training-square" class="p-6">
+                        <!-- 搜索栏 -->
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <div class="flex-1">
+                                <input type="text" placeholder="搜索实训项目..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div class="flex gap-2">
+                                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option>全部企业</option>
+                                    <option>阿里巴巴</option>
+                                    <option>腾讯科技</option>
+                                    <option>字节跳动</option>
+                                </select>
+                                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option>全部标签</option>
+                                    <option>前端开发</option>
+                                    <option>后端开发</option>
+                                    <option>数据分析</option>
+                                    <option>UI设计</option>
+                                </select>
+                                <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                    搜索
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 实训项目列表 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- 项目1 -->
+                            <div class="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">Web前端开发实训</h4>
+                                        <p class="text-sm text-gray-600 mt-1">阿里巴巴集团</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">招募中</span>
+                                </div>
+                                
+                                <p class="text-gray-700 text-sm mb-4">学习现代前端开发技术栈，包括React、Vue等主流框架，参与实际企业项目开发，提升实战能力。</p>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="mr-4">2024-03-15发布</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    <span>限20人</span>
+                                </div>
+                                
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">JavaScript</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">前端开发</span>
+                                </div>
+                                
+                                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+
+                            <!-- 项目2 -->
+                            <div class="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">数据分析实战项目</h4>
+                                        <p class="text-sm text-gray-600 mt-1">腾讯科技</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">招募中</span>
+                                </div>
+                                
+                                <p class="text-gray-700 text-sm mb-4">使用Python进行数据分析，学习数据清洗、可视化、机器学习等技术，处理真实业务数据。</p>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="mr-4">2024-03-12发布</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    <span>限15人</span>
+                                </div>
+                                
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Python</span>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">数据分析</span>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">机器学习</span>
+                                </div>
+                                
+                                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 我的实训内容 -->
+                    <div id="training-my" class="p-6 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- 我的实训项目1 -->
+                            <div class="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">Web前端开发实训</h4>
+                                        <p class="text-sm text-gray-600 mt-1">阿里巴巴集团</p>
+                                    </div>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">进行中</span>
+                                </div>
+                                
+                                <p class="text-gray-700 text-sm mb-4">学习现代前端开发技术栈，包括React、Vue等主流框架，参与实际企业项目开发。</p>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="mr-4">2024-03-01开始</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                    </svg>
+                                    <span>进度60%</span>
+                                </div>
+                                
+                                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 60%"></div>
+                                </div>
+                                
+                                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 实习板块内容 -->
+            <section id="internship" class="content-section p-6">
+                <!-- Tab切换 -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="-mb-px flex">
+                            <button class="py-3 px-6 border-b-2 border-blue-500 font-medium text-sm text-blue-600" id="internship-tab-square">
+                                实习项目广场
+                            </button>
+                            <button class="py-3 px-6 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" id="internship-tab-my">
+                                我的实习
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- 实习项目广场内容 -->
+                    <div id="internship-square" class="p-6">
+                        <!-- 搜索栏 -->
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <div class="flex-1">
+                                <input type="text" placeholder="搜索实习项目..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <div class="flex gap-2">
+                                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option>全部企业</option>
+                                    <option>阿里巴巴</option>
+                                    <option>腾讯科技</option>
+                                    <option>字节跳动</option>
+                                    <option>美团</option>
+                                </select>
+                                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option>全部城市</option>
+                                    <option>北京</option>
+                                    <option>上海</option>
+                                    <option>杭州</option>
+                                    <option>深圳</option>
+                                </select>
+                                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option>薪资范围</option>
+                                    <option>100-150/天</option>
+                                    <option>150-200/天</option>
+                                    <option>200-300/天</option>
+                                    <option>300+/天</option>
+                                </select>
+                                <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                    搜索
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 实习项目列表 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- 项目1 -->
+                            <div class="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">前端开发实习生</h4>
+                                        <p class="text-sm text-gray-600 mt-1">阿里巴巴集团</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">热招中</span>
+                                </div>
+                                
+                                <p class="text-gray-700 text-sm mb-4">参与淘宝前端团队开发，负责用户界面开发和交互优化，学习大型电商前端架构。</p>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="mr-4">2024-03-15发布</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    <span>限15人</span>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <span class="mr-4">杭州</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-green-600 font-semibold">250-300/天</span>
+                                </div>
+                                
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">React</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">JavaScript</span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">前端开发</span>
+                                </div>
+                                
+                                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+
+                            <!-- 项目2 -->
+                            <div class="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">后端开发实习生</h4>
+                                        <p class="text-sm text-gray-600 mt-1">腾讯科技</p>
+                                    </div>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">热招中</span>
+                                </div>
+                                
+                                <p class="text-gray-700 text-sm mb-4">参与微信后端服务开发，负责API接口设计和数据库优化，学习大规模分布式系统架构。</p>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="mr-4">2024-03-12发布</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    <span>限20人</span>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <span class="mr-4">深圳</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-green-600 font-semibold">280-350/天</span>
+                                </div>
+                                
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Java</span>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Spring Boot</span>
+                                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">后端开发</span>
+                                </div>
+                                
+                                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 我的实习内容 -->
+                    <div id="internship-my" class="p-6 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- 我的实习项目1 -->
+                            <div class="border rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h4 class="text-lg font-semibold text-gray-900">前端开发实习生</h4>
+                                        <p class="text-sm text-gray-600 mt-1">阿里巴巴集团</p>
+                                    </div>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">进行中</span>
+                                </div>
+                                
+                                <p class="text-gray-700 text-sm mb-4">参与淘宝前端团队开发，负责用户界面开发和交互优化，学习大型电商前端架构。</p>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span class="mr-4">2024-02-01开始</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                    </svg>
+                                    <span>进度45%</span>
+                                </div>
+                                
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <span class="mr-4">杭州</span>
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-green-600 font-semibold">250/天</span>
+                                </div>
+                                
+                                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: 45%"></div>
+                                </div>
+                                
+                                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    查看详情
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 初始化雷达图
+        let radarChart = null;
+
+        function initRadarChart() {
+            const ctx = document.getElementById('radarChart');
+            if (ctx && !radarChart) {
+                radarChart = new Chart(ctx.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['专业技能', '沟通能力', '团队协作', '创新思维', '学习能力', '执行力'],
+                        datasets: [{
+                            label: '能力评估',
+                            data: [85, 75, 90, 70, 95, 88],
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 20
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // 切换主要板块
+        function switchSection(sectionName) {
+            // 隐藏所有内容区域
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 显示选中的内容区域
+            document.getElementById(sectionName).classList.add('active');
+
+            // 更新菜单样式
+            document.querySelectorAll('[id^="menu-"]').forEach(menu => {
+                menu.classList.remove('bg-blue-50', 'text-blue-600', 'font-medium');
+                menu.classList.add('text-gray-700');
+            });
+
+            const activeMenu = document.getElementById('menu-' + sectionName);
+            activeMenu.classList.add('bg-blue-50', 'text-blue-600', 'font-medium');
+            activeMenu.classList.remove('text-gray-700');
+
+            // 更新页面标题
+            const titles = {
+                'dashboard': '仪表盘',
+                'training': '实训板块',
+                'internship': '实习板块'
+            };
+            document.getElementById('page-title').textContent = titles[sectionName];
+
+            // 如果切换到仪表盘，初始化雷达图
+            if (sectionName === 'dashboard') {
+                setTimeout(initRadarChart, 100);
+            }
+        }
+
+        // 实训板块Tab切换
+        document.getElementById('training-tab-square').addEventListener('click', function() {
+            this.classList.add('border-blue-500', 'text-blue-600');
+            this.classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById('training-tab-my').classList.remove('border-blue-500', 'text-blue-600');
+            document.getElementById('training-tab-my').classList.add('border-transparent', 'text-gray-500');
+            
+            document.getElementById('training-square').classList.remove('hidden');
+            document.getElementById('training-my').classList.add('hidden');
+        });
+
+        document.getElementById('training-tab-my').addEventListener('click', function() {
+            this.classList.add('border-blue-500', 'text-blue-600');
+            this.classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById('training-tab-square').classList.remove('border-blue-500', 'text-blue-600');
+            document.getElementById('training-tab-square').classList.add('border-transparent', 'text-gray-500');
+            
+            document.getElementById('training-my').classList.remove('hidden');
+            document.getElementById('training-square').classList.add('hidden');
+        });
+
+        // 实习板块Tab切换
+        document.getElementById('internship-tab-square').addEventListener('click', function() {
+            this.classList.add('border-blue-500', 'text-blue-600');
+            this.classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById('internship-tab-my').classList.remove('border-blue-500', 'text-blue-600');
+            document.getElementById('internship-tab-my').classList.add('border-transparent', 'text-gray-500');
+            
+            document.getElementById('internship-square').classList.remove('hidden');
+            document.getElementById('internship-my').classList.add('hidden');
+        });
+
+        document.getElementById('internship-tab-my').addEventListener('click', function() {
+            this.classList.add('border-blue-500', 'text-blue-600');
+            this.classList.remove('border-transparent', 'text-gray-500');
+            document.getElementById('internship-tab-square').classList.remove('border-blue-500', 'text-blue-600');
+            document.getElementById('internship-tab-square').classList.add('border-transparent', 'text-gray-500');
+            
+            document.getElementById('internship-my').classList.remove('hidden');
+            document.getElementById('internship-square').classList.add('hidden');
+        });
+
+        // 页面加载时初始化雷达图
+        document.addEventListener('DOMContentLoaded', function() {
+            initRadarChart();
+        });
+    </script>
+</body>
+</html>

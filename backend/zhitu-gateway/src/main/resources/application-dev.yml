@@ -1,0 +1,23 @@
+# Development Environment Configuration
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  # Swagger UI 配置
+  swagger-ui:
+    enabled: true
+
+# Swagger 聚合配置
+swagger:
+  # 启用 Swagger UI
+  enabled: true
+  # 访问控制配置
+  access-control:
+    # 开发环境不启用访问控制
+    enabled: false
+    # 启用审计日志
+    audit-enabled: true
+
+logging:
+  level:
+    com.zhitu: DEBUG
+    org.springframework.cloud.gateway: DEBUG

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实习详情页 - 前端开发实习生</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <button onclick="history.back()" class="mr-4 p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <h1 class="text-xl font-semibold text-gray-900">实习详情</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </button>
+                    <button class="p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m9.032 4.026a9.001 9.001 0 01-7.432 0m9.032-4.026A9.001 9.001 0 0112 3c-4.474 0-8.268 3.12-9.032 7.326m9.032 4.026A9.001 9.001 0 012.968 10.326m7.432 7.432a3 3 0 01-4.732 0m4.732 0a3 3 0 004.732 0"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- 企业信息区域 -->
+        <section class="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center">
+                    <div class="w-20 h-20 bg-blue-100 rounded-lg flex items-center justify-center mr-6">
+                        <span class="text-2xl font-bold text-blue-600">阿里</span>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">阿里巴巴集团</h1>
+                        <div class="flex items-center space-x-4 text-gray-600">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                互联网/电子商务
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                10000+人
+                            </span>
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                杭州市余杭区
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">招聘中</span>
+                </div>
+            </div>
+            
+            <div class="mt-6 pt-6 border-t">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">企业简介</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    阿里巴巴集团是全球领先的电子商务和科技公司，旗下拥有淘宝、天猫、阿里云等知名业务平台。
+                    公司致力于让天下没有难做的生意，通过技术创新推动商业变革，为全球数亿用户提供优质的互联网服务。
+                    作为中国互联网行业的领军企业，阿里巴巴在云计算、人工智能、数字支付等领域处于世界领先地位。
+                </p>
+            </div>
+        </section>
+
+        <!-- 岗位信息区域 -->
+        <section class="bg-white rounded-lg shadow-lg p-8 mb-8">
+            <div class="border-b pb-6 mb-6">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">前端开发实习生</h2>
+                        <p class="text-gray-600">技术部 · 淘宝前端技术团队</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-green-600 mb-1">250-300元/天</div>
+                        <p class="text-sm text-gray-600">实习薪资</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 岗位基础信息卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700">工作地点</span>
+                    </div>
+                    <p class="text-gray-900 font-semibold">杭州市余杭区</p>
+                    <p class="text-xs text-gray-600 mt-1">文一西路969号</p>
+                    <p class="text-xs text-green-600 mt-1">✓ 支持远程办公</p>
+                </div>
+
+                <div class="bg-green-50 rounded-lg p-4">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700">实习周期</span>
+                    </div>
+                    <p class="text-gray-900 font-semibold">2024.04.01 - 2024.09.30</p>
+                    <p class="text-xs text-gray-600 mt-1">共6个月</p>
+                    <p class="text-xs text-gray-600 mt-1">每周5天</p>
+                </div>
+
+                <div class="bg-purple-50 rounded-lg p-4">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700">招聘人数</span>
+                    </div>
+                    <p class="text-gray-900 font-semibold">15人</p>
+                    <p class="text-xs text-gray-600 mt-1">剩余名额：5个</p>
+                </div>
+
+                <div class="bg-orange-50 rounded-lg p-4">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-5 h-5 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700">转正机会</span>
+                    </div>
+                    <p class="text-gray-900 font-semibold">有转正名额</p>
+                    <p class="text-xs text-gray-600 mt-1">转正比例：30%</p>
+                    <p class="text-xs text-orange-600 mt-1">★ 重点培养岗位</p>
+                </div>
+            </div>
+
+            <!-- 实习工作职责 -->
+            <div class="mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                    实习工作职责
+                </h3>
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">参与淘宝前端页面的开发与维护，负责用户界面的实现和交互优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">使用React、Vue等现代前端框架进行组件开发和页面构建</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">配合产品经理和UI设计师，完成产品功能的开发实现</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">参与前端性能优化，提升页面加载速度和用户体验</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">学习和应用前端新技术，参与技术方案讨论和代码评审</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 任职要求 -->
+            <div class="mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    任职要求
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            学历要求
+                        </h4>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li>• 本科及以上学历</li>
+                            <li>• 计算机相关专业优先</li>
+                            <li>• 2024届毕业生</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                            </svg>
+                            专业技能
+                        </h4>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li>• 熟悉HTML、CSS、JavaScript基础</li>
+                            <li>• 了解React或Vue框架</li>
+                            <li>• 有前端项目经验者优先</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            实习经验
+                        </h4>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li>• 有相关实习经验者优先</li>
+                            <li>• 有个人项目或开源贡献者优先</li>
+                            <li>• 可接受无经验但学习能力强的同学</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-orange-50 rounded-lg p-6">
+                        <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            软技能
+                        </h4>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li>• 良好的沟通能力和团队协作精神</li>
+                            <li>• 主动学习，对技术有热情</li>
+                            <li>• 能够承受一定的工作压力</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实习待遇 -->
+            <div class="mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    实习待遇
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="border-l-4 border-green-500 pl-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">薪资福利</h4>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-center">
+                                <span class="text-green-600 font-bold mr-2">250-300元/天</span>
+                                <span class="text-sm text-gray-600">（根据能力面议）</span>
+                            </li>
+                            <li>• 餐补：50元/天</li>
+                            <li>• 交通补贴：200元/月</li>
+                            <li>• 住房补贴：1000元/月（外地学生）</li>
+                        </ul>
+                    </div>
+
+                    <div class="border-l-4 border-blue-500 pl-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">其他福利</h4>
+                        <ul class="space-y-2 text-gray-700">
+                            <li>• 免费三餐 + 下午茶</li>
+                            <li>• 免费健身房</li>
+                            <li>• 定期技术分享和培训</li>
+                            <li>• 实习证明和推荐信</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-yellow-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="font-semibold text-gray-900">住宿安排：</span>
+                        <span class="text-gray-700 ml-2">公司提供宿舍，4人间，配备基本生活设施</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部操作区域 -->
+        <section class="bg-white rounded-lg shadow-lg p-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-6">
+                    <div>
+                        <p class="text-sm text-gray-600">招聘状态</p>
+                        <p class="text-lg font-semibold text-green-600">招聘中</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">截止时间</p>
+                        <p class="text-lg font-semibold text-gray-900">2024-03-30</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">已投递</p>
+                        <p class="text-lg font-semibold text-gray-900">10/15人</p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        收藏岗位
+                    </button>
+                    <button class="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        立即投递
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center text-gray-600">
+                <p class="mb-2">如有疑问，请联系：hr@alibaba.com | 0571-85022088</p>
+                <p class="text-sm">© 2024 阿里巴巴集团 版权所有 | 浙ICP备08009512号</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
