@@ -460,7 +460,7 @@ public class StudentPortalService {
 
         // 查询项目任务
         String taskSql = "SELECT pt.id, pt.title, pt.description, pt.assignee_id, pt.status, " +
-                "pt.priority, pt.story_points, u.real_name as assignee_name " +
+                "pt.priority, pt.story_points, u.username as assignee_name " +
                 "FROM training_svc.project_task pt " +
                 "LEFT JOIN auth_center.sys_user u ON pt.assignee_id = u.id " +
                 "WHERE pt.project_id = ? AND pt.is_deleted IS FALSE " +
@@ -614,7 +614,7 @@ public class StudentPortalService {
         // 查询周报
         String sql = "SELECT wr.id, wr.internship_id, wr.week_start, wr.week_end, wr.content, " +
                 "wr.work_hours, wr.status, wr.review_comment, wr.reviewed_at, wr.created_at, " +
-                "u.real_name as reviewer_name " +
+                "u.username as reviewer_name " +
                 "FROM internship_svc.weekly_report wr " +
                 "LEFT JOIN auth_center.sys_user u ON wr.reviewed_by = u.id " +
                 "WHERE wr.student_id = ? " +
@@ -664,8 +664,9 @@ public class StudentPortalService {
             }
 
             // 查询评价记录
+            // 注意：sys_user 表没有 real_name 字段，使用 username 作为评价者名称
             String sql = "SELECT er.id, er.source_type, er.scores, er.comment, er.created_at, " +
-                    "u.real_name as evaluator_name " +
+                    "u.username as evaluator_name " +
                     "FROM growth_svc.evaluation_record er " +
                     "LEFT JOIN auth_center.sys_user u ON er.evaluator_id = u.id " +
                     "WHERE er.student_id = ? AND er.is_deleted IS FALSE " +

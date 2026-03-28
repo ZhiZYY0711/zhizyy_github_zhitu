@@ -18,12 +18,10 @@ const TECH_STACKS = ['React', 'Vue', 'Spring Boot', 'Node.js', 'Python', 'Redis'
 const DEPARTMENTS = ['前端组', '后端组', '算法组', '测试组', '运维组'];
 
 export const getMockDashboardStats = (): DashboardStats => ({
-  active_jobs: ri(5, 20),
-  pending_applications: ri(10, 50),
-  active_interns: ri(5, 30),
-  pending_reviews: ri(2, 15),
-  pending_weekly_reports: ri(3, 12),
-  upcoming_interviews: ri(1, 8),
+  activeJobCount: ri(5, 20),
+  pendingApplicationCount: ri(10, 50),
+  activeInternCount: ri(5, 30),
+  trainingProjectCount: ri(2, 10),
 });
 
 export const getMockJobs = (): Job[] => [

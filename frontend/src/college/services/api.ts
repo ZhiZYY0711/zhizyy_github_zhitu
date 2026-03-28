@@ -21,7 +21,7 @@ export const fetchTrends = (dimension = 'month') =>
 export const fetchStudents = (params?: { keyword?: string; class_id?: string; status?: string }) => {
   const q = new URLSearchParams();
   if (params?.keyword) q.set('keyword', params.keyword);
-  if (params?.class_id) q.set('class_id', params.class_id);
+  if (params?.class_id) q.set('classId', params.class_id);
   if (params?.status) q.set('status', params.status);
   const qs = q.toString() ? `?${q}` : '';
   return fetchWithAuth(`${USER_API}/college/students${qs}`, Mock.getMockStudents);
@@ -51,7 +51,7 @@ export const fetchPendingContracts = () =>
   fetchWithAuth(`${INTERNSHIP_API}/college/contracts/pending`, Mock.getMockContracts);
 
 export const auditContract = (id: string, result: 'pass' | 'reject', reject_reason?: string) =>
-  mutateWithAuth(`${INTERNSHIP_API}/college/contracts/${id}/audit`, 'POST', { result, reject_reason });
+  mutateWithAuth(`${INTERNSHIP_API}/college/contracts/${id}/audit`, 'POST', { action: result, comment: reject_reason });
 
 export const createInspection = (data: object) =>
   mutateWithAuth(`${INTERNSHIP_API}/college/inspections`, 'POST', data);
@@ -76,7 +76,7 @@ export const updateEnterpriseLevel = (id: string, level: string, reason: string)
   mutateWithAuth(`${PORTAL_API}/crm/enterprises/${id}/level`, 'PUT', { level, reason });
 
 export const fetchVisitRecords = (enterprise_id?: string) => {
-  const qs = enterprise_id ? `?enterprise_id=${enterprise_id}` : '';
+  const qs = enterprise_id ? `?enterpriseId=${enterprise_id}` : '';
   return fetchWithAuth(`${PORTAL_API}/crm/visits${qs}`, Mock.getMockVisitRecords);
 };
 

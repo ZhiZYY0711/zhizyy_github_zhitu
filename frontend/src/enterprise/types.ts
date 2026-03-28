@@ -136,12 +136,10 @@ export interface CodeReview {
 }
 
 export interface DashboardStats {
-  active_jobs: number;
-  pending_applications: number;
-  active_interns: number;
-  pending_reviews: number;
-  pending_weekly_reports: number;
-  upcoming_interviews: number;
+  activeJobCount: number;
+  pendingApplicationCount: number;
+  activeInternCount: number;
+  trainingProjectCount: number;
 }
 
 export interface TodoItem {

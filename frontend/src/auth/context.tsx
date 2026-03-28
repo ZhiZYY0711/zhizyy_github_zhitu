@@ -74,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session.accessToken}`,
         },
+        body: JSON.stringify({ refreshToken: session.refreshToken }),
       }).catch(() => {});
     }
     clearSession();

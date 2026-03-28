@@ -18,10 +18,13 @@ const TREND_DATA = [
   { week: '第6周', applications: 28, interns: 8 },
 ];
 
-const PRIORITY_CONFIG = {
+const PRIORITY_CONFIG: Record<string | number, {label: string, className: string}> = {
   high: { label: '紧急', className: 'bg-red-100 text-red-700 border-red-200' },
   medium: { label: '普通', className: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
   low: { label: '低优先', className: 'bg-gray-100 text-gray-600 border-gray-200' },
+  3: { label: '紧急', className: 'bg-red-100 text-red-700 border-red-200' },
+  2: { label: '普通', className: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
+  1: { label: '低优先', className: 'bg-gray-100 text-gray-600 border-gray-200' },
 };
 
 const TODO_ICON: Record<TodoItem['type'], React.ReactNode> = {
@@ -31,11 +34,13 @@ const TODO_ICON: Record<TodoItem['type'], React.ReactNode> = {
   contract: <ClipboardList className="h-4 w-4 text-orange-500" />,
 };
 
-const ACTIVITY_COLORS: Record<ActivityItem['type'], string> = {
+const ACTIVITY_COLORS: Record<string, string> = {
   application: 'bg-blue-500',
   interview: 'bg-green-500',
   weekly_report: 'bg-yellow-500',
   review: 'bg-purple-500',
+  report_submitted: 'bg-yellow-500',
+  evaluation: 'bg-purple-500',
 };
 
 export default function DashboardPage() {
@@ -49,23 +54,23 @@ export default function DashboardPage() {
     Promise.all([fetchDashboardStats(), fetchTodos(), fetchActivities()])
       .then(([s, t, a]) => { 
         setStats(s); 
-        setTodos(Array.isArray(t) ? t : t.records || []); 
-        setActivities(Array.isArray(a) ? a : a.records || []); 
+        setTodos(Array.isArray(t) ? t : (t as any).records || []); 
+        setActivities(Array.isArray(a) ? a : (a as any).records || []); 
       })
       .finally(() => setLoading(false));
   }, []);
 
   const statCards = stats ? [
-    { title: '在招职位', value: stats.active_jobs, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { title: '待处理简历', value: stats.pending_applications, icon: Users, color: 'text-orange-600', bg: 'bg-orange-50' },
-    { title: '在岗实习生', value: stats.active_interns, icon: UserCheck, color: 'text-green-600', bg: 'bg-green-50' },
-    { title: '待评审任务', value: stats.pending_reviews + stats.pending_weekly_reports, icon: ClipboardList, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { title: '在招职位', value: stats.activeJobCount || 0, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { title: '待处理简历', value: stats.pendingApplicationCount || 0, icon: Users, color: 'text-orange-600', bg: 'bg-orange-50' },
+    { title: '在岗实习生', value: stats.activeInternCount || 0, icon: UserCheck, color: 'text-green-600', bg: 'bg-green-50' },
+    { title: '实训项目', value: stats.trainingProjectCount || 0, icon: ClipboardList, color: 'text-purple-600', bg: 'bg-purple-50' },
   ] : [];
 
   const todosByType = {
-    interview: todos.filter(t => t.type === 'interview'),
-    weekly_report: todos.filter(t => t.type === 'weekly_report'),
-    code_review: todos.filter(t => t.type === 'code_review'),
+    interview: todos.filter(t => t.type === 'interview' || (t as any).todoType === 'interview_schedule'),
+    weekly_report: todos.filter(t => t.type === 'weekly_report' || (t as any).todoType === 'report_review'),
+    code_review: todos.filter(t => t.type === 'code_review' || (t as any).todoType === 'application_review'),
   };
 
   return (
@@ -125,11 +130,11 @@ export default function DashboardPage() {
                         <div className="mt-0.5">{TODO_ICON[todo.type]}</div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">{todo.title}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{todo.description}</p>
-                          {todo.due_time && <p className="text-xs text-blue-600 mt-1">{todo.due_time}</p>}
+                          <p className="text-xs text-muted-foreground mt-0.5">{todo.description || '暂无描述'}</p>
+                          {(todo.due_time || (todo as any).dueDate) && <p className="text-xs text-blue-600 mt-1">{todo.due_time || (todo as any).dueDate}</p>}
                         </div>
-                        <Badge className={PRIORITY_CONFIG[todo.priority].className}>
-                          {PRIORITY_CONFIG[todo.priority].label}
+                        <Badge className={PRIORITY_CONFIG[todo.priority]?.className || 'bg-gray-100 text-gray-600 border-gray-200'}>
+                          {PRIORITY_CONFIG[todo.priority]?.label || '普通'}
                         </Badge>
                       </div>
                     ))}
@@ -147,19 +152,22 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {activities.map((act, i) => (
+              {activities.map((act, i) => {
+                const actType = (act as any).activityType || act.type;
+                const actColor = ACTIVITY_COLORS[actType] || 'bg-gray-500';
+                return (
                 <div key={act.id} className="flex gap-3">
                   <div className="flex flex-col items-center">
-                    <div className={`h-2.5 w-2.5 rounded-full mt-1.5 ${ACTIVITY_COLORS[act.type]}`} />
+                    <div className={`h-2.5 w-2.5 rounded-full mt-1.5 ${actColor}`} />
                     {i < activities.length - 1 && <div className="w-px flex-1 bg-border mt-1" />}
                   </div>
                   <div className="pb-4 min-w-0">
-                    <p className="text-sm font-medium">{act.title}</p>
+                    <p className="text-sm font-medium">{act.title || '系统通知'}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{act.description}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{act.time}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{act.time || (act as any).createdAt}</p>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </CardContent>
         </Card>

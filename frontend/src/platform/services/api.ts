@@ -39,7 +39,7 @@ export const fetchEnterpriseAuditList = (status?: string) => {
 };
 
 export const auditEnterprise = (id: string, action: 'pass' | 'reject', reject_reason?: string) =>
-  mutateWithAuth(`${SYSTEM_API}/audits/enterprises/${id}`, 'POST', { action, reject_reason });
+  mutateWithAuth(`${SYSTEM_API}/audits/enterprises/${id}`, 'POST', { action, rejectReason: reject_reason });
 
 // ── Project Audit ─────────────────────────────────────────────────────────────
 
@@ -49,7 +49,7 @@ export const fetchProjectAuditList = (status?: string) => {
 };
 
 export const auditProject = (id: string, action: 'pass' | 'reject', quality_rating?: string, comment?: string) =>
-  mutateWithAuth(`${PORTAL_API}/audits/projects/${id}`, 'POST', { action, quality_rating, comment });
+  mutateWithAuth(`${PORTAL_API}/audits/projects/${id}`, 'POST', { action, qualityRating: quality_rating ? Number(quality_rating) : undefined, rejectReason: comment });
 
 // ── Tags ──────────────────────────────────────────────────────────────────────
 
@@ -59,7 +59,7 @@ export const fetchTags = (category?: string) => {
 };
 
 export const createTag = (data: { category: string; name: string; parent_id?: string }) =>
-  mutateWithAuth(`${SYSTEM_API}/tags`, 'POST', data);
+  mutateWithAuth(`${SYSTEM_API}/tags`, 'POST', { category: data.category, name: data.name, parentId: data.parent_id });
 
 export const deleteTag = (id: string) =>
   mutateWithAuth(`${SYSTEM_API}/tags/${id}`, 'DELETE');
@@ -91,12 +91,12 @@ export const saveRecommendationBanner = (data: object) =>
 
 export const fetchTopListItems = (listType: 'mentor' | 'course' | 'project') =>
   fetchWithAuth(
-    `${PORTAL_API}/recommendations/top-list?list_type=${listType}`,
+    `${PORTAL_API}/recommendations/top-list?listType=${listType}`,
     () => MockGenerator.getMockTopListItems(listType)
   );
 
 export const saveTopListItems = (listType: string, item_ids: string[]) =>
-  mutateWithAuth(`${PORTAL_API}/recommendations/top-list`, 'POST', { list_type: listType, item_ids });
+  mutateWithAuth(`${PORTAL_API}/recommendations/top-list`, 'POST', { listType, itemIds: item_ids.map(Number) });
 
 // ── Logs ──────────────────────────────────────────────────────────────────────
 
@@ -105,11 +105,11 @@ export const fetchOperationLogs = (params?: {
   start_time?: string; end_time?: string;
 }) => {
   const q = new URLSearchParams();
-  if (params?.user_id) q.set('user_id', params.user_id);
+  if (params?.user_id) q.set('userId', params.user_id);
   if (params?.module) q.set('module', params.module);
   if (params?.result) q.set('result', params.result);
-  if (params?.start_time) q.set('start_time', params.start_time);
-  if (params?.end_time) q.set('end_time', params.end_time);
+  if (params?.start_time) q.set('startTime', params.start_time);
+  if (params?.end_time) q.set('endTime', params.end_time);
   const qs = q.toString() ? `?${q}` : '';
   return fetchWithAuth(`${SYSTEM_API}/logs/operation${qs}`, MockGenerator.getMockOperationLogs);
 };

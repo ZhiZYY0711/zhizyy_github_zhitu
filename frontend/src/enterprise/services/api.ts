@@ -35,14 +35,19 @@ export const closeJob = (id: string) =>
 
 export const fetchApplications = (params?: { job_id?: string; status?: string }) => {
   const q = new URLSearchParams();
-  if (params?.job_id) q.set('job_id', params.job_id);
+  if (params?.job_id) q.set('jobId', params.job_id);
   if (params?.status) q.set('status', params.status);
   const qs = q.toString() ? `?${q}` : '';
   return fetchWithAuth(`${INTERNSHIP_API}/enterprise/applications${qs}`, Mock.getMockApplications);
 };
 
-export const scheduleInterview = (data: object) =>
-  mutateWithAuth(`${INTERNSHIP_API}/enterprise/interviews`, 'POST', data);
+export const scheduleInterview = (data: any) =>
+  mutateWithAuth(`${INTERNSHIP_API}/enterprise/interviews`, 'POST', {
+    applicationId: data.application_id,
+    interviewTime: data.time ? new Date(data.time).toISOString() : undefined,
+    location: data.link || '待定',
+    interviewType: data.type === 'online' ? 'video' : 'onsite'
+  });
 
 export const rejectApplication = (id: string) =>
   mutateWithAuth(`${INTERNSHIP_API}/enterprise/applications/${id}/reject`, 'POST');
@@ -83,10 +88,10 @@ export const sendOffer = (data: object) =>
   mutateWithAuth(`${INTERNSHIP_API}/enterprise/offers`, 'POST', data);
 
 export const approveAttendance = (record_id: string, action: 'approve' | 'reject', comment?: string) =>
-  mutateWithAuth(`${INTERNSHIP_API}/enterprise/attendance/audit`, 'POST', { record_id, action, comment });
+  mutateWithAuth(`${INTERNSHIP_API}/enterprise/attendance/audit`, 'POST', { attendanceId: record_id, status: action === 'approve' ? 1 : 2, auditRemark: comment });
 
-export const issueCertificate = (intern_id: string, comment: string) =>
-  mutateWithAuth(`${INTERNSHIP_API}/enterprise/certificates/issue`, 'POST', { intern_id, comment });
+export const issueCertificate = (intern_id: string, _comment: string) =>
+  mutateWithAuth(`${INTERNSHIP_API}/enterprise/certificates/issue?internshipId=${intern_id}`, 'POST');
 
 // ── Weekly Reports ────────────────────────────────────────────────────────────
 
@@ -95,8 +100,8 @@ export const fetchWeeklyReports = (status?: string) => {
   return fetchWithAuth(`${INTERNSHIP_API}/mentor/reports${qs}`, Mock.getMockWeeklyReports);
 };
 
-export const reviewWeeklyReport = (id: string, score: number, comment: string) =>
-  mutateWithAuth(`${INTERNSHIP_API}/mentor/reports/${id}/review`, 'POST', { score, comment });
+export const reviewWeeklyReport = (id: string, _score: number, comment: string) =>
+  mutateWithAuth(`${INTERNSHIP_API}/mentor/reports/${id}/review`, 'POST', { reviewComment: comment });
 
 // ── Code Reviews ──────────────────────────────────────────────────────────────
 
