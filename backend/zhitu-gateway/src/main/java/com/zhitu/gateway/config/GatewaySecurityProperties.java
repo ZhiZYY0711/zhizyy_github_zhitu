@@ -32,6 +32,7 @@ public class GatewaySecurityProperties {
     private List<String> getDefaultWhiteList() {
         return new ArrayList<>(List.of(
                 "/api/auth/v1/login",
+                "/api/auth/v1/logout",
                 "/api/auth/v1/token/refresh",
                 "/actuator/**",
                 "/swagger-ui.html",

@@ -243,6 +243,7 @@ zhitu:
   security:
     white-list:
       - /api/auth/v1/login
+      - /api/auth/v1/logout
       - /api/auth/v1/token/refresh
       - /actuator/**
       - /swagger-ui.html

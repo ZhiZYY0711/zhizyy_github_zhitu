@@ -101,16 +101,14 @@ function mapBadgeApiToBadge(apiBadge: any): any {
 // Helper function to convert backend dashboard stats to frontend format
 function mapDashboardStatsApiToStats(apiStats: any): any {
   return {
-    gpa: 0, // Not provided by backend, could be added later
-    credit_completed: 0, // Not provided by backend, could be added later
-    training_hours: apiStats.trainingProjectCount || 0, // Use training project count as proxy
-    internship_status: apiStats.internshipJobCount > 0 ? 1 : 0, // 0=未开始, 1=求职中
-    radar_summary: {
+    training_project_count: apiStats.trainingProjectCount || 0,
+    internship_job_count: apiStats.internshipJobCount || 0,
+    pending_tasks_count: apiStats.pendingTaskCount || 0,
+    growth_score: apiStats.growthScore || 0,
+    radar_summary: apiStats.radar_summary || {
       labels: [],
       data: [],
     },
-    pending_tasks_count: apiStats.pendingTaskCount || 0,
-    growth_score: apiStats.growthScore || 0,
   };
 }
 

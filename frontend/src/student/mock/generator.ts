@@ -1,15 +1,14 @@
 // f:\projects\zhitu\frontend\src\student\mock\generator.ts
 
 export interface DashboardStats {
-  gpa: number;
-  credit_completed: number;
-  training_hours: number;
-  internship_status: 0 | 1 | 2 | 3;
+  training_project_count: number;
+  internship_job_count: number;
+  pending_tasks_count: number;
+  growth_score: number;
   radar_summary: {
     labels: string[];
     data: number[];
   };
-  pending_tasks_count: number;
 }
 
 export interface RadarData {
@@ -107,20 +106,18 @@ export interface ScrumBoard {
 
 // Random helper functions
 const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
-const getRandomFloat = (min: number, max: number, decimals: number = 1) => parseFloat((Math.random() * (max - min) + min).toFixed(decimals));
 const getRandomArrayItem = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
 export const getMockDashboardStats = (): DashboardStats => {
   return {
-    gpa: getRandomFloat(2.0, 4.0, 2),
-    credit_completed: getRandomInt(80, 150),
-    training_hours: getRandomInt(100, 500),
-    internship_status: getRandomArrayItem([0, 1, 2, 3]),
+    training_project_count: getRandomInt(1, 4),
+    internship_job_count: getRandomInt(10, 200),
+    pending_tasks_count: getRandomInt(0, 5),
+    growth_score: getRandomInt(60, 100),
     radar_summary: {
       labels: ["技术", "沟通", "管理", "文档", "创新", "学习"],
       data: Array.from({ length: 6 }, () => getRandomInt(50, 95))
-    },
-    pending_tasks_count: getRandomInt(0, 10)
+    }
   };
 };
 

@@ -397,23 +397,23 @@ INSERT INTO "student_svc"."student_capability"
 ("student_id", "dimension", "score", "updated_at")
 VALUES
 -- 学生1: 王小明
-(1, '技术能力', 85, CURRENT_TIMESTAMP),
-(1, '沟通能力', 78, CURRENT_TIMESTAMP),
-(1, '团队协作', 82, CURRENT_TIMESTAMP),
-(1, '学习能力', 88, CURRENT_TIMESTAMP),
-(1, '问题解决', 80, CURRENT_TIMESTAMP),
+(1, 'technical_skill', 85, CURRENT_TIMESTAMP),
+(1, 'communication', 78, CURRENT_TIMESTAMP),
+(1, 'teamwork', 82, CURRENT_TIMESTAMP),
+(1, 'innovation', 88, CURRENT_TIMESTAMP),
+(1, 'problem_solving', 80, CURRENT_TIMESTAMP),
 -- 学生2: 李小红
-(2, '技术能力', 90, CURRENT_TIMESTAMP),
-(2, '沟通能力', 75, CURRENT_TIMESTAMP),
-(2, '团队协作', 80, CURRENT_TIMESTAMP),
-(2, '学习能力', 92, CURRENT_TIMESTAMP),
-(2, '问题解决', 88, CURRENT_TIMESTAMP),
+(2, 'technical_skill', 90, CURRENT_TIMESTAMP),
+(2, 'communication', 75, CURRENT_TIMESTAMP),
+(2, 'teamwork', 80, CURRENT_TIMESTAMP),
+(2, 'innovation', 92, CURRENT_TIMESTAMP),
+(2, 'problem_solving', 88, CURRENT_TIMESTAMP),
 -- 学生3: 张小强
-(3, '技术能力', 82, CURRENT_TIMESTAMP),
-(3, '沟通能力', 85, CURRENT_TIMESTAMP),
-(3, '团队协作', 88, CURRENT_TIMESTAMP),
-(3, '学习能力', 80, CURRENT_TIMESTAMP),
-(3, '问题解决', 78, CURRENT_TIMESTAMP);
+(3, 'technical_skill', 82, CURRENT_TIMESTAMP),
+(3, 'communication', 85, CURRENT_TIMESTAMP),
+(3, 'teamwork', 88, CURRENT_TIMESTAMP),
+(3, 'innovation', 80, CURRENT_TIMESTAMP),
+(3, 'problem_solving', 78, CURRENT_TIMESTAMP);
 
 -- 添加学生个性化推荐
 INSERT INTO "student_svc"."student_recommendation"
