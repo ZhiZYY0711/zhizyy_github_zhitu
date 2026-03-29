@@ -51,7 +51,8 @@ export const fetchPendingContracts = () =>
   fetchWithAuth(`${INTERNSHIP_API}/college/contracts/pending`, Mock.getMockContracts).then(
     (page: any) => {
       console.log('[API] fetchPendingContracts raw response:', page);
-      const result = page.content || page;
+      // MyBatis Plus 分页返回 page.records
+      const result = page?.records ?? page?.content ?? [];
       console.log('[API] fetchPendingContracts extracted result:', result);
       return result;
     }

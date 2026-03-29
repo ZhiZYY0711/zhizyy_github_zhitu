@@ -66,9 +66,11 @@
             ON ir.enterprise_id = ei.tenant_id
         LEFT JOIN internship_svc.internship_job ij
             ON ir.job_id = ij.id
-        LEFT JOIN auth_center.sys_user mu
-            ON ir.mentor_id = mu.id
-        LEFT JOIN auth_center.sys_user tu
+        LEFT JOIN internship_svc.internship_mentor im
+            ON ir.mentor_id = im.id
+        LEFT JOIN system_svc.sys_user mu
+            ON im.user_id = mu.id
+        LEFT JOIN system_svc.sys_user tu
             ON ir.teacher_id = tu.id
         LEFT JOIN LATERAL (
             SELECT MAX(created_at) AS last_report_time
