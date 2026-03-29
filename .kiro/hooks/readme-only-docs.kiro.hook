@@ -4,13 +4,12 @@
   "description": "Reminds the agent to generate only a README file when creating documentation, avoiding unnecessary markdown files",
   "version": "1",
   "when": {
-    "type": "preToolUse",
-    "toolTypes": [
-      "write"
-    ]
+    "type": "postTaskExecution"
   },
   "then": {
     "type": "askAgent",
     "prompt": "When generating documentation, create only a README file. Do not create additional markdown files unless explicitly requested by the user. Keep documentation minimal and consolidated."
-  }
+  },
+  "workspaceFolderName": "zhitu",
+  "shortName": "readme-only-docs"
 }

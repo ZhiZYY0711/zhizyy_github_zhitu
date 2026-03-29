@@ -2,7 +2,7 @@ package com.zhitu.college.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zhitu.college.entity.InternshipOffer;
+import com.zhitu.college.dto.ContractDTO;
 import com.zhitu.college.entity.InternshipRecord;
 import com.zhitu.college.service.CollegeInternshipService;
 import org.junit.jupiter.api.Test;
@@ -103,20 +103,24 @@ class CollegeInternshipOversightControllerTest {
 
     @Test
     void testGetPendingContracts() throws Exception {
-        InternshipOffer offer1 = new InternshipOffer();
-        offer1.setId(1L);
-        offer1.setStudentId(100L);
-        offer1.setCollegeAudit(0);
-        offer1.setStatus(1);
+        ContractDTO contract1 = new ContractDTO();
+        contract1.setId(1L);
+        contract1.setStudentName("张三");
+        contract1.setCompanyName("阿里巴巴");
+        contract1.setPosition("Java开发实习生");
+        contract1.setSubmitTime("2024-03-15T10:30:00Z");
+        contract1.setStatus("pending");
 
-        InternshipOffer offer2 = new InternshipOffer();
-        offer2.setId(2L);
-        offer2.setStudentId(101L);
-        offer2.setCollegeAudit(0);
-        offer2.setStatus(1);
+        ContractDTO contract2 = new ContractDTO();
+        contract2.setId(2L);
+        contract2.setStudentName("李四");
+        contract2.setCompanyName("腾讯");
+        contract2.setPosition("前端开发实习生");
+        contract2.setSubmitTime("2024-03-16T11:00:00Z");
+        contract2.setStatus("pending");
 
-        IPage<InternshipOffer> page = new Page<>(1, 10);
-        page.setRecords(Arrays.asList(offer1, offer2));
+        IPage<ContractDTO> page = new Page<>(1, 10);
+        page.setRecords(Arrays.asList(contract1, contract2));
         page.setTotal(2);
 
         when(collegeInternshipService.getPendingContracts(1, 10)).thenReturn(page);
@@ -135,7 +139,7 @@ class CollegeInternshipOversightControllerTest {
 
     @Test
     void testGetPendingContracts_DefaultPagination() throws Exception {
-        IPage<InternshipOffer> page = new Page<>(1, 10);
+        IPage<ContractDTO> page = new Page<>(1, 10);
         page.setRecords(Arrays.asList());
         page.setTotal(0);
 

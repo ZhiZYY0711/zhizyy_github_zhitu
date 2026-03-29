@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import com.zhitu.college.dto.DashboardStatsDTO;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -35,41 +37,32 @@ public class CollegePortalService {
      * Get dashboard employment statistics
      * Requirements: 20.1-20.7
      */
-    public Map<String, Object> getDashboardStats(String year) {
+    public DashboardStatsDTO getDashboardStats(String year) {
         Long tenantId = UserContext.getTenantId();
-        String cacheKey = "college:dashboard:stats:" + tenantId + ":" + (year != null ? year : "all");
         
-        return cacheService.getOrSet(cacheKey, 3600, () -> {
-            Map<String, Object> stats = new HashMap<>();
-            
-            // Total student count
-            long totalStudents = studentInfoMapper.selectCount(
-                new LambdaQueryWrapper<StudentInfo>()
-                    .eq(StudentInfo::getTenantId, tenantId)
-            );
-            stats.put("totalStudentCount", totalStudents);
-            
-            // TODO: Calculate actual internship participation rate from internship records
-            // For now, return mock data
-            stats.put("internshipParticipationRate", 75.5);
-            
-            // TODO: Calculate actual employment rate from employment records
-            stats.put("employmentRate", 82.3);
-            
-            // TODO: Calculate actual average salary from employment records
-            stats.put("averageSalary", 8500);
-            
-            // TODO: Get top hiring enterprises from internship/employment records
-            stats.put("topHiringEnterprises", Arrays.asList(
-                Map.of("name", "企业A", "hireCount", 15),
-                Map.of("name", "企业B", "hireCount", 12),
-                Map.of("name", "企业C", "hireCount", 10)
-            ));
-            
-            stats.put("year", year != null ? year : LocalDate.now().getYear());
-            
-            return stats;
-        });
+        // Total student count
+        long totalStudents = studentInfoMapper.selectCount(
+            new LambdaQueryWrapper<StudentInfo>()
+                .eq(StudentInfo::getTenantId, tenantId)
+        );
+
+        // TODO: Calculate actual rates from internship/employment records
+        // TODO: Calculate actual average salary from employment records
+        // TODO: Get top hiring industries from internship/employment records
+        return DashboardStatsDTO.builder()
+            .totalGraduates(totalStudents)
+            .internshipRate(0.93)
+            .employmentRate(0.87)
+            .flexibleEmploymentRate(0.12)
+            .avgSalary(9200)
+            .topIndustries(Arrays.asList(
+                DashboardStatsDTO.IndustryItem.builder().name("互联网").ratio(0.42).build(),
+                DashboardStatsDTO.IndustryItem.builder().name("金融").ratio(0.18).build(),
+                DashboardStatsDTO.IndustryItem.builder().name("制造业").ratio(0.15).build(),
+                DashboardStatsDTO.IndustryItem.builder().name("教育").ratio(0.10).build(),
+                DashboardStatsDTO.IndustryItem.builder().name("其他").ratio(0.15).build()
+            ))
+            .build();
     }
 
     /**
@@ -78,66 +71,47 @@ public class CollegePortalService {
      */
     public Map<String, Object> getEmploymentTrends(String dimension) {
         Long tenantId = UserContext.getTenantId();
-        String cacheKey = "college:employment:trends:" + tenantId + ":" + dimension;
         
-        return cacheService.getOrSet(cacheKey, 3600, () -> {
-            Map<String, Object> trends = new HashMap<>();
-            trends.put("dimension", dimension);
-            
-            // TODO: Calculate actual trends from historical data
-            // For now, return mock trend data
-            List<Map<String, Object>> trendData = new ArrayList<>();
-            
-            switch (dimension) {
-                case "month":
-                    for (int i = 1; i <= 12; i++) {
-                        trendData.add(Map.of(
-                            "period", i + "月",
-                            "internshipRate", 70 + (i * 2),
-                            "employmentRate", 75 + i,
-                            "averageSalary", 8000 + (i * 100)
-                        ));
-                    }
-                    break;
-                case "quarter":
-                    for (int i = 1; i <= 4; i++) {
-                        trendData.add(Map.of(
-                            "period", "Q" + i,
-                            "internshipRate", 72 + (i * 3),
-                            "employmentRate", 78 + (i * 2),
-                            "averageSalary", 8200 + (i * 300)
-                        ));
-                    }
-                    break;
-                case "year":
-                    int currentYear = LocalDate.now().getYear();
-                    for (int i = 0; i < 5; i++) {
-                        int year = currentYear - 4 + i;
-                        trendData.add(Map.of(
-                            "period", String.valueOf(year),
-                            "internshipRate", 65 + (i * 5),
-                            "employmentRate", 70 + (i * 4),
-                            "averageSalary", 7000 + (i * 500)
-                        ));
-                    }
-                    break;
-            }
-            
-            trends.put("internshipTrends", trendData);
-            trends.put("employmentTrends", trendData);
-            trends.put("salaryTrends", trendData);
-            
-            // TODO: Calculate industry distribution from actual data
-            trends.put("industryDistribution", Arrays.asList(
-                Map.of("industry", "互联网", "percentage", 35.5),
-                Map.of("industry", "制造业", "percentage", 25.3),
-                Map.of("industry", "金融", "percentage", 18.2),
-                Map.of("industry", "教育", "percentage", 12.0),
-                Map.of("industry", "其他", "percentage", 9.0)
-            ));
-            
-            return trends;
-        });
+        Map<String, Object> trends = new HashMap<>();
+        
+        // Frontend expects: { labels: string[], series: [{ name: string, data: number[] }] }
+        List<String> labels = new ArrayList<>();
+        List<Double> internshipData = new ArrayList<>();
+        List<Double> employmentData = new ArrayList<>();
+        
+        // TODO: Calculate actual trends from historical data
+        // For now, return mock trend data matching frontend expectations
+        switch (dimension) {
+            case "month":
+                labels = Arrays.asList("1月", "2月", "3月", "4月", "5月", "6月");
+                internshipData = Arrays.asList(0.12, 0.28, 0.55, 0.72, 0.88, 0.93);
+                employmentData = Arrays.asList(0.05, 0.10, 0.22, 0.38, 0.55, 0.68);
+                break;
+            case "quarter":
+                labels = Arrays.asList("Q1", "Q2", "Q3", "Q4");
+                internshipData = Arrays.asList(0.25, 0.55, 0.75, 0.90);
+                employmentData = Arrays.asList(0.15, 0.35, 0.60, 0.80);
+                break;
+            case "year":
+                int currentYear = LocalDate.now().getYear();
+                labels = new ArrayList<>();
+                internshipData = new ArrayList<>();
+                employmentData = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    labels.add(String.valueOf(currentYear - 4 + i));
+                    internshipData.add(0.65 + (i * 0.05));
+                    employmentData.add(0.70 + (i * 0.04));
+                }
+                break;
+        }
+        
+        trends.put("labels", labels);
+        trends.put("series", Arrays.asList(
+            Map.of("name", "实习率", "data", internshipData),
+            Map.of("name", "三方签约率", "data", employmentData)
+        ));
+        
+        return trends;
     }
 
     /**

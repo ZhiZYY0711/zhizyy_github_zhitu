@@ -15,7 +15,17 @@ const EmploymentPage = () => {
 
   useEffect(() => {
     fetchEmploymentStats().then(setStats);
-    fetchPendingContracts().then(setContracts);
+    fetchPendingContracts().then(data => {
+      console.log('[EmploymentPage] Received contracts data:', data);
+      console.log('[EmploymentPage] Is array?', Array.isArray(data));
+      // 确保 data 是数组
+      const contractsArray = Array.isArray(data) ? data : [];
+      console.log('[EmploymentPage] Setting contracts:', contractsArray);
+      setContracts(contractsArray);
+    }).catch(err => {
+      console.error('[EmploymentPage] Failed to fetch contracts:', err);
+      setContracts([]);
+    });
   }, []);
 
   const handleAudit = async (id: string, result: 'pass' | 'reject') => {
@@ -69,14 +79,20 @@ const EmploymentPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {contracts.map(c => {
+                {contracts.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="text-center py-8 text-muted-foreground">
+                      暂无待审核协议
+                    </td>
+                  </tr>
+                ) : contracts.map(c => {
                   const st = contractStatusMap[c.status];
                   return (
                     <tr key={c.id} className="border-t hover:bg-muted/30 transition-colors">
-                      <td className="px-4 py-3 font-medium">{c.student_name}</td>
-                      <td className="px-4 py-3">{c.company_name}</td>
+                      <td className="px-4 py-3 font-medium">{c.studentName}</td>
+                      <td className="px-4 py-3">{c.companyName}</td>
                       <td className="px-4 py-3 text-muted-foreground">{c.position}</td>
-                      <td className="px-4 py-3 text-muted-foreground text-xs">{c.submit_time}</td>
+                      <td className="px-4 py-3 text-muted-foreground text-xs">{c.submitTime}</td>
                       <td className="px-4 py-3">
                         <Badge className={st.className}>{st.label}</Badge>
                       </td>

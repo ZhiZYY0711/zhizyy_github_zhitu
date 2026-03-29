@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "DTO to TypeScript Sync",
+  "description": "保存 Java DTO/Request/Response 类时，提示生成或更新对应的 TypeScript 类型",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*DTO.java",
+      "**/*Dto.java",
+      "**/*Request.java",
+      "**/*Response.java",
+      "**/*VO.java",
+      "**/*Vo.java"
+    ]
+  },
+  "instructions": "分析刚刚编辑的 Java DTO 文件，完成以下任务：\n\n1. 提取所有字段，注意：\n   - 检查是否有 @JsonProperty 注解（影响序列化字段名）\n   - 检查是否有 @NotNull / @NotBlank（决定 TS 字段是否可选）\n   - 识别字段类型（Long/Integer/BigDecimal/LocalDateTime 等）\n\n2. 按照 .kiro/steering/api-contract.md 的类型映射规则，生成对应的 TypeScript interface：\n   - Long → string\n   - BigDecimal → string\n   - LocalDateTime/LocalDate → string\n   - 无 @NotNull 的字段 → 加 | null\n   - List<T> → T[]\n\n3. 在聊天中输出生成的 TypeScript interface\n\n4. 询问是否需要将该 interface 写入 src/types/ 目录下的对应文件"
+}

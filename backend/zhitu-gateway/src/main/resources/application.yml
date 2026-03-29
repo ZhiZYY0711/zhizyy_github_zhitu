@@ -76,6 +76,12 @@ spring:
                 key-resolver: "#{@userKeyResolver}"
           order: 2
 
+        # 高校服务：/api/college/** → zhitu-college
+        - id: college-service
+          uri: lb://zhitu-college
+          predicates:
+            - Path=/api/college/**
+
         # 学生门户 API 文档：/api/student-portal/v3/api-docs → zhitu-student/v3/api-docs
         - id: student-portal-api-docs
           uri: lb://zhitu-student

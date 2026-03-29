@@ -24,6 +24,10 @@ public class GatewaySecurityProperties {
         if (whiteList == null || whiteList.isEmpty()) {
             whiteList = getDefaultWhiteList();
         }
+        // 打印白名单配置，便于调试
+        System.out.println("=== 网关白名单配置 ===");
+        whiteList.forEach(path -> System.out.println("  - " + path));
+        System.out.println("======================");
     }
 
     /**

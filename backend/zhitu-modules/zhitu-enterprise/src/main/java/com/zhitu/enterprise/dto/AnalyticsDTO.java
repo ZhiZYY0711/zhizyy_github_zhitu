@@ -17,6 +17,30 @@ import java.util.List;
 public class AnalyticsDTO {
     
     /**
+     * 转化率数据
+     */
+    @Schema(description = "转化率数据")
+    private ConversionRate conversionRate;
+    
+    /**
+     * 转化率趋势
+     */
+    @Schema(description = "转化率趋势")
+    private List<ConversionTrend> conversionTrend;
+    
+    /**
+     * 贡献度数据
+     */
+    @Schema(description = "贡献度数据")
+    private Contribution contribution;
+    
+    /**
+     * 招聘漏斗数据
+     */
+    @Schema(description = "招聘漏斗数据")
+    private List<RecruitmentFunnel> recruitmentFunnel;
+    
+    /**
      * 申请趋势数据
      */
     @Schema(description = "申请趋势数据")
@@ -39,6 +63,94 @@ public class AnalyticsDTO {
      */
     @Schema(description = "导师满意度评分", example = "4.5")
     private Double mentorSatisfaction;
+    
+    /**
+     * 简化构造器 - 用于测试和简单场景
+     */
+    public AnalyticsDTO(List<TrendDataPoint> applicationTrends, 
+                       InternPerformanceMetrics internPerformance,
+                       Double projectCompletionRate,
+                       Double mentorSatisfaction) {
+        this.applicationTrends = applicationTrends;
+        this.internPerformance = internPerformance;
+        this.projectCompletionRate = projectCompletionRate;
+        this.mentorSatisfaction = mentorSatisfaction;
+    }
+    
+    /**
+     * 转化率数据
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "转化率数据")
+    public static class ConversionRate {
+        @Schema(description = "实习转正率", example = "0.65")
+        private Double internshipToFulltime;
+        
+        @Schema(description = "招聘成本节省", example = "50000")
+        private Double costSaving;
+    }
+    
+    /**
+     * 转化率趋势
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "转化率趋势")
+    public static class ConversionTrend {
+        @Schema(description = "月份", example = "2024-01")
+        private String month;
+        
+        @Schema(description = "转化率", example = "0.65")
+        private Double rate;
+    }
+    
+    /**
+     * 贡献度数据
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "贡献度数据")
+    public static class Contribution {
+        @Schema(description = "总价值", example = "500000")
+        private Double totalValue;
+        
+        @Schema(description = "按部门分布")
+        private List<DepartmentContribution> byDepartment;
+    }
+    
+    /**
+     * 部门贡献度
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "部门贡献度")
+    public static class DepartmentContribution {
+        @Schema(description = "部门名称", example = "技术部")
+        private String department;
+        
+        @Schema(description = "贡献值", example = "200000")
+        private Double value;
+    }
+    
+    /**
+     * 招聘漏斗
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "招聘漏斗")
+    public static class RecruitmentFunnel {
+        @Schema(description = "阶段", example = "简历筛选")
+        private String stage;
+        
+        @Schema(description = "人数", example = "100")
+        private Integer count;
+    }
     
     /**
      * 趋势数据点

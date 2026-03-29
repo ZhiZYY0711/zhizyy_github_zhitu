@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, Calendar, Star } from 'lucide-react';
+import { ExternalLink, Calendar, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -18,6 +18,8 @@ const STATUS_CONFIG = {
   withdrawn: { label: '已撤回', className: 'bg-gray-100 text-gray-600 border-gray-200' },
 };
 
+const PAGE_SIZE_OPTIONS = [10, 20, 50];
+
 export default function ApplicationList() {
   const [apps, setApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(false);
@@ -26,21 +28,46 @@ export default function ApplicationList() {
   const [interviewForm, setInterviewForm] = useState({ time: '', type: 'online', link: '' });
   const [submitting, setSubmitting] = useState(false);
 
+  // 分页状态
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+
   const load = async () => {
     setLoading(true);
     try {
-      const data = await fetchApplications({ status: statusFilter !== 'all' ? statusFilter : undefined });
-      setApps(data);
+      // 后端使用数字状态: 0-待处理，1-已通过，2-已拒绝
+      const statusParam = statusFilter === 'all' ? undefined :
+                          statusFilter === 'pending' ? 0 :
+                          statusFilter === 'offered' ? 1 : 2;
+      const result = await fetchApplications({
+        status: statusParam,
+        page: currentPage,
+        size: pageSize,
+      });
+      setApps(result.records);
+      setTotal(result.total);
     } finally { setLoading(false); }
   };
 
-  useEffect(() => { load(); }, [statusFilter]);
+  useEffect(() => {
+    // 筛选条件改变时重置到第一页
+    setCurrentPage(1);
+  }, [statusFilter]);
+
+  useEffect(() => { load(); }, [currentPage, pageSize, statusFilter]);
 
   const handleInterview = async () => {
     if (!interviewTarget) return;
     setSubmitting(true);
     try {
-      await scheduleInterview({ application_id: interviewTarget.application_id, ...interviewForm });
+      await scheduleInterview({
+        application_id: Number(interviewTarget.application_id),
+        student_id: Number(interviewTarget.student_id),
+        time: interviewForm.time,
+        link: interviewForm.link,
+        type: interviewForm.type as 'online' | 'onsite',
+      });
       setApps(prev => prev.map(a => a.application_id === interviewTarget.application_id ? { ...a, status: 'interview' as const } : a));
       setInterviewTarget(null);
     } finally { setSubmitting(false); }
@@ -55,24 +82,27 @@ export default function ApplicationList() {
     await addToTalentPool(app.student_id, ['潜力股']);
   };
 
-  const filtered = apps.filter(a => statusFilter === 'all' || a.status === statusFilter);
+  // 计算总页数
+  const totalPages = Math.ceil(total / pageSize);
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-36">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全部状态</SelectItem>
-            <SelectItem value="pending">待处理</SelectItem>
-            <SelectItem value="interview">面试中</SelectItem>
-            <SelectItem value="offered">已发 Offer</SelectItem>
-            <SelectItem value="rejected">已拒绝</SelectItem>
-          </SelectContent>
-        </Select>
-        <span className="text-sm text-muted-foreground">共 {filtered.length} 份简历</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全部状态</SelectItem>
+              <SelectItem value="pending">待处理</SelectItem>
+              <SelectItem value="interview">面试中</SelectItem>
+              <SelectItem value="offered">已发 Offer</SelectItem>
+              <SelectItem value="rejected">已拒绝</SelectItem>
+            </SelectContent>
+          </Select>
+          <span className="text-sm text-muted-foreground">共 {total} 份简历</span>
+        </div>
       </div>
 
       <div className="rounded-md border overflow-x-auto">
@@ -90,9 +120,9 @@ export default function ApplicationList() {
           <tbody>
             {loading ? (
               <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">加载中...</td></tr>
-            ) : filtered.length === 0 ? (
+            ) : apps.length === 0 ? (
               <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">暂无简历</td></tr>
-            ) : filtered.map(app => (
+            ) : apps.map(app => (
               <tr key={app.application_id} className="border-t hover:bg-muted/20 transition-colors">
                 <td className="px-4 py-3">
                   <div>
@@ -102,22 +132,30 @@ export default function ApplicationList() {
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{app.job_title}</td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-2 min-w-24">
-                    <Progress value={app.match_score * 100} className="h-1.5 flex-1" />
-                    <span className={`text-xs font-medium ${app.match_score >= 0.8 ? 'text-green-600' : app.match_score >= 0.6 ? 'text-yellow-600' : 'text-gray-500'}`}>
-                      {Math.round(app.match_score * 100)}%
-                    </span>
-                  </div>
+                  {app.match_score !== undefined ? (
+                    <div className="flex items-center gap-2 min-w-24">
+                      <Progress value={app.match_score * 100} className="h-1.5 flex-1" />
+                      <span className={`text-xs font-medium ${app.match_score >= 0.8 ? 'text-green-600' : app.match_score >= 0.6 ? 'text-yellow-600' : 'text-gray-500'}`}>
+                        {Math.round(app.match_score * 100)}%
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">-</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{app.apply_time}</td>
                 <td className="px-4 py-3">
-                  <Badge className={STATUS_CONFIG[app.status].className}>{STATUS_CONFIG[app.status].label}</Badge>
+                  <Badge className={STATUS_CONFIG[app.status]?.className || STATUS_CONFIG.pending.className}>
+                    {STATUS_CONFIG[app.status]?.label || '未知'}
+                  </Badge>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <Button variant="ghost" size="sm" onClick={() => window.open(app.resume_url, '_blank')}>
-                      <ExternalLink className="h-3.5 w-3.5 mr-1" />简历
-                    </Button>
+                    {app.resume_url && (
+                      <Button variant="ghost" size="sm" onClick={() => window.open(app.resume_url, '_blank')}>
+                        <ExternalLink className="h-3.5 w-3.5 mr-1" />简历
+                      </Button>
+                    )}
                     {app.status === 'pending' && (
                       <>
                         <Button variant="outline" size="sm" onClick={() => setInterviewTarget(app)}>
@@ -138,6 +176,73 @@ export default function ApplicationList() {
           </tbody>
         </table>
       </div>
+
+      {/* 分页控件 */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-2">
+          <div className="text-sm text-muted-foreground">
+            共 {total} 条记录，第 {currentPage} / {totalPages} 页
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); setCurrentPage(1); }}>
+              <SelectTrigger className="w-20 h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PAGE_SIZE_OPTIONS.map(size => (
+                  <SelectItem key={size} value={String(size)}>{size} 条/页</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(p => p - 1)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setCurrentPage(pageNum)}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(p => p + 1)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Dialog open={!!interviewTarget} onOpenChange={() => setInterviewTarget(null)}>
         <DialogContent className="max-w-md">

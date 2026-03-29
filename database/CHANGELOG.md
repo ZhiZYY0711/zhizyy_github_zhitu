@@ -4,6 +4,63 @@
 
 ---
 
+## [v1.6.0] - 2026-03-29
+
+### 新增
+- 为 `auth_center.sys_user` 表添加 `real_name` 字段
+- 支持存储所有用户类型（企业员工、教师、平台管理员等）的真实姓名
+- 添加 `idx_user_realname` 索引优化查询性能
+
+### 修复
+- 修复跨服务查询时无法获取企业导师和教师姓名的问题
+- 修复 `InternshipManageService.getInternList()` SQL 错误
+- 简化 JOIN 逻辑，直接从 `sys_user` 获取导师和教师姓名
+
+### 数据迁移
+- 将现有用户的 `username` 复制到 `real_name` 作为默认值
+- 所有现有数据保持向后兼容
+
+### 影响范围
+- `auth_center.sys_user` 表结构变更
+- `InternshipManageService` 查询逻辑优化
+- 不影响现有功能，向后兼容
+
+### 文件
+- `v1.6.0-add-user-realname/upgrade.sql` - 升级脚本
+- `v1.6.0-add-user-realname/rollback.sql` - 回滚脚本
+- `v1.6.0-add-user-realname/verify.sql` - 验证脚本
+- `v1.6.0-add-user-realname/deploy.sh` - Linux部署脚本
+- `v1.6.0-add-user-realname/deploy.bat` - Windows部署脚本
+- `v1.6.0-add-user-realname/README.md` - 详细说明
+
+---
+
+## [v1.5.0] - 2026-03-28
+
+### 新增
+- 新增代码评审功能表 `training_svc.code_review`
+- 支持导师对学生项目代码进行在线评审
+- 支持代码行级评审和评审意见分级
+- 生成500条测试数据
+
+### 功能特性
+- 评审严重程度分级：suggestion（建议）、warning（警告）、error（错误）
+- 评审状态跟踪：pending（待处理）、resolved（已解决）、closed（已关闭）
+- 支持记录文件路径、行号、代码片段
+- 支持评审解决人和解决时间记录
+
+### 索引优化
+- 项目ID、学生ID、导师ID索引
+- 状态索引、创建时间索引
+
+### 文件
+- `v1.5.0-code-review/upgrade.sql` - 升级脚本
+- `v1.5.0-code-review/rollback.sql` - 回滚脚本
+- `v1.5.0-code-review/verify.sql` - 验证脚本
+- `v1.5.0-code-review/README.md` - 详细说明
+
+---
+
 ## [v1.3.0] - 2025-03-22
 
 ### 新增
@@ -152,5 +209,5 @@
 
 ---
 
-**最后更新：** 2025-03-22  
-**当前版本：** v1.3.0
+**最后更新：** 2026-03-29  
+**当前版本：** v1.6.0

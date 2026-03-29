@@ -5,10 +5,10 @@ import { Search } from 'lucide-react';
 import { fetchStudents } from '../../services/api';
 import type { Student } from '../../types';
 
-const statusMap: Record<Student['status'], { label: string; className: string }> = {
-  active: { label: '在读', className: 'border-transparent bg-green-500 text-white' },
-  suspended: { label: '休学', className: 'border-transparent bg-yellow-500 text-white' },
-  graduated: { label: '毕业', className: 'border-transparent bg-gray-400 text-white' },
+// 性别映射
+const genderMap: Record<number, string> = {
+  1: '男',
+  2: '女',
 };
 
 const StudentList = () => {
@@ -20,8 +20,13 @@ const StudentList = () => {
   useEffect(() => {
     setLoading(true);
     fetchStudents({ keyword }).then(data => {
-      setStudents(data.records);
-      setTotal(data.total);
+      // 确保 data.records 是数组
+      setStudents(Array.isArray(data?.records) ? data.records : []);
+      setTotal(data?.total || 0);
+      setLoading(false);
+    }).catch(() => {
+      setStudents([]);
+      setTotal(0);
       setLoading(false);
     });
   }, [keyword]);
@@ -47,33 +52,24 @@ const StudentList = () => {
             <tr>
               <th className="text-left px-4 py-3 font-medium">学号</th>
               <th className="text-left px-4 py-3 font-medium">姓名</th>
-              <th className="text-left px-4 py-3 font-medium">班级</th>
-              <th className="text-left px-4 py-3 font-medium">GPA</th>
+              <th className="text-left px-4 py-3 font-medium">性别</th>
+              <th className="text-left px-4 py-3 font-medium">年级</th>
               <th className="text-left px-4 py-3 font-medium">联系方式</th>
-              <th className="text-left px-4 py-3 font-medium">状态</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="text-center py-8 text-muted-foreground">加载中...</td></tr>
+              <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">加载中...</td></tr>
             ) : students.length === 0 ? (
-              <tr><td colSpan={6} className="text-center py-8 text-muted-foreground">暂无数据</td></tr>
+              <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">暂无数据</td></tr>
             ) : students.map(s => {
-              const st = statusMap[s.status];
               return (
                 <tr key={s.id} className="border-t hover:bg-muted/30 transition-colors">
-                  <td className="px-4 py-3 font-mono text-xs">{s.student_no}</td>
-                  <td className="px-4 py-3 font-medium">{s.name}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{s.class_name}</td>
-                  <td className="px-4 py-3">
-                    <span className={s.gpa >= 3.5 ? 'text-green-600 font-medium' : s.gpa < 2.5 ? 'text-red-500' : ''}>
-                      {s.gpa.toFixed(1)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">{s.phone}</td>
-                  <td className="px-4 py-3">
-                    <Badge className={st.className}>{st.label}</Badge>
-                  </td>
+                  <td className="px-4 py-3 font-mono text-xs">{s.studentNo}</td>
+                  <td className="px-4 py-3 font-medium">{s.realName}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{genderMap[s.gender] || '-'}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{s.grade || '-'}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{s.phone || '-'}</td>
                 </tr>
               );
             })}

@@ -2,8 +2,9 @@ package com.zhitu.college.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zhitu.college.dto.AuditContractRequest;
+import com.zhitu.college.dto.ContractDTO;
 import com.zhitu.college.dto.CreateInspectionRequest;
-import com.zhitu.college.entity.InternshipOffer;
+import com.zhitu.college.dto.InternshipStudentDTO;
 import com.zhitu.college.entity.InternshipRecord;
 import com.zhitu.college.service.CollegeInternshipService;
 import com.zhitu.common.core.result.Result;
@@ -69,15 +70,15 @@ public class CollegeInternshipOversightController {
         )
     })
     @GetMapping("/students")
-    public Result<IPage<InternshipRecord>> getInternshipStudents(
-            @Parameter(description = "实习状态：pending-待审核，approved-已通过，ongoing-进行中，completed-已完成", example = "ongoing")
+    public Result<IPage<InternshipStudentDTO>> getInternshipStudents(
+            @Parameter(description = "实习状态：active-实习中，completed-已结束", example = "active")
             @RequestParam(value = "status", required = false) String status,
             @Parameter(description = "页码，从1开始", example = "1")
             @RequestParam(value = "page", defaultValue = "1") int page,
             @Parameter(description = "每页记录数", example = "10")
             @RequestParam(value = "size", defaultValue = "10") int size) {
-        
-        IPage<InternshipRecord> students = collegeInternshipService.getInternshipStudents(status, page, size);
+
+        IPage<InternshipStudentDTO> students = collegeInternshipService.getInternshipStudents(status, page, size);
         return Result.ok(students);
     }
 
@@ -110,13 +111,13 @@ public class CollegeInternshipOversightController {
         )
     })
     @GetMapping("/contracts/pending")
-    public Result<IPage<InternshipOffer>> getPendingContracts(
+    public Result<IPage<ContractDTO>> getPendingContracts(
             @Parameter(description = "页码，从1开始", example = "1")
             @RequestParam(value = "page", defaultValue = "1") int page,
             @Parameter(description = "每页记录数", example = "10")
             @RequestParam(value = "size", defaultValue = "10") int size) {
         
-        IPage<InternshipOffer> contracts = collegeInternshipService.getPendingContracts(page, size);
+        IPage<ContractDTO> contracts = collegeInternshipService.getPendingContracts(page, size);
         return Result.ok(contracts);
     }
 

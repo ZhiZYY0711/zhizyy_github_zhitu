@@ -31,17 +31,17 @@ export default function MentorPage() {
       ) : dashboard && <MentorStats data={dashboard} />}
 
       {/* Student List */}
-      {dashboard && dashboard.students.length > 0 && (
+      {dashboard && dashboard.students?.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <GraduationCap className="h-4 w-4" />
-              指导学生 ({dashboard.students.length})
+              指导学生 ({dashboard.students?.length || 0})
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {dashboard.students.map(s => (
+              {dashboard.students?.map(s => (
                 <div key={s.student_id} className="border rounded-lg p-3 flex items-center gap-3">
                   <div className="h-9 w-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold shrink-0">
                     {s.student_name.slice(0, 2)}

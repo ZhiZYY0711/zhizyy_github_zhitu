@@ -52,8 +52,8 @@ const StudentDashboard = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="container mx-auto p-6 h-full flex flex-col overflow-hidden space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">学生成长工作台</h1>
           <p className="text-muted-foreground">My Career DNA - 全景数字档案与能力画像</p>
@@ -67,25 +67,19 @@ const StudentDashboard = () => {
       </div>
 
       {/* 1. 核心指标 */}
-      <section>
+      <section className="shrink-0">
         <StatsCards stats={stats} loading={loading} />
       </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-1 min-h-0 auto-rows-[minmax(0,1fr)]">
         {/* 2. 能力雷达 */}
-        <section className="col-span-1">
-          <CapabilityRadar data={radarData} loading={loading} />
-        </section>
+        <CapabilityRadar data={radarData} loading={loading} />
 
         {/* 3. 任务指挥中心 */}
-        <section className="col-span-1">
-          <TaskList tasks={tasks?.records || []} loading={loading} />
-        </section>
+        <TaskList tasks={tasks?.records || []} loading={loading} />
 
         {/* 4. 个性化推荐 */}
-        <section className="col-span-1">
-          <RecommendationFeed recommendations={recommendations} loading={loading} />
-        </section>
+        <RecommendationFeed recommendations={recommendations} loading={loading} />
       </div>
     </div>
   );

@@ -12,11 +12,11 @@ interface CapabilityRadarProps {
 const CapabilityRadar: React.FC<CapabilityRadarProps> = ({ data, loading }) => {
   if (loading) {
     return (
-      <Card className="col-span-1 h-[400px] animate-pulse">
-        <CardHeader>
+      <Card className="col-span-1 h-full flex flex-col animate-pulse min-h-0">
+        <CardHeader className="shrink-0">
           <div className="h-6 w-32 bg-gray-200 rounded"></div>
         </CardHeader>
-        <CardContent className="flex justify-center items-center h-[300px]">
+        <CardContent className="flex-1 flex justify-center items-center">
           <div className="h-48 w-48 rounded-full bg-gray-200"></div>
         </CardContent>
       </Card>
@@ -25,13 +25,13 @@ const CapabilityRadar: React.FC<CapabilityRadarProps> = ({ data, loading }) => {
 
   if (!data || !data.dimensions || data.dimensions.length === 0) {
     return (
-      <Card className="col-span-1">
-        <CardHeader>
+      <Card className="col-span-1 h-full flex flex-col min-h-0">
+        <CardHeader className="shrink-0">
           <CardTitle>能力雷达画像</CardTitle>
           <CardDescription>六维能力评估与同专业对比</CardDescription>
         </CardHeader>
-        <CardContent className="pb-4">
-          <div className="h-[300px] w-full flex items-center justify-center text-gray-400">
+        <CardContent className="flex-1 flex items-center justify-center pb-4 min-h-0">
+          <div className="text-gray-400">
             暂无能力数据
           </div>
         </CardContent>
@@ -49,15 +49,15 @@ const CapabilityRadar: React.FC<CapabilityRadarProps> = ({ data, loading }) => {
   }));
 
   return (
-    <Card className="col-span-1">
-      <CardHeader>
+    <Card className="col-span-1 h-full flex flex-col min-h-0">
+      <CardHeader className="shrink-0">
         <CardTitle>能力雷达画像</CardTitle>
         <CardDescription>六维能力评估与同专业对比</CardDescription>
       </CardHeader>
-      <CardContent className="pb-4">
-        <div className="w-full" style={{ height: '300px', minHeight: '300px' }}>
-          <ResponsiveContainer width="100%" height={300}>
-            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+      <CardContent className="flex-1 pb-4 min-h-0">
+        <div className="w-full h-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
               <PolarGrid />
               <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
               <PolarRadiusAxis angle={30} domain={[0, 100]} />

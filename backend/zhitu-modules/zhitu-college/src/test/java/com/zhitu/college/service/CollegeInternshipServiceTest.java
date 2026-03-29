@@ -3,6 +3,7 @@ package com.zhitu.college.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zhitu.college.dto.ContractDTO;
 import com.zhitu.college.dto.CreateInspectionRequest;
 import com.zhitu.college.entity.*;
 import com.zhitu.college.mapper.*;
@@ -110,31 +111,35 @@ class CollegeInternshipServiceTest {
 
     @Test
     void testGetPendingContracts() {
-        InternshipOffer offer1 = new InternshipOffer();
-        offer1.setId(1L);
-        offer1.setStudentId(100L);
-        offer1.setCollegeAudit(0);
-        offer1.setStatus(1);
+        ContractDTO contract1 = new ContractDTO();
+        contract1.setId(1L);
+        contract1.setStudentName("张三");
+        contract1.setCompanyName("阿里巴巴");
+        contract1.setPosition("Java开发实习生");
+        contract1.setSubmitTime("2024-03-15T10:30:00Z");
+        contract1.setStatus("pending");
 
-        InternshipOffer offer2 = new InternshipOffer();
-        offer2.setId(2L);
-        offer2.setStudentId(101L);
-        offer2.setCollegeAudit(0);
-        offer2.setStatus(1);
+        ContractDTO contract2 = new ContractDTO();
+        contract2.setId(2L);
+        contract2.setStudentName("李四");
+        contract2.setCompanyName("腾讯");
+        contract2.setPosition("前端开发实习生");
+        contract2.setSubmitTime("2024-03-16T11:00:00Z");
+        contract2.setStatus("pending");
 
-        Page<InternshipOffer> page = new Page<>(1, 10);
-        page.setRecords(Arrays.asList(offer1, offer2));
+        Page<ContractDTO> page = new Page<>(1, 10);
+        page.setRecords(Arrays.asList(contract1, contract2));
         page.setTotal(2);
 
-        when(internshipOfferMapper.selectPage(any(Page.class), any(LambdaQueryWrapper.class)))
+        when(internshipOfferMapper.selectPendingContracts(any(Page.class)))
                 .thenReturn(page);
 
-        IPage<InternshipOffer> result = collegeInternshipService.getPendingContracts(1, 10);
+        IPage<ContractDTO> result = collegeInternshipService.getPendingContracts(1, 10);
 
         assertNotNull(result);
         assertEquals(2, result.getRecords().size());
         assertEquals(2, result.getTotal());
-        verify(internshipOfferMapper).selectPage(any(Page.class), any(LambdaQueryWrapper.class));
+        verify(internshipOfferMapper).selectPendingContracts(any(Page.class));
     }
 
     @Test

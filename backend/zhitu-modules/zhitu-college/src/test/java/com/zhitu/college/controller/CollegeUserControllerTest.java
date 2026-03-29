@@ -49,7 +49,7 @@ class CollegeUserControllerTest {
 
         when(collegeService.getStudentList(null, null, 1, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/api/user/v1/college/students")
+        mockMvc.perform(get("/api/college/v1/students")
                 .param("page", "1")
                 .param("size", "10"))
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ class CollegeUserControllerTest {
 
         when(collegeService.getStudentList("张三", null, 1, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/api/user/v1/college/students")
+        mockMvc.perform(get("/api/college/v1/students")
                 .param("keyword", "张三")
                 .param("page", "1")
                 .param("size", "10"))
@@ -98,7 +98,7 @@ class CollegeUserControllerTest {
 
         when(collegeService.getStudentList(null, 100L, 1, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/api/user/v1/college/students")
+        mockMvc.perform(get("/api/college/v1/students")
                 .param("classId", "100")
                 .param("page", "1")
                 .param("size", "10"))
@@ -117,7 +117,7 @@ class CollegeUserControllerTest {
 
         when(collegeService.getStudentList("张三", 100L, 1, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/api/user/v1/college/students")
+        mockMvc.perform(get("/api/college/v1/students")
                 .param("keyword", "张三")
                 .param("classId", "100")
                 .param("page", "1")
@@ -136,7 +136,7 @@ class CollegeUserControllerTest {
 
         when(collegeService.getStudentList(null, null, 1, 10)).thenReturn(page);
 
-        mockMvc.perform(get("/api/user/v1/college/students"))
+        mockMvc.perform(get("/api/college/v1/students"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200));
 

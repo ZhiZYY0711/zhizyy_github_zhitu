@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Tag(name = "学生管理", description = "学生信息管理相关接口")
 @RestController
-@RequestMapping("/api/user/v1/college")
+@RequestMapping("/api/college/v1")
 @RequiredArgsConstructor
 public class CollegeUserController {
 

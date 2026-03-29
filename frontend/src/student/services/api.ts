@@ -183,7 +183,7 @@ export const fetchTasks = async (status: 'pending' | 'completed' = 'pending') =>
           type: task.taskType || 'training_submit',
           title: task.title,
           deadline: task.dueDate,
-          priority: task.priority === 1 ? 'high' : task.priority === 2 ? 'medium' : 'low',
+          priority: (task.priority === 1 ? 'high' : task.priority === 2 ? 'medium' : 'low') as 'high' | 'medium' | 'low',
           jump_url: '#', // Default jump URL
         })),
       };

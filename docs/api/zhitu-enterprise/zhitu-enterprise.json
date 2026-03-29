@@ -1,1 +1,3109 @@
-{"openapi":"3.0.1","info":{"title":"智途平台 API","description":"智途云平台 - 高校产教融合智能服务平台接口文档","version":"v1.0.0"},"servers":[{"url":"http://localhost:8888","description":"API Gateway"}],"security":[{"BearerAuth":[]}],"tags":[{"name":"岗位管理","description":"企业岗位管理相关接口"},{"name":"申请管理","description":"企业申请管理相关接口"},{"name":"企业档案","description":"企业档案管理相关接口"}],"paths":{"/api/user/v1/enterprise/profile":{"get":{"tags":["企业档案"],"summary":"获取企业详情","description":"获取当前登录企业的详细信息，包括企业名称、简介、联系方式等\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n- 企业信息必须已在 enterprise_info 表中存在\n\n**数据依赖：**\n- 依赖 enterprise_info 表中的企业记录\n- 通过当前用户的 tenantId 查询企业信息","operationId":"getProfile","responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"未授权","content":{"application/json":{"example":{"code":401,"message":"未授权","data":null}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"查询成功","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Result"}}}}}},"put":{"tags":["企业档案"],"summary":"更新企业信息","description":"更新当前登录企业的基本信息\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n- 企业信息必须已存在\n\n**数据依赖：**\n- 依赖 enterprise_info 表中的现有企业记录","operationId":"updateProfile","requestBody":{"description":"企业信息更新请求","content":{"application/json":{"schema":{"$ref":"#/components/schemas/EnterpriseProfileUpdateRequest"},"examples":{"更新基本信息":{"summary":"更新企业基本信息","description":"更新基本信息","value":{"enterpriseName":"智途科技有限公司","industry":"互联网","scale":"100-500人","province":"广东省","city":"深圳市","address":"南山区科技园","logoUrl":"https://example.com/logo.png","website":"https://www.zhitu.com","description":"专注于教育科技的创新企业"}},"更新联系方式":{"summary":"更新企业联系信息","description":"更新联系方式","value":{"enterpriseName":"智途科技有限公司","contactName":"李经理","contactPhone":"13800138000","contactEmail":"contact@zhitu.com"}},"完整更新":{"summary":"更新企业完整信息","description":"完整更新","value":{"enterpriseName":"智途科技有限公司","industry":"互联网","scale":"100-500人","province":"广东省","city":"深圳市","address":"南山区科技园南区R2-B栋","logoUrl":"https://example.com/logo.png","website":"https://www.zhitu.com","description":"专注于产教融合的教育科技创新企业，致力于为高校和学生提供优质的实习实训机会","contactName":"李经理","contactPhone":"13800138000","contactEmail":"contact@zhitu.com"}},"边界值-最小规模":{"summary":"企业规模为最小值","description":"边界值-最小规模","value":{"enterpriseName":"小型创业公司","industry":"科技","scale":"1-10人","province":"广东省","city":"深圳市","address":"南山区创业园","contactName":"创始人","contactPhone":"13900000000","contactEmail":"founder@startup.com"}},"边界值-最大规模":{"summary":"企业规模为最大值","description":"边界值-最大规模","value":{"enterpriseName":"大型集团公司","industry":"制造业","scale":"10000+人","province":"广东省","city":"深圳市","address":"福田区总部大厦","contactName":"人力资源总监","contactPhone":"0755-12345678","contactEmail":"hr@large-corp.com"}},"特殊字符-长企业名":{"summary":"包含很长名称的企业","description":"特殊字符-长企业名","value":{"enterpriseName":"深圳市智途云计算科技有限责任公司（华南区总部）","industry":"信息技术","scale":"500-1000人","province":"广东省","city":"深圳市","address":"南山区高新技术产业园区","contactName":"张总监","contactPhone":"0755-88888888","contactEmail":"zhang@long-name-company.com"}},"特殊字符-国际企业":{"summary":"包含英文的企业名称","description":"特殊字符-国际企业","value":{"enterpriseName":"Zhitu Technology Co., Ltd.","industry":"Software","scale":"100-500人","province":"广东省","city":"深圳市","address":"Nanshan District, Shenzhen","website":"https://www.zhitu-tech.com","contactName":"John Wang","contactPhone":"+86-755-12345678","contactEmail":"john.wang@zhitu-tech.com"}},"边界值-空网站":{"summary":"网站URL为空（可选字段）","description":"边界值-空网站","value":{"enterpriseName":"无网站企业","industry":"服务业","scale":"50-100人","province":"广东省","city":"深圳市","address":"罗湖区","contactName":"李经理","contactPhone":"13800138000","contactEmail":"contact@no-website.com"}},"特殊字符-特殊行业":{"summary":"包含特殊符号的行业名称","description":"特殊字符-特殊行业","value":{"enterpriseName":"创新企业","industry":"互联网+教育","scale":"100-500人","province":"广东省","city":"深圳市","address":"南山区","contactName":"王总","contactPhone":"13900139000","contactEmail":"wang@innovative.com"}},"边界值-长描述":{"summary":"包含很长描述的企业信息","description":"边界值-长描述","value":{"enterpriseName":"详细描述企业","industry":"科技","scale":"100-500人","province":"广东省","city":"深圳市","address":"南山区","description":"这是一家专注于人工智能、大数据、云计算等前沿技术研发的高新技术企业。公司成立于2010年，拥有强大的研发团队和丰富的行业经验。我们致力于为客户提供最优质的技术解决方案和服务，推动产业数字化转型升级。","contactName":"赵经理","contactPhone":"13800138000","contactEmail":"zhao@detailed.com"}}}}},"required":true},"responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"参数校验失败","content":{"application/json":{"example":{"code":422,"message":"参数校验失败","data":null}}}},"200":{"description":"更新成功","content":{"application/json":{"example":{"code":200,"message":"操作成功","data":null}}}}}}},"/api/user/v1/enterprise/staff":{"get":{"tags":["企业档案"],"summary":"获取员工列表","description":"获取当前企业的员工列表\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n\n**数据依赖：**\n- 查询 enterprise_staff 表\n- 关联 sys_user 表获取员工详细信息","operationId":"getStaff","responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"查询成功","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Result"}}}}}},"post":{"tags":["企业档案"],"summary":"添加员工","description":"为当前企业添加新员工\n\n**测试前置条件：**\n- 用户必须以企业角色登录且有管理员权限\n- userId 必须存在于 sys_user 表中\n- 该用户不能已经是本企业的员工\n\n**数据依赖：**\n- 依赖 sys_user 表中的用户记录\n- 依赖 enterprise_info 表中的企业记录","operationId":"addStaff","requestBody":{"description":"添加员工请求","content":{"application/json":{"schema":{"$ref":"#/components/schemas/AddStaffRequest"},"examples":{"添加普通员工":{"summary":"添加普通员工","description":"添加普通员工","value":{"userId":1001,"department":"技术部","position":"软件工程师","isMentor":false}},"添加导师":{"summary":"添加企业导师","description":"添加导师","value":{"userId":1002,"department":"技术部","position":"高级工程师","isMentor":true}},"添加HR":{"summary":"添加人力资源员工","description":"添加HR","value":{"userId":1003,"department":"人力资源部","position":"招聘专员","isMentor":false}},"边界值-最小用户ID":{"summary":"用户ID为1（最小值）","description":"边界值-最小用户ID","value":{"userId":1,"department":"管理部","position":"总经理","isMentor":false}},"边界值-最大用户ID":{"summary":"用户ID为Long.MAX_VALUE","description":"边界值-最大用户ID","value":{"userId":9223372036854775807,"department":"测试部","position":"测试工程师","isMentor":false}},"特殊字符-长部门名":{"summary":"包含很长的部门名称","description":"特殊字符-长部门名","value":{"userId":1004,"department":"人工智能与大数据研发中心（华南区）","position":"算法工程师","isMentor":true}},"特殊字符-中英文混合":{"summary":"中英文混合的职位名称","description":"特殊字符-中英文混合","value":{"userId":1005,"department":"技术部","position":"Senior Software Engineer高级软件工程师","isMentor":true}},"特殊字符-特殊符号":{"summary":"包含特殊符号的部门和职位","description":"特殊字符-特殊符号","value":{"userId":1006,"department":"研发部-AI组","position":"机器学习工程师（NLP方向）","isMentor":true}},"边界值-导师标识":{"summary":"导师标识为true","description":"边界值-导师标识","value":{"userId":1007,"department":"技术部","position":"架构师","isMentor":true}},"特殊字符-短名称":{"summary":"最短的部门和职位名称","description":"特殊字符-短名称","value":{"userId":1008,"department":"IT","position":"PM","isMentor":false}}}}},"required":true},"responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"参数校验失败","content":{"application/json":{"example":{"code":422,"message":"参数校验失败","data":null}}}},"200":{"description":"添加成功","content":{"application/json":{"example":{"code":200,"message":"操作成功","data":null}}}}}}},"/api/internship/v1/mentor/reports/{id}/review":{"post":{"tags":["internship-manage-controller"],"operationId":"reviewReport","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","format":"int64"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ReportReviewRequest"}}},"required":true},"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}}}}},"/api/internship/v1/enterprise/jobs":{"get":{"tags":["岗位管理"],"summary":"获取企业岗位列表","description":"分页查询企业发布的实习岗位列表，支持按状态筛选\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n\n**数据依赖：**\n- 查询 internship_job 表\n- 通过当前用户的 enterpriseId 筛选岗位","operationId":"getJobs","parameters":[{"name":"status","in":"query","description":"岗位状态：1-招募中，0-已关闭","required":false,"schema":{"type":"integer","format":"int32"},"example":1},{"name":"page","in":"query","description":"页码，从1开始","required":false,"schema":{"type":"integer","format":"int32","default":1},"example":1},{"name":"size","in":"query","description":"每页记录数","required":false,"schema":{"type":"integer","format":"int32","default":10},"example":10}],"responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"参数校验失败","content":{"application/json":{"example":{"code":422,"message":"参数校验失败","data":null}}}},"200":{"description":"查询成功","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Result"}}}}}},"post":{"tags":["岗位管理"],"summary":"创建实习岗位","description":"企业创建新的实习岗位信息\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 企业信息必须已完善（enterprise_info 表）\n- 必须有发布岗位的权限\n\n**数据依赖：**\n- 依赖 enterprise_info 表中的企业记录\n- 技能标签（techStack）建议从系统标签库中选择","operationId":"createJob","requestBody":{"description":"岗位创建请求","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateJobRequest"},"examples":{"Java开发岗位":{"summary":"创建Java开发实习岗位","description":"Java开发岗位","value":{"jobTitle":"Java开发实习生","jobType":"技术类","description":"负责后端服务开发，参与项目需求分析和系统设计","requirements":"1. 熟悉Java语言，了解Spring Boot框架\n2. 了解MySQL数据库\n3. 有良好的学习能力和团队协作精神","techStack":["Java","Spring Boot","MySQL","Redis"],"city":"深圳","salaryMin":3000,"salaryMax":5000,"headcount":5,"startDate":"2024-07-01","endDate":"2024-09-30"}},"前端开发岗位":{"summary":"创建前端开发实习岗位","description":"前端开发岗位","value":{"jobTitle":"前端开发实习生","jobType":"技术类","description":"负责Web前端开发，实现产品界面和交互功能","requirements":"1. 熟悉HTML、CSS、JavaScript\n2. 了解Vue或React框架\n3. 有良好的审美和用户体验意识","techStack":["Vue.js","TypeScript","Element Plus"],"city":"北京","salaryMin":3500,"salaryMax":6000,"headcount":3,"startDate":"2024-07-01","endDate":"2024-12-31"}},"产品运营岗位":{"summary":"创建产品运营实习岗位","description":"产品运营岗位","value":{"jobTitle":"产品运营实习生","jobType":"运营类","description":"协助产品运营工作，包括用户调研、数据分析、活动策划等","requirements":"1. 对互联网产品有浓厚兴趣\n2. 具备良好的沟通能力和文案能力\n3. 熟练使用Office办公软件","techStack":["数据分析","用户运营","活动策划"],"city":"上海","salaryMin":2500,"salaryMax":4000,"headcount":2,"startDate":"2024-06-01","endDate":"2024-08-31"}}}}},"required":true},"responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"参数校验失败","content":{"application/json":{"example":{"code":422,"message":"参数校验失败","data":null}}}},"200":{"description":"创建成功","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Result"},"example":{"code":200,"message":"操作成功","data":{"id":1001}}}}}}}},"/api/internship/v1/enterprise/jobs/{id}/close":{"post":{"tags":["岗位管理"],"summary":"关闭岗位","description":"关闭指定的实习岗位，停止招募","operationId":"closeJob","parameters":[{"name":"id","in":"path","description":"岗位ID","required":true,"schema":{"type":"integer","format":"int64"},"example":1001}],"responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"岗位不存在","content":{"application/json":{"example":{"code":404,"message":"岗位不存在","data":null}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"关闭成功","content":{"application/json":{"example":{"code":200,"message":"操作成功","data":null}}}}}}},"/api/internship/v1/enterprise/interviews":{"post":{"tags":["申请管理"],"summary":"安排面试","description":"为学生申请安排面试时间和地点","operationId":"scheduleInterview","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/ScheduleInterviewRequest"}}},"required":true},"responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"申请不存在","content":{"application/json":{"example":{"code":404,"message":"申请不存在","data":null}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"参数校验失败","content":{"application/json":{"example":{"code":422,"message":"参数校验失败","data":null}}}},"200":{"description":"安排成功","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Result"}}}}}}},"/api/internship/v1/enterprise/certificates/issue":{"post":{"tags":["internship-manage-controller"],"operationId":"issueCertificate","parameters":[{"name":"internshipId","in":"query","required":true,"schema":{"type":"integer","format":"int64"}}],"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}}}}},"/api/internship/v1/enterprise/attendance/audit":{"post":{"tags":["internship-manage-controller"],"operationId":"auditAttendance","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/AttendanceAuditRequest"}}},"required":true},"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}}}}},"/api/portal-enterprise/v1/todos":{"get":{"tags":["enterprise-portal-controller"],"operationId":"getTodos","parameters":[{"name":"page","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":1}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":10}}],"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultPageResultTodoDTO"}}}}}}},"/api/portal-enterprise/v1/talent-pool":{"get":{"tags":["enterprise-portal-controller"],"operationId":"getTalentPool","parameters":[{"name":"page","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":1}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":10}}],"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultPageResultTalentPoolDTO"}}}}}}},"/api/portal-enterprise/v1/mentor/dashboard":{"get":{"tags":["enterprise-mentor-controller"],"operationId":"getDashboard","responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultMentorDashboardDTO"}}}}}}},"/api/portal-enterprise/v1/dashboard/stats":{"get":{"tags":["enterprise-portal-controller"],"operationId":"getDashboardStats","responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultDashboardStatsDTO"}}}}}}},"/api/portal-enterprise/v1/analytics":{"get":{"tags":["enterprise-portal-controller"],"operationId":"getAnalytics","parameters":[{"name":"range","in":"query","required":false,"schema":{"type":"string","default":"month"}}],"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultAnalyticsDTO"}}}}}}},"/api/portal-enterprise/v1/activities":{"get":{"tags":["enterprise-portal-controller"],"operationId":"getActivities","parameters":[{"name":"page","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":1}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":10}}],"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultPageResultActivityDTO"}}}}}}},"/api/internship/v1/enterprise/interns":{"get":{"tags":["internship-manage-controller"],"operationId":"getInterns","parameters":[{"name":"page","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":1}},{"name":"size","in":"query","required":false,"schema":{"type":"integer","format":"int32","default":10}}],"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultIPageInternshipRecord"}}}}}}},"/api/internship/v1/enterprise/applications":{"get":{"tags":["申请管理"],"summary":"获取岗位申请列表","description":"分页查询企业收到的学生岗位申请，支持按岗位和状态筛选","operationId":"getApplications","parameters":[{"name":"jobId","in":"query","description":"岗位ID，用于筛选特定岗位的申请","required":false,"schema":{"type":"integer","format":"int64"},"example":1001},{"name":"status","in":"query","description":"申请状态：0-待处理，1-已通过，2-已拒绝","required":false,"schema":{"type":"integer","format":"int32"},"example":0},{"name":"page","in":"query","description":"页码，从1开始","required":false,"schema":{"type":"integer","format":"int32","default":1},"example":1},{"name":"size","in":"query","description":"每页记录数","required":false,"schema":{"type":"integer","format":"int32","default":10},"example":10}],"responses":{"500":{"description":"服务器内部错误","content":{"application/json":{"example":{"code":500,"message":"服务器内部错误","data":null}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"参数校验失败","content":{"application/json":{"example":{"code":422,"message":"参数校验失败","data":null}}}},"200":{"description":"查询成功","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Result"}}}}}}},"/api/portal-enterprise/v1/talent-pool/{id}":{"delete":{"tags":["enterprise-portal-controller"],"operationId":"removeFromTalentPool","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer","format":"int64"}}],"responses":{"500":{"description":"Internal Server Error","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"404":{"description":"Not Found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"400":{"description":"Bad Request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}},"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ResultVoid"}}}}}}}},"components":{"schemas":{"ResultVoid":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"type":"object","description":"响应数据"}},"description":"统一响应体"},"EnterpriseProfileUpdateRequest":{"required":["enterpriseName"],"type":"object","properties":{"enterpriseName":{"type":"string","description":"企业名称","example":"智途科技有限公司"},"industry":{"type":"string","description":"所属行业","example":"互联网"},"scale":{"type":"string","description":"企业规模","example":"100-500人"},"province":{"type":"string","description":"省份","example":"北京市"},"city":{"type":"string","description":"城市","example":"北京"},"address":{"type":"string","description":"详细地址","example":"朝阳区建国路88号"},"logoUrl":{"type":"string","description":"企业Logo URL","example":"https://example.com/logo.png"},"website":{"type":"string","description":"企业网站","example":"https://www.example.com"},"description":{"type":"string","description":"企业简介","example":"专注于教育科技的创新企业"},"contactName":{"type":"string","description":"联系人姓名","example":"李经理"},"contactPhone":{"type":"string","description":"联系电话","example":"13800138000"},"contactEmail":{"type":"string","description":"联系邮箱","example":"contact@example.com"}},"description":"企业资料更新请求"},"AddStaffRequest":{"required":["userId"],"type":"object","properties":{"userId":{"type":"integer","description":"用户ID","format":"int64","example":1001},"department":{"type":"string","description":"部门","example":"技术部"},"position":{"type":"string","description":"职位","example":"高级工程师"},"isMentor":{"type":"boolean","description":"是否为导师","example":true}},"description":"添加员工请求"},"ReportReviewRequest":{"required":["reviewComment"],"type":"object","properties":{"reviewComment":{"type":"string","description":"批阅意见","example":"本周工作完成良好，继续保持"}},"description":"周报批阅请求"},"CreateJobRequest":{"type":"object","properties":{"jobTitle":{"type":"string","description":"岗位标题","example":"Java开发实习生"},"jobType":{"type":"string","description":"岗位类型","example":"技术类"},"description":{"type":"string","description":"岗位描述","example":"负责后端开发工作"},"requirements":{"type":"string","description":"岗位要求","example":"熟悉Java、Spring Boot框架"},"techStack":{"type":"array","description":"技术栈","example":["Java","Spring Boot","MySQL"],"items":{"type":"string","description":"技术栈","example":"[\"Java\",\"Spring Boot\",\"MySQL\"]"}},"city":{"type":"string","description":"工作城市","example":"北京"},"salaryMin":{"type":"integer","description":"最低薪资","format":"int32","example":3000},"salaryMax":{"type":"integer","description":"最高薪资","format":"int32","example":5000},"headcount":{"type":"integer","description":"招聘人数","format":"int32","example":5},"startDate":{"type":"string","description":"开始日期","format":"date","example":"2024-03-01"},"endDate":{"type":"string","description":"结束日期","format":"date","example":"2024-06-30"}},"description":"创建岗位请求"},"Result":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"type":"object","description":"响应数据"}},"description":"统一响应体"},"ScheduleInterviewRequest":{"type":"object","properties":{"applicationId":{"type":"integer","description":"申请ID","format":"int64","example":1},"studentId":{"type":"integer","description":"学生ID","format":"int64","example":2001},"interviewTime":{"type":"string","description":"面试时间","format":"date-time","example":"2024-01-20T14:00:00+08:00"},"location":{"type":"string","description":"面试地点","example":"公司会议室A"},"interviewerId":{"type":"integer","description":"面试官ID","format":"int64","example":3001},"interviewType":{"type":"string","description":"面试类型","example":"technical","enum":["phone","video","onsite","technical"]},"notes":{"type":"string","description":"备注","example":"请提前准备技术问题"}},"description":"面试安排请求"},"AttendanceAuditRequest":{"required":["attendanceId","status"],"type":"object","properties":{"attendanceId":{"type":"integer","description":"考勤记录ID","format":"int64","example":1},"status":{"type":"integer","description":"考勤状态：1=正常 2=异常","format":"int32","example":1,"enum":[1,2]},"auditRemark":{"type":"string","description":"审核备注","example":"考勤正常"}},"description":"考勤审核请求"},"PageResultTodoDTO":{"required":["page","records","size","total"],"type":"object","properties":{"total":{"type":"integer","description":"总记录数","format":"int64","example":100},"records":{"type":"array","description":"当前页数据列表","items":{"$ref":"#/components/schemas/TodoDTO"}},"page":{"type":"integer","description":"当前页码","format":"int32","example":1},"size":{"type":"integer","description":"每页记录数","format":"int32","example":10}},"description":"分页响应体"},"ResultPageResultTodoDTO":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"$ref":"#/components/schemas/PageResultTodoDTO"}},"description":"统一响应体"},"TodoDTO":{"type":"object","properties":{"id":{"type":"integer","description":"待办事项ID","format":"int64","example":1},"todoType":{"type":"string","description":"待办类型","example":"application_review","enum":["application_review","interview_schedule","report_review","evaluation_pending"]},"refType":{"type":"string","description":"关联类型","example":"application","enum":["job","application","intern"]},"refId":{"type":"integer","description":"关联ID","format":"int64","example":100},"title":{"type":"string","description":"待办标题","example":"审核张三的岗位申请"},"priority":{"type":"integer","description":"优先级：1=低 2=中 3=高","format":"int32","example":2,"enum":[1,2,3]},"dueDate":{"type":"string","description":"截止日期","format":"date-time","example":"2024-01-20T18:00:00+08:00"},"status":{"type":"integer","description":"状态：0=待处理 1=已完成","format":"int32","example":0,"enum":[0,1]},"createdAt":{"type":"string","description":"创建时间","format":"date-time","example":"2024-01-15T10:30:00+08:00"}},"description":"企业待办事项"},"PageResultTalentPoolDTO":{"required":["page","records","size","total"],"type":"object","properties":{"total":{"type":"integer","description":"总记录数","format":"int64","example":100},"records":{"type":"array","description":"当前页数据列表","items":{"$ref":"#/components/schemas/TalentPoolDTO"}},"page":{"type":"integer","description":"当前页码","format":"int32","example":1},"size":{"type":"integer","description":"每页记录数","format":"int32","example":10}},"description":"分页响应体"},"ResultPageResultTalentPoolDTO":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"$ref":"#/components/schemas/PageResultTalentPoolDTO"}},"description":"统一响应体"},"TalentPoolDTO":{"type":"object","properties":{"id":{"type":"integer","description":"人才库记录ID","format":"int64","example":1},"studentId":{"type":"integer","description":"学生ID","format":"int64","example":2001},"studentName":{"type":"string","description":"学生姓名","example":"张三"},"studentNo":{"type":"string","description":"学号","example":"2021001"},"major":{"type":"string","description":"专业","example":"计算机科学与技术"},"grade":{"type":"string","description":"年级","example":"2021级"},"skills":{"type":"string","description":"技能标签（JSON数组）","example":"[\"Java\",\"Spring Boot\",\"MySQL\"]"},"remark":{"type":"string","description":"备注","example":"技术能力强，适合Java开发岗位"},"collectedAt":{"type":"string","description":"收藏时间","format":"date-time","example":"2024-01-15T10:30:00+08:00"}},"description":"人才库信息"},"ActivityDTO":{"type":"object","properties":{"id":{"type":"integer","description":"活动ID","format":"int64","example":1},"activityType":{"type":"string","description":"活动类型","example":"application","enum":["application","interview","report_submitted","evaluation"]},"description":{"type":"string","description":"活动描述","example":"学生张三申请了Java开发实习岗位"},"refType":{"type":"string","description":"关联类型","example":"application","enum":["job","application","intern"]},"refId":{"type":"integer","description":"关联ID","format":"int64","example":100},"createdAt":{"type":"string","description":"创建时间","format":"date-time","example":"2024-01-15T10:30:00+08:00"}},"description":"企业活动动态信息"},"MentorDashboardDTO":{"type":"object","properties":{"assignedInternCount":{"type":"integer","description":"分配的实习生数量","format":"int32","example":8},"pendingReportCount":{"type":"integer","description":"待批阅周报数量","format":"int32","example":5},"pendingCodeReviewCount":{"type":"integer","description":"待审核代码评审数量","format":"int32","example":3},"recentActivities":{"type":"array","description":"最近的实习生活动列表","items":{"$ref":"#/components/schemas/ActivityDTO"}}},"description":"导师仪表板数据"},"ResultMentorDashboardDTO":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"$ref":"#/components/schemas/MentorDashboardDTO"}},"description":"统一响应体"},"DashboardStatsDTO":{"type":"object","properties":{"activeJobCount":{"type":"integer","description":"活跃岗位数量","format":"int32","example":10},"pendingApplicationCount":{"type":"integer","description":"待处理申请数量","format":"int32","example":25},"activeInternCount":{"type":"integer","description":"活跃实习生数量","format":"int32","example":15},"trainingProjectCount":{"type":"integer","description":"实训项目数量","format":"int32","example":8}},"description":"企业仪表板统计数据"},"ResultDashboardStatsDTO":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"$ref":"#/components/schemas/DashboardStatsDTO"}},"description":"统一响应体"},"AnalyticsDTO":{"type":"object","properties":{"applicationTrends":{"type":"array","description":"申请趋势数据","items":{"$ref":"#/components/schemas/TrendDataPoint"}},"internPerformance":{"$ref":"#/components/schemas/InternPerformanceMetrics"},"projectCompletionRate":{"type":"number","description":"实训项目完成率","format":"double","example":0.85},"mentorSatisfaction":{"type":"number","description":"导师满意度评分","format":"double","example":4.5}},"description":"企业分析数据"},"InternPerformanceMetrics":{"type":"object","properties":{"averageScore":{"type":"number","description":"平均评价分数","format":"double","example":4.2},"totalInterns":{"type":"integer","description":"实习生总数","format":"int32","example":50},"evaluatedInterns":{"type":"integer","description":"已评价实习生数","format":"int32","example":45}},"description":"实习生绩效指标"},"ResultAnalyticsDTO":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"$ref":"#/components/schemas/AnalyticsDTO"}},"description":"统一响应体"},"TrendDataPoint":{"type":"object","properties":{"period":{"type":"string","description":"时间段标签","example":"2024-W01"},"count":{"type":"integer","description":"申请数量","format":"int32","example":25}},"description":"趋势数据点"},"PageResultActivityDTO":{"required":["page","records","size","total"],"type":"object","properties":{"total":{"type":"integer","description":"总记录数","format":"int64","example":100},"records":{"type":"array","description":"当前页数据列表","items":{"$ref":"#/components/schemas/ActivityDTO"}},"page":{"type":"integer","description":"当前页码","format":"int32","example":1},"size":{"type":"integer","description":"每页记录数","format":"int32","example":10}},"description":"分页响应体"},"ResultPageResultActivityDTO":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"$ref":"#/components/schemas/PageResultActivityDTO"}},"description":"统一响应体"},"IPageInternshipRecord":{"type":"object","properties":{"size":{"type":"integer","format":"int64"},"records":{"type":"array","items":{"$ref":"#/components/schemas/InternshipRecord"}},"total":{"type":"integer","format":"int64"},"pages":{"type":"integer","format":"int64","deprecated":true},"current":{"type":"integer","format":"int64"}},"description":"响应数据"},"InternshipRecord":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"studentId":{"type":"integer","format":"int64"},"enterpriseId":{"type":"integer","format":"int64"},"jobId":{"type":"integer","format":"int64"},"mentorId":{"type":"integer","format":"int64"},"teacherId":{"type":"integer","format":"int64"},"startDate":{"type":"string","format":"date"},"endDate":{"type":"string","format":"date"},"status":{"type":"integer","format":"int32"},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}}},"ResultIPageInternshipRecord":{"required":["code","message"],"type":"object","properties":{"code":{"type":"integer","description":"响应状态码，200表示成功","format":"int32","example":200},"message":{"type":"string","description":"响应消息","example":"操作成功"},"data":{"$ref":"#/components/schemas/IPageInternshipRecord"}},"description":"统一响应体"}},"securitySchemes":{"BearerAuth":{"type":"http","name":"BearerAuth","scheme":"bearer","bearerFormat":"JWT"}}}}
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "智途平台 API",
+        "description": "智途云平台 - 高校产教融合智能服务平台接口文档",
+        "version": "v1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8888",
+            "description": "API Gateway"
+        }
+    ],
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "岗位管理",
+            "description": "企业岗位管理相关接口"
+        },
+        {
+            "name": "申请管理",
+            "description": "企业申请管理相关接口"
+        },
+        {
+            "name": "企业档案",
+            "description": "企业档案管理相关接口"
+        }
+    ],
+    "paths": {
+        "/api/user/v1/enterprise/profile": {
+            "get": {
+                "tags": [
+                    "企业档案"
+                ],
+                "summary": "获取企业详情",
+                "description": "获取当前登录企业的详细信息，包括企业名称、简介、联系方式等\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n- 企业信息必须已在 enterprise_info 表中存在\n\n**数据依赖：**\n- 依赖 enterprise_info 表中的企业记录\n- 通过当前用户的 tenantId 查询企业信息",
+                "operationId": "getProfile",
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "未授权",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 401,
+                                    "message": "未授权",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "查询成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "企业档案"
+                ],
+                "summary": "更新企业信息",
+                "description": "更新当前登录企业的基本信息\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n- 企业信息必须已存在\n\n**数据依赖：**\n- 依赖 enterprise_info 表中的现有企业记录",
+                "operationId": "updateProfile",
+                "requestBody": {
+                    "description": "企业信息更新请求",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EnterpriseProfileUpdateRequest"
+                            },
+                            "examples": {
+                                "更新基本信息": {
+                                    "summary": "更新企业基本信息",
+                                    "description": "更新基本信息",
+                                    "value": {
+                                        "enterpriseName": "智途科技有限公司",
+                                        "industry": "互联网",
+                                        "scale": "100-500人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "南山区科技园",
+                                        "logoUrl": "https://example.com/logo.png",
+                                        "website": "https://www.zhitu.com",
+                                        "description": "专注于教育科技的创新企业"
+                                    }
+                                },
+                                "更新联系方式": {
+                                    "summary": "更新企业联系信息",
+                                    "description": "更新联系方式",
+                                    "value": {
+                                        "enterpriseName": "智途科技有限公司",
+                                        "contactName": "李经理",
+                                        "contactPhone": "13800138000",
+                                        "contactEmail": "contact@zhitu.com"
+                                    }
+                                },
+                                "完整更新": {
+                                    "summary": "更新企业完整信息",
+                                    "description": "完整更新",
+                                    "value": {
+                                        "enterpriseName": "智途科技有限公司",
+                                        "industry": "互联网",
+                                        "scale": "100-500人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "南山区科技园南区R2-B栋",
+                                        "logoUrl": "https://example.com/logo.png",
+                                        "website": "https://www.zhitu.com",
+                                        "description": "专注于产教融合的教育科技创新企业，致力于为高校和学生提供优质的实习实训机会",
+                                        "contactName": "李经理",
+                                        "contactPhone": "13800138000",
+                                        "contactEmail": "contact@zhitu.com"
+                                    }
+                                },
+                                "边界值-最小规模": {
+                                    "summary": "企业规模为最小值",
+                                    "description": "边界值-最小规模",
+                                    "value": {
+                                        "enterpriseName": "小型创业公司",
+                                        "industry": "科技",
+                                        "scale": "1-10人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "南山区创业园",
+                                        "contactName": "创始人",
+                                        "contactPhone": "13900000000",
+                                        "contactEmail": "founder@startup.com"
+                                    }
+                                },
+                                "边界值-最大规模": {
+                                    "summary": "企业规模为最大值",
+                                    "description": "边界值-最大规模",
+                                    "value": {
+                                        "enterpriseName": "大型集团公司",
+                                        "industry": "制造业",
+                                        "scale": "10000+人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "福田区总部大厦",
+                                        "contactName": "人力资源总监",
+                                        "contactPhone": "0755-12345678",
+                                        "contactEmail": "hr@large-corp.com"
+                                    }
+                                },
+                                "特殊字符-长企业名": {
+                                    "summary": "包含很长名称的企业",
+                                    "description": "特殊字符-长企业名",
+                                    "value": {
+                                        "enterpriseName": "深圳市智途云计算科技有限责任公司（华南区总部）",
+                                        "industry": "信息技术",
+                                        "scale": "500-1000人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "南山区高新技术产业园区",
+                                        "contactName": "张总监",
+                                        "contactPhone": "0755-88888888",
+                                        "contactEmail": "zhang@long-name-company.com"
+                                    }
+                                },
+                                "特殊字符-国际企业": {
+                                    "summary": "包含英文的企业名称",
+                                    "description": "特殊字符-国际企业",
+                                    "value": {
+                                        "enterpriseName": "Zhitu Technology Co., Ltd.",
+                                        "industry": "Software",
+                                        "scale": "100-500人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "Nanshan District, Shenzhen",
+                                        "website": "https://www.zhitu-tech.com",
+                                        "contactName": "John Wang",
+                                        "contactPhone": "+86-755-12345678",
+                                        "contactEmail": "john.wang@zhitu-tech.com"
+                                    }
+                                },
+                                "边界值-空网站": {
+                                    "summary": "网站URL为空（可选字段）",
+                                    "description": "边界值-空网站",
+                                    "value": {
+                                        "enterpriseName": "无网站企业",
+                                        "industry": "服务业",
+                                        "scale": "50-100人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "罗湖区",
+                                        "contactName": "李经理",
+                                        "contactPhone": "13800138000",
+                                        "contactEmail": "contact@no-website.com"
+                                    }
+                                },
+                                "特殊字符-特殊行业": {
+                                    "summary": "包含特殊符号的行业名称",
+                                    "description": "特殊字符-特殊行业",
+                                    "value": {
+                                        "enterpriseName": "创新企业",
+                                        "industry": "互联网+教育",
+                                        "scale": "100-500人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "南山区",
+                                        "contactName": "王总",
+                                        "contactPhone": "13900139000",
+                                        "contactEmail": "wang@innovative.com"
+                                    }
+                                },
+                                "边界值-长描述": {
+                                    "summary": "包含很长描述的企业信息",
+                                    "description": "边界值-长描述",
+                                    "value": {
+                                        "enterpriseName": "详细描述企业",
+                                        "industry": "科技",
+                                        "scale": "100-500人",
+                                        "province": "广东省",
+                                        "city": "深圳市",
+                                        "address": "南山区",
+                                        "description": "这是一家专注于人工智能、大数据、云计算等前沿技术研发的高新技术企业。公司成立于2010年，拥有强大的研发团队和丰富的行业经验。我们致力于为客户提供最优质的技术解决方案和服务，推动产业数字化转型升级。",
+                                        "contactName": "赵经理",
+                                        "contactPhone": "13800138000",
+                                        "contactEmail": "zhao@detailed.com"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "参数校验失败",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 422,
+                                    "message": "参数校验失败",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "更新成功",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 200,
+                                    "message": "操作成功",
+                                    "data": null
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/v1/enterprise/staff": {
+            "get": {
+                "tags": [
+                    "企业档案"
+                ],
+                "summary": "获取员工列表",
+                "description": "获取当前企业的员工列表\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n\n**数据依赖：**\n- 查询 enterprise_staff 表\n- 关联 sys_user 表获取员工详细信息",
+                "operationId": "getStaff",
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "查询成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "企业档案"
+                ],
+                "summary": "添加员工",
+                "description": "为当前企业添加新员工\n\n**测试前置条件：**\n- 用户必须以企业角色登录且有管理员权限\n- userId 必须存在于 sys_user 表中\n- 该用户不能已经是本企业的员工\n\n**数据依赖：**\n- 依赖 sys_user 表中的用户记录\n- 依赖 enterprise_info 表中的企业记录",
+                "operationId": "addStaff",
+                "requestBody": {
+                    "description": "添加员工请求",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddStaffRequest"
+                            },
+                            "examples": {
+                                "添加普通员工": {
+                                    "summary": "添加普通员工",
+                                    "description": "添加普通员工",
+                                    "value": {
+                                        "userId": 1001,
+                                        "department": "技术部",
+                                        "position": "软件工程师",
+                                        "isMentor": false
+                                    }
+                                },
+                                "添加导师": {
+                                    "summary": "添加企业导师",
+                                    "description": "添加导师",
+                                    "value": {
+                                        "userId": 1002,
+                                        "department": "技术部",
+                                        "position": "高级工程师",
+                                        "isMentor": true
+                                    }
+                                },
+                                "添加HR": {
+                                    "summary": "添加人力资源员工",
+                                    "description": "添加HR",
+                                    "value": {
+                                        "userId": 1003,
+                                        "department": "人力资源部",
+                                        "position": "招聘专员",
+                                        "isMentor": false
+                                    }
+                                },
+                                "边界值-最小用户ID": {
+                                    "summary": "用户ID为1（最小值）",
+                                    "description": "边界值-最小用户ID",
+                                    "value": {
+                                        "userId": 1,
+                                        "department": "管理部",
+                                        "position": "总经理",
+                                        "isMentor": false
+                                    }
+                                },
+                                "边界值-最大用户ID": {
+                                    "summary": "用户ID为Long.MAX_VALUE",
+                                    "description": "边界值-最大用户ID",
+                                    "value": {
+                                        "userId": 9223372036854775807,
+                                        "department": "测试部",
+                                        "position": "测试工程师",
+                                        "isMentor": false
+                                    }
+                                },
+                                "特殊字符-长部门名": {
+                                    "summary": "包含很长的部门名称",
+                                    "description": "特殊字符-长部门名",
+                                    "value": {
+                                        "userId": 1004,
+                                        "department": "人工智能与大数据研发中心（华南区）",
+                                        "position": "算法工程师",
+                                        "isMentor": true
+                                    }
+                                },
+                                "特殊字符-中英文混合": {
+                                    "summary": "中英文混合的职位名称",
+                                    "description": "特殊字符-中英文混合",
+                                    "value": {
+                                        "userId": 1005,
+                                        "department": "技术部",
+                                        "position": "Senior Software Engineer高级软件工程师",
+                                        "isMentor": true
+                                    }
+                                },
+                                "特殊字符-特殊符号": {
+                                    "summary": "包含特殊符号的部门和职位",
+                                    "description": "特殊字符-特殊符号",
+                                    "value": {
+                                        "userId": 1006,
+                                        "department": "研发部-AI组",
+                                        "position": "机器学习工程师（NLP方向）",
+                                        "isMentor": true
+                                    }
+                                },
+                                "边界值-导师标识": {
+                                    "summary": "导师标识为true",
+                                    "description": "边界值-导师标识",
+                                    "value": {
+                                        "userId": 1007,
+                                        "department": "技术部",
+                                        "position": "架构师",
+                                        "isMentor": true
+                                    }
+                                },
+                                "特殊字符-短名称": {
+                                    "summary": "最短的部门和职位名称",
+                                    "description": "特殊字符-短名称",
+                                    "value": {
+                                        "userId": 1008,
+                                        "department": "IT",
+                                        "position": "PM",
+                                        "isMentor": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "参数校验失败",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 422,
+                                    "message": "参数校验失败",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "添加成功",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 200,
+                                    "message": "操作成功",
+                                    "data": null
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/mentor/reports/{id}/review": {
+            "post": {
+                "tags": [
+                    "internship-manage-controller"
+                ],
+                "operationId": "reviewReport",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReportReviewRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/enterprise/jobs": {
+            "get": {
+                "tags": [
+                    "岗位管理"
+                ],
+                "summary": "获取企业岗位列表",
+                "description": "分页查询企业发布的实习岗位列表，支持按状态筛选\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 必须携带有效的 JWT token\n\n**数据依赖：**\n- 查询 internship_job 表\n- 通过当前用户的 enterpriseId 筛选岗位",
+                "operationId": "getJobs",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "岗位状态：1-招募中，0-已关闭",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "页码，从1开始",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "每页记录数",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "参数校验失败",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 422,
+                                    "message": "参数校验失败",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "查询成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "岗位管理"
+                ],
+                "summary": "创建实习岗位",
+                "description": "企业创建新的实习岗位信息\n\n**测试前置条件：**\n- 用户必须以企业角色登录\n- 企业信息必须已完善（enterprise_info 表）\n- 必须有发布岗位的权限\n\n**数据依赖：**\n- 依赖 enterprise_info 表中的企业记录\n- 技能标签（techStack）建议从系统标签库中选择",
+                "operationId": "createJob",
+                "requestBody": {
+                    "description": "岗位创建请求",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateJobRequest"
+                            },
+                            "examples": {
+                                "Java开发岗位": {
+                                    "summary": "创建Java开发实习岗位",
+                                    "description": "Java开发岗位",
+                                    "value": {
+                                        "jobTitle": "Java开发实习生",
+                                        "jobType": "技术类",
+                                        "description": "负责后端服务开发，参与项目需求分析和系统设计",
+                                        "requirements": "1. 熟悉Java语言，了解Spring Boot框架\n2. 了解MySQL数据库\n3. 有良好的学习能力和团队协作精神",
+                                        "techStack": [
+                                            "Java",
+                                            "Spring Boot",
+                                            "MySQL",
+                                            "Redis"
+                                        ],
+                                        "city": "深圳",
+                                        "salaryMin": 3000,
+                                        "salaryMax": 5000,
+                                        "headcount": 5,
+                                        "startDate": "2024-07-01",
+                                        "endDate": "2024-09-30"
+                                    }
+                                },
+                                "前端开发岗位": {
+                                    "summary": "创建前端开发实习岗位",
+                                    "description": "前端开发岗位",
+                                    "value": {
+                                        "jobTitle": "前端开发实习生",
+                                        "jobType": "技术类",
+                                        "description": "负责Web前端开发，实现产品界面和交互功能",
+                                        "requirements": "1. 熟悉HTML、CSS、JavaScript\n2. 了解Vue或React框架\n3. 有良好的审美和用户体验意识",
+                                        "techStack": [
+                                            "Vue.js",
+                                            "TypeScript",
+                                            "Element Plus"
+                                        ],
+                                        "city": "北京",
+                                        "salaryMin": 3500,
+                                        "salaryMax": 6000,
+                                        "headcount": 3,
+                                        "startDate": "2024-07-01",
+                                        "endDate": "2024-12-31"
+                                    }
+                                },
+                                "产品运营岗位": {
+                                    "summary": "创建产品运营实习岗位",
+                                    "description": "产品运营岗位",
+                                    "value": {
+                                        "jobTitle": "产品运营实习生",
+                                        "jobType": "运营类",
+                                        "description": "协助产品运营工作，包括用户调研、数据分析、活动策划等",
+                                        "requirements": "1. 对互联网产品有浓厚兴趣\n2. 具备良好的沟通能力和文案能力\n3. 熟练使用Office办公软件",
+                                        "techStack": [
+                                            "数据分析",
+                                            "用户运营",
+                                            "活动策划"
+                                        ],
+                                        "city": "上海",
+                                        "salaryMin": 2500,
+                                        "salaryMax": 4000,
+                                        "headcount": 2,
+                                        "startDate": "2024-06-01",
+                                        "endDate": "2024-08-31"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "参数校验失败",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 422,
+                                    "message": "参数校验失败",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "创建成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                },
+                                "example": {
+                                    "code": 200,
+                                    "message": "操作成功",
+                                    "data": {
+                                        "id": 1001
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/enterprise/jobs/{id}/close": {
+            "post": {
+                "tags": [
+                    "岗位管理"
+                ],
+                "summary": "关闭岗位",
+                "description": "关闭指定的实习岗位，停止招募",
+                "operationId": "closeJob",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "岗位ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1001
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "岗位不存在",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 404,
+                                    "message": "岗位不存在",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "关闭成功",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 200,
+                                    "message": "操作成功",
+                                    "data": null
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/enterprise/interviews": {
+            "post": {
+                "tags": [
+                    "申请管理"
+                ],
+                "summary": "安排面试",
+                "description": "为学生申请安排面试时间和地点",
+                "operationId": "scheduleInterview",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ScheduleInterviewRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "申请不存在",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 404,
+                                    "message": "申请不存在",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "参数校验失败",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 422,
+                                    "message": "参数校验失败",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "安排成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/enterprise/certificates/issue": {
+            "post": {
+                "tags": [
+                    "internship-manage-controller"
+                ],
+                "operationId": "issueCertificate",
+                "parameters": [
+                    {
+                        "name": "internshipId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/enterprise/attendance/audit": {
+            "post": {
+                "tags": [
+                    "internship-manage-controller"
+                ],
+                "operationId": "auditAttendance",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AttendanceAuditRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/portal-enterprise/v1/todos": {
+            "get": {
+                "tags": [
+                    "enterprise-portal-controller"
+                ],
+                "operationId": "getTodos",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageResultTodoDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/portal-enterprise/v1/talent-pool": {
+            "get": {
+                "tags": [
+                    "enterprise-portal-controller"
+                ],
+                "operationId": "getTalentPool",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageResultTalentPoolDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/portal-enterprise/v1/mentor/dashboard": {
+            "get": {
+                "tags": [
+                    "enterprise-mentor-controller"
+                ],
+                "operationId": "getDashboard",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultMentorDashboardDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/portal-enterprise/v1/dashboard/stats": {
+            "get": {
+                "tags": [
+                    "enterprise-portal-controller"
+                ],
+                "operationId": "getDashboardStats",
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultDashboardStatsDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/portal-enterprise/v1/analytics": {
+            "get": {
+                "tags": [
+                    "enterprise-portal-controller"
+                ],
+                "operationId": "getAnalytics",
+                "parameters": [
+                    {
+                        "name": "range",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "month"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultAnalyticsDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/portal-enterprise/v1/activities": {
+            "get": {
+                "tags": [
+                    "enterprise-portal-controller"
+                ],
+                "operationId": "getActivities",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultPageResultActivityDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/enterprise/interns": {
+            "get": {
+                "tags": [
+                    "internship-manage-controller"
+                ],
+                "operationId": "getInterns",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultIPageInternshipRecord"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/internship/v1/enterprise/applications": {
+            "get": {
+                "tags": [
+                    "申请管理"
+                ],
+                "summary": "获取岗位申请列表",
+                "description": "分页查询企业收到的学生岗位申请，支持按岗位和状态筛选",
+                "operationId": "getApplications",
+                "parameters": [
+                    {
+                        "name": "jobId",
+                        "in": "query",
+                        "description": "岗位ID，用于筛选特定岗位的申请",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": 1001
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "申请状态：0-待处理，1-已通过，2-已拒绝",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        },
+                        "example": 0
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "页码，从1开始",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        },
+                        "example": 1
+                    },
+                    {
+                        "name": "size",
+                        "in": "query",
+                        "description": "每页记录数",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "服务器内部错误",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 500,
+                                    "message": "服务器内部错误",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "参数校验失败",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "code": 422,
+                                    "message": "参数校验失败",
+                                    "data": null
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "查询成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Result"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/portal-enterprise/v1/talent-pool/{id}": {
+            "delete": {
+                "tags": [
+                    "enterprise-portal-controller"
+                ],
+                "operationId": "removeFromTalentPool",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultVoid"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ResultVoid": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "响应数据"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "EnterpriseProfileUpdateRequest": {
+                "required": [
+                    "enterpriseName"
+                ],
+                "type": "object",
+                "properties": {
+                    "enterpriseName": {
+                        "type": "string",
+                        "description": "企业名称",
+                        "example": "智途科技有限公司"
+                    },
+                    "industry": {
+                        "type": "string",
+                        "description": "所属行业",
+                        "example": "互联网"
+                    },
+                    "scale": {
+                        "type": "string",
+                        "description": "企业规模",
+                        "example": "100-500人"
+                    },
+                    "province": {
+                        "type": "string",
+                        "description": "省份",
+                        "example": "北京市"
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "城市",
+                        "example": "北京"
+                    },
+                    "address": {
+                        "type": "string",
+                        "description": "详细地址",
+                        "example": "朝阳区建国路88号"
+                    },
+                    "logoUrl": {
+                        "type": "string",
+                        "description": "企业Logo URL",
+                        "example": "https://example.com/logo.png"
+                    },
+                    "website": {
+                        "type": "string",
+                        "description": "企业网站",
+                        "example": "https://www.example.com"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "企业简介",
+                        "example": "专注于教育科技的创新企业"
+                    },
+                    "contactName": {
+                        "type": "string",
+                        "description": "联系人姓名",
+                        "example": "李经理"
+                    },
+                    "contactPhone": {
+                        "type": "string",
+                        "description": "联系电话",
+                        "example": "13800138000"
+                    },
+                    "contactEmail": {
+                        "type": "string",
+                        "description": "联系邮箱",
+                        "example": "contact@example.com"
+                    }
+                },
+                "description": "企业资料更新请求"
+            },
+            "AddStaffRequest": {
+                "required": [
+                    "userId"
+                ],
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "format": "int64",
+                        "example": 1001
+                    },
+                    "department": {
+                        "type": "string",
+                        "description": "部门",
+                        "example": "技术部"
+                    },
+                    "position": {
+                        "type": "string",
+                        "description": "职位",
+                        "example": "高级工程师"
+                    },
+                    "isMentor": {
+                        "type": "boolean",
+                        "description": "是否为导师",
+                        "example": true
+                    }
+                },
+                "description": "添加员工请求"
+            },
+            "ReportReviewRequest": {
+                "required": [
+                    "reviewComment"
+                ],
+                "type": "object",
+                "properties": {
+                    "reviewComment": {
+                        "type": "string",
+                        "description": "批阅意见",
+                        "example": "本周工作完成良好，继续保持"
+                    }
+                },
+                "description": "周报批阅请求"
+            },
+            "CreateJobRequest": {
+                "type": "object",
+                "properties": {
+                    "jobTitle": {
+                        "type": "string",
+                        "description": "岗位标题",
+                        "example": "Java开发实习生"
+                    },
+                    "jobType": {
+                        "type": "string",
+                        "description": "岗位类型",
+                        "example": "技术类"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "岗位描述",
+                        "example": "负责后端开发工作"
+                    },
+                    "requirements": {
+                        "type": "string",
+                        "description": "岗位要求",
+                        "example": "熟悉Java、Spring Boot框架"
+                    },
+                    "techStack": {
+                        "type": "array",
+                        "description": "技术栈",
+                        "example": [
+                            "Java",
+                            "Spring Boot",
+                            "MySQL"
+                        ],
+                        "items": {
+                            "type": "string",
+                            "description": "技术栈",
+                            "example": "[\"Java\",\"Spring Boot\",\"MySQL\"]"
+                        }
+                    },
+                    "city": {
+                        "type": "string",
+                        "description": "工作城市",
+                        "example": "北京"
+                    },
+                    "salaryMin": {
+                        "type": "integer",
+                        "description": "最低薪资",
+                        "format": "int32",
+                        "example": 3000
+                    },
+                    "salaryMax": {
+                        "type": "integer",
+                        "description": "最高薪资",
+                        "format": "int32",
+                        "example": 5000
+                    },
+                    "headcount": {
+                        "type": "integer",
+                        "description": "招聘人数",
+                        "format": "int32",
+                        "example": 5
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "description": "开始日期",
+                        "format": "date",
+                        "example": "2024-03-01"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "description": "结束日期",
+                        "format": "date",
+                        "example": "2024-06-30"
+                    }
+                },
+                "description": "创建岗位请求"
+            },
+            "Result": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "响应数据"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "ScheduleInterviewRequest": {
+                "type": "object",
+                "properties": {
+                    "applicationId": {
+                        "type": "integer",
+                        "description": "申请ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "studentId": {
+                        "type": "integer",
+                        "description": "学生ID",
+                        "format": "int64",
+                        "example": 2001
+                    },
+                    "interviewTime": {
+                        "type": "string",
+                        "description": "面试时间",
+                        "format": "date-time",
+                        "example": "2024-01-20T14:00:00+08:00"
+                    },
+                    "location": {
+                        "type": "string",
+                        "description": "面试地点",
+                        "example": "公司会议室A"
+                    },
+                    "interviewerId": {
+                        "type": "integer",
+                        "description": "面试官ID",
+                        "format": "int64",
+                        "example": 3001
+                    },
+                    "interviewType": {
+                        "type": "string",
+                        "description": "面试类型",
+                        "example": "technical",
+                        "enum": [
+                            "phone",
+                            "video",
+                            "onsite",
+                            "technical"
+                        ]
+                    },
+                    "notes": {
+                        "type": "string",
+                        "description": "备注",
+                        "example": "请提前准备技术问题"
+                    }
+                },
+                "description": "面试安排请求"
+            },
+            "AttendanceAuditRequest": {
+                "required": [
+                    "attendanceId",
+                    "status"
+                ],
+                "type": "object",
+                "properties": {
+                    "attendanceId": {
+                        "type": "integer",
+                        "description": "考勤记录ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "考勤状态：1=正常 2=异常",
+                        "format": "int32",
+                        "example": 1,
+                        "enum": [
+                            1,
+                            2
+                        ]
+                    },
+                    "auditRemark": {
+                        "type": "string",
+                        "description": "审核备注",
+                        "example": "考勤正常"
+                    }
+                },
+                "description": "考勤审核请求"
+            },
+            "PageResultTodoDTO": {
+                "required": [
+                    "page",
+                    "records",
+                    "size",
+                    "total"
+                ],
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "description": "总记录数",
+                        "format": "int64",
+                        "example": 100
+                    },
+                    "records": {
+                        "type": "array",
+                        "description": "当前页数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/TodoDTO"
+                        }
+                    },
+                    "page": {
+                        "type": "integer",
+                        "description": "当前页码",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "每页记录数",
+                        "format": "int32",
+                        "example": 10
+                    }
+                },
+                "description": "分页响应体"
+            },
+            "ResultPageResultTodoDTO": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageResultTodoDTO"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "TodoDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "待办事项ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "todoType": {
+                        "type": "string",
+                        "description": "待办类型",
+                        "example": "application_review",
+                        "enum": [
+                            "application_review",
+                            "interview_schedule",
+                            "report_review",
+                            "evaluation_pending"
+                        ]
+                    },
+                    "refType": {
+                        "type": "string",
+                        "description": "关联类型",
+                        "example": "application",
+                        "enum": [
+                            "job",
+                            "application",
+                            "intern"
+                        ]
+                    },
+                    "refId": {
+                        "type": "integer",
+                        "description": "关联ID",
+                        "format": "int64",
+                        "example": 100
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "待办标题",
+                        "example": "审核张三的岗位申请"
+                    },
+                    "priority": {
+                        "type": "integer",
+                        "description": "优先级：1=低 2=中 3=高",
+                        "format": "int32",
+                        "example": 2,
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    "dueDate": {
+                        "type": "string",
+                        "description": "截止日期",
+                        "format": "date-time",
+                        "example": "2024-01-20T18:00:00+08:00"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "description": "状态：0=待处理 1=已完成",
+                        "format": "int32",
+                        "example": 0,
+                        "enum": [
+                            0,
+                            1
+                        ]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time",
+                        "example": "2024-01-15T10:30:00+08:00"
+                    }
+                },
+                "description": "企业待办事项"
+            },
+            "PageResultTalentPoolDTO": {
+                "required": [
+                    "page",
+                    "records",
+                    "size",
+                    "total"
+                ],
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "description": "总记录数",
+                        "format": "int64",
+                        "example": 100
+                    },
+                    "records": {
+                        "type": "array",
+                        "description": "当前页数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/TalentPoolDTO"
+                        }
+                    },
+                    "page": {
+                        "type": "integer",
+                        "description": "当前页码",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "每页记录数",
+                        "format": "int32",
+                        "example": 10
+                    }
+                },
+                "description": "分页响应体"
+            },
+            "ResultPageResultTalentPoolDTO": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageResultTalentPoolDTO"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "TalentPoolDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "人才库记录ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "studentId": {
+                        "type": "integer",
+                        "description": "学生ID",
+                        "format": "int64",
+                        "example": 2001
+                    },
+                    "studentName": {
+                        "type": "string",
+                        "description": "学生姓名",
+                        "example": "张三"
+                    },
+                    "studentNo": {
+                        "type": "string",
+                        "description": "学号",
+                        "example": "2021001"
+                    },
+                    "major": {
+                        "type": "string",
+                        "description": "专业",
+                        "example": "计算机科学与技术"
+                    },
+                    "grade": {
+                        "type": "string",
+                        "description": "年级",
+                        "example": "2021级"
+                    },
+                    "skills": {
+                        "type": "string",
+                        "description": "技能标签（JSON数组）",
+                        "example": "[\"Java\",\"Spring Boot\",\"MySQL\"]"
+                    },
+                    "remark": {
+                        "type": "string",
+                        "description": "备注",
+                        "example": "技术能力强，适合Java开发岗位"
+                    },
+                    "collectedAt": {
+                        "type": "string",
+                        "description": "收藏时间",
+                        "format": "date-time",
+                        "example": "2024-01-15T10:30:00+08:00"
+                    }
+                },
+                "description": "人才库信息"
+            },
+            "ActivityDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "活动ID",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "activityType": {
+                        "type": "string",
+                        "description": "活动类型",
+                        "example": "application",
+                        "enum": [
+                            "application",
+                            "interview",
+                            "report_submitted",
+                            "evaluation"
+                        ]
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "活动描述",
+                        "example": "学生张三申请了Java开发实习岗位"
+                    },
+                    "refType": {
+                        "type": "string",
+                        "description": "关联类型",
+                        "example": "application",
+                        "enum": [
+                            "job",
+                            "application",
+                            "intern"
+                        ]
+                    },
+                    "refId": {
+                        "type": "integer",
+                        "description": "关联ID",
+                        "format": "int64",
+                        "example": 100
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "创建时间",
+                        "format": "date-time",
+                        "example": "2024-01-15T10:30:00+08:00"
+                    }
+                },
+                "description": "企业活动动态信息"
+            },
+            "MentorDashboardDTO": {
+                "type": "object",
+                "properties": {
+                    "assignedInternCount": {
+                        "type": "integer",
+                        "description": "分配的实习生数量",
+                        "format": "int32",
+                        "example": 8
+                    },
+                    "pendingReportCount": {
+                        "type": "integer",
+                        "description": "待批阅周报数量",
+                        "format": "int32",
+                        "example": 5
+                    },
+                    "pendingCodeReviewCount": {
+                        "type": "integer",
+                        "description": "待审核代码评审数量",
+                        "format": "int32",
+                        "example": 3
+                    },
+                    "recentActivities": {
+                        "type": "array",
+                        "description": "最近的实习生活动列表",
+                        "items": {
+                            "$ref": "#/components/schemas/ActivityDTO"
+                        }
+                    }
+                },
+                "description": "导师仪表板数据"
+            },
+            "ResultMentorDashboardDTO": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/MentorDashboardDTO"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "DashboardStatsDTO": {
+                "type": "object",
+                "properties": {
+                    "activeJobCount": {
+                        "type": "integer",
+                        "description": "活跃岗位数量",
+                        "format": "int32",
+                        "example": 10
+                    },
+                    "pendingApplicationCount": {
+                        "type": "integer",
+                        "description": "待处理申请数量",
+                        "format": "int32",
+                        "example": 25
+                    },
+                    "activeInternCount": {
+                        "type": "integer",
+                        "description": "活跃实习生数量",
+                        "format": "int32",
+                        "example": 15
+                    },
+                    "trainingProjectCount": {
+                        "type": "integer",
+                        "description": "实训项目数量",
+                        "format": "int32",
+                        "example": 8
+                    }
+                },
+                "description": "企业仪表板统计数据"
+            },
+            "ResultDashboardStatsDTO": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/DashboardStatsDTO"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "AnalyticsDTO": {
+                "type": "object",
+                "properties": {
+                    "applicationTrends": {
+                        "type": "array",
+                        "description": "申请趋势数据",
+                        "items": {
+                            "$ref": "#/components/schemas/TrendDataPoint"
+                        }
+                    },
+                    "internPerformance": {
+                        "$ref": "#/components/schemas/InternPerformanceMetrics"
+                    },
+                    "projectCompletionRate": {
+                        "type": "number",
+                        "description": "实训项目完成率",
+                        "format": "double",
+                        "example": 0.85
+                    },
+                    "mentorSatisfaction": {
+                        "type": "number",
+                        "description": "导师满意度评分",
+                        "format": "double",
+                        "example": 4.5
+                    }
+                },
+                "description": "企业分析数据"
+            },
+            "InternPerformanceMetrics": {
+                "type": "object",
+                "properties": {
+                    "averageScore": {
+                        "type": "number",
+                        "description": "平均评价分数",
+                        "format": "double",
+                        "example": 4.2
+                    },
+                    "totalInterns": {
+                        "type": "integer",
+                        "description": "实习生总数",
+                        "format": "int32",
+                        "example": 50
+                    },
+                    "evaluatedInterns": {
+                        "type": "integer",
+                        "description": "已评价实习生数",
+                        "format": "int32",
+                        "example": 45
+                    }
+                },
+                "description": "实习生绩效指标"
+            },
+            "ResultAnalyticsDTO": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/AnalyticsDTO"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "TrendDataPoint": {
+                "type": "object",
+                "properties": {
+                    "period": {
+                        "type": "string",
+                        "description": "时间段标签",
+                        "example": "2024-W01"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "description": "申请数量",
+                        "format": "int32",
+                        "example": 25
+                    }
+                },
+                "description": "趋势数据点"
+            },
+            "PageResultActivityDTO": {
+                "required": [
+                    "page",
+                    "records",
+                    "size",
+                    "total"
+                ],
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "description": "总记录数",
+                        "format": "int64",
+                        "example": 100
+                    },
+                    "records": {
+                        "type": "array",
+                        "description": "当前页数据列表",
+                        "items": {
+                            "$ref": "#/components/schemas/ActivityDTO"
+                        }
+                    },
+                    "page": {
+                        "type": "integer",
+                        "description": "当前页码",
+                        "format": "int32",
+                        "example": 1
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "每页记录数",
+                        "format": "int32",
+                        "example": 10
+                    }
+                },
+                "description": "分页响应体"
+            },
+            "ResultPageResultActivityDTO": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/PageResultActivityDTO"
+                    }
+                },
+                "description": "统一响应体"
+            },
+            "IPageInternshipRecord": {
+                "type": "object",
+                "properties": {
+                    "size": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "records": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InternshipRecord"
+                        }
+                    },
+                    "total": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "format": "int64",
+                        "deprecated": true
+                    },
+                    "current": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                },
+                "description": "响应数据"
+            },
+            "InternshipRecord": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "studentId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "enterpriseId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "jobId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "mentorId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "teacherId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "startDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "ResultIPageInternshipRecord": {
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "integer",
+                        "description": "响应状态码，200表示成功",
+                        "format": "int32",
+                        "example": 200
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "响应消息",
+                        "example": "操作成功"
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/IPageInternshipRecord"
+                    }
+                },
+                "description": "统一响应体"
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "name": "BearerAuth",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

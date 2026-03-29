@@ -1,6 +1,7 @@
 package com.zhitu.college.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.zhitu.college.dto.DashboardStatsDTO;
 import com.zhitu.college.entity.*;
 import com.zhitu.college.mapper.*;
 import com.zhitu.common.core.context.UserContext;
@@ -57,19 +58,17 @@ class CollegePortalServiceTest {
             mockedUserContext.when(UserContext::getTenantId).thenReturn(1L);
 
             when(studentInfoMapper.selectCount(any(LambdaQueryWrapper.class))).thenReturn(100L);
-            when(cacheService.getOrSet(anyString(), anyLong(), any())).thenAnswer(invocation -> {
-                return ((java.util.function.Supplier<?>) invocation.getArgument(2)).get();
-            });
 
-            Map<String, Object> stats = collegePortalService.getDashboardStats("2024");
+            DashboardStatsDTO stats = collegePortalService.getDashboardStats("2024");
 
             assertNotNull(stats);
-            assertEquals(100L, stats.get("totalStudentCount"));
-            assertEquals("2024", stats.get("year"));
-            assertTrue(stats.containsKey("internshipParticipationRate"));
-            assertTrue(stats.containsKey("employmentRate"));
-            assertTrue(stats.containsKey("averageSalary"));
-            assertTrue(stats.containsKey("topHiringEnterprises"));
+            assertEquals(100L, stats.getTotalGraduates());
+            assertEquals(0.93, stats.getInternshipRate());
+            assertEquals(0.87, stats.getEmploymentRate());
+            assertEquals(0.12, stats.getFlexibleEmploymentRate());
+            assertEquals(9200, stats.getAvgSalary());
+            assertNotNull(stats.getTopIndustries());
+            assertEquals(5, stats.getTopIndustries().size());
 
             verify(studentInfoMapper).selectCount(any(LambdaQueryWrapper.class));
         }
@@ -80,18 +79,19 @@ class CollegePortalServiceTest {
         try (MockedStatic<UserContext> mockedUserContext = mockStatic(UserContext.class)) {
             mockedUserContext.when(UserContext::getTenantId).thenReturn(1L);
 
-            when(cacheService.getOrSet(anyString(), anyLong(), any())).thenAnswer(invocation -> {
-                return ((java.util.function.Supplier<?>) invocation.getArgument(2)).get();
-            });
-
             Map<String, Object> trends = collegePortalService.getEmploymentTrends("month");
 
             assertNotNull(trends);
-            assertEquals("month", trends.get("dimension"));
-            assertTrue(trends.containsKey("internshipTrends"));
-            assertTrue(trends.containsKey("employmentTrends"));
-            assertTrue(trends.containsKey("salaryTrends"));
-            assertTrue(trends.containsKey("industryDistribution"));
+            assertTrue(trends.containsKey("labels"));
+            assertTrue(trends.containsKey("series"));
+            
+            @SuppressWarnings("unchecked")
+            List<String> labels = (List<String>) trends.get("labels");
+            assertEquals(6, labels.size());
+            
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> series = (List<Map<String, Object>>) trends.get("series");
+            assertEquals(2, series.size());
         }
     }
 
@@ -100,14 +100,15 @@ class CollegePortalServiceTest {
         try (MockedStatic<UserContext> mockedUserContext = mockStatic(UserContext.class)) {
             mockedUserContext.when(UserContext::getTenantId).thenReturn(1L);
 
-            when(cacheService.getOrSet(anyString(), anyLong(), any())).thenAnswer(invocation -> {
-                return ((java.util.function.Supplier<?>) invocation.getArgument(2)).get();
-            });
-
             Map<String, Object> trends = collegePortalService.getEmploymentTrends("quarter");
 
             assertNotNull(trends);
-            assertEquals("quarter", trends.get("dimension"));
+            assertTrue(trends.containsKey("labels"));
+            assertTrue(trends.containsKey("series"));
+            
+            @SuppressWarnings("unchecked")
+            List<String> labels = (List<String>) trends.get("labels");
+            assertEquals(4, labels.size());
         }
     }
 

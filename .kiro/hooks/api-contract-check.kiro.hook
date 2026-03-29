@@ -1,0 +1,16 @@
+{
+  "name": "API Contract Checker",
+  "version": "1.0.0",
+  "description": "保存前端 service 文件时，自动检查与后端 DTO 的接口一致性",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "frontend/src/*/services/**/*.ts",
+      "frontend/src/lib/http.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "检查刚刚编辑的文件中所有 API 调用的接口一致性：\n\n1. 找出文件中所有的 axios 请求（GET/POST/PUT/DELETE）\n2. 对每个请求，分析：\n   - TypeScript 类型定义（Request/Response interface）\n   - 实际发送的字段和路径\n3. 根据 .kiro/steering/api-contract.md 中的规范，检查以下问题：\n   - ID 类型：是否用了 string 而非 number\n   - 日期类型：是否用了 string 而非 Date/number\n   - 响应解包路径：res.data 还是 res.data.data\n   - 字段名命名：与 Java DTO 是否一致（camelCase）\n   - 可空字段：是否有 | null\n4. 如发现问题，在文件中直接修正，并在聊天中说明修正内容\n5. 如无问题，简短说明'接口规范检查通过'"
+  }
+}

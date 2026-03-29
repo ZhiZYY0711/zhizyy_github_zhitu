@@ -17,14 +17,25 @@ export interface CollegeUser {
 }
 
 export interface Student {
-  id: string;
-  student_no: string;
-  name: string;
-  gender: 'male' | 'female';
-  class_name: string;
-  gpa: number;
-  phone: string;
-  status: 'active' | 'suspended' | 'graduated';
+  id: string;                    // Long -> string
+  userId: string;                // Long -> string
+  tenantId: string;              // Long -> string
+  studentNo: string;
+  realName: string;
+  gender: number;                // Integer: 1-男，2-女
+  phone: string | null;
+  email: string | null;
+  avatarUrl: string | null;
+  collegeId: string | null;      // Long -> string
+  majorId: string | null;        // Long -> string
+  classId: string | null;        // Long -> string
+  grade: string | null;
+  enrollmentDate: string | null; // LocalDate -> string (ISO 8601)
+  graduationDate: string | null; // LocalDate -> string (ISO 8601)
+  resumeUrl: string | null;
+  skills: string | null;
+  createdAt: string;             // 继承自 BaseEntity
+  updatedAt: string;             // 继承自 BaseEntity
 }
 
 export interface TrainingPlan {
@@ -39,21 +50,33 @@ export interface TrainingPlan {
 }
 
 export interface InternshipStudent {
-  student_name: string;
-  company: string;
-  position: string;
-  start_date: string;
-  mentor_name: string;
-  last_report_time: string;
-  status: 'normal' | 'warning';
+  id: string;
+  studentId: string;
+  enterpriseId: string;
+  jobId: string;
+  mentorId: string;
+  teacherId: string;
+  startDate: string;
+  endDate: string | null;
+  status: number; // 1=实习中 2=已结束
+  createdAt: string;
+  updatedAt: string;
+  studentName: string;
+  studentNo: string;
+  enterpriseName: string;
+  jobTitle: string;
+  mentorName: string;
+  teacherName: string;
+  lastReportTime: string | null;
+  statusText: 'normal' | 'warning' | 'completed';
 }
 
 export interface Contract {
   id: string;
-  student_name: string;
-  company_name: string;
+  studentName: string;    // camelCase
+  companyName: string;    // camelCase
   position: string;
-  submit_time: string;
+  submitTime: string;     // camelCase, ISO 8601 date string
   status: 'pending' | 'approved' | 'rejected';
 }
 

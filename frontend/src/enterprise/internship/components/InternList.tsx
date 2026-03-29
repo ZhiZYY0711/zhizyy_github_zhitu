@@ -26,7 +26,14 @@ export default function InternList() {
 
   const load = async () => {
     setLoading(true);
-    try { setInterns(await fetchInterns(statusFilter !== 'all' ? statusFilter : undefined)); }
+    try {
+      // 后端使用数字状态
+      const statusParam = statusFilter === 'all' ? undefined :
+                          statusFilter === 'active' ? 1 :
+                          statusFilter === 'pending' ? 0 :
+                          statusFilter === 'completed' ? 2 : 3;
+      setInterns(await fetchInterns(statusParam));
+    }
     finally { setLoading(false); }
   };
 

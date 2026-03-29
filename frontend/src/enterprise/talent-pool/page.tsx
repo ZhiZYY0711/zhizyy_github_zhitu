@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Trash2, Send, GraduationCap } from 'lucide-react';
+import { Trash2, Send, GraduationCap, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -9,25 +9,40 @@ import type { TalentPoolItem } from '../types';
 
 const ALL_TAGS = ['潜力股', '25届', '26届', '技术强', '沟通好', '有实习经验', '竞赛获奖'];
 
+const PAGE_SIZE_OPTIONS = [9, 18, 27];
+
 export default function TalentPoolPage() {
   const [students, setStudents] = useState<TalentPoolItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [tagFilter, setTagFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(9);
+  const [total, setTotal] = useState(0);
 
   const load = async () => {
     setLoading(true);
-    try { setStudents(await fetchTalentPool()); }
-    finally { setLoading(false); }
+    try {
+      const result = await fetchTalentPool({ page: currentPage, size: pageSize });
+      setStudents(result.records);
+      setTotal(result.total);
+    } finally { setLoading(false); }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [tagFilter]);
+
+  useEffect(() => { load(); }, [currentPage, pageSize]);
 
   const handleRemove = async (id: string) => {
     await removeFromTalentPool(id);
     setStudents(prev => prev.filter(s => s.id !== id));
+    setTotal(prev => prev - 1);
   };
 
   const filtered = tagFilter === 'all' ? students : students.filter(s => s.tags.includes(tagFilter));
+
+  const totalPages = Math.ceil(total / pageSize);
 
   return (
     <div className="p-6 space-y-6">
@@ -46,7 +61,7 @@ export default function TalentPoolPage() {
             {ALL_TAGS.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
           </SelectContent>
         </Select>
-        <span className="text-sm text-muted-foreground">共 {filtered.length} 位候选人</span>
+        <span className="text-sm text-muted-foreground">共 {total} 位候选人</span>
       </div>
 
       {loading ? (
@@ -105,6 +120,72 @@ export default function TalentPoolPage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-2">
+          <div className="text-sm text-muted-foreground">
+            共 {total} 条记录，第 {currentPage} / {totalPages} 页
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); setCurrentPage(1); }}>
+              <SelectTrigger className="w-20 h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {PAGE_SIZE_OPTIONS.map(size => (
+                  <SelectItem key={size} value={String(size)}>{size} 条/页</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(p => p - 1)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setCurrentPage(pageNum)}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(p => p + 1)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>

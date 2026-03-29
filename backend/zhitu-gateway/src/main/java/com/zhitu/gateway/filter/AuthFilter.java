@@ -63,7 +63,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String path = exchange.getRequest().getURI().getPath();
         log.debug("AuthFilter 处理请求路径: {}", path);
 
-        // 白名单放行
+        // 白名单放行（不验证 token，即使携带了也忽略）
         if (isWhiteListed(path)) {
             log.debug("白名单路径，直接放行: {}", path);
             return chain.filter(exchange);
@@ -75,7 +75,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String token = extractToken(exchange.getRequest());
         if (token == null) {
             log.warn("缺少 Authorization 请求头，路径: {}", path);
-            return unauthorized(exchange, "缺少 Authorization 请求头");
+            return unauthorized(exchange, "未登录或 Token 已过期");
         }
 
         // 验证 token 签名

@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zhitu.college.dto.AuditContractRequest;
+import com.zhitu.college.dto.ContractDTO;
 import com.zhitu.college.dto.CreateInspectionRequest;
+import com.zhitu.college.dto.InternshipStudentDTO;
 import com.zhitu.college.entity.*;
 import com.zhitu.college.mapper.*;
 import com.zhitu.common.core.context.UserContext;
@@ -34,40 +36,18 @@ public class CollegeInternshipService {
      * Get internship students with filtering and pagination
      * Requirements: 24.1-24.7
      */
-    public IPage<InternshipRecord> getInternshipStudents(String status, int page, int size) {
-        Long tenantId = UserContext.getTenantId();
-        
-        Page<InternshipRecord> pageParam = new Page<>(page, size);
-        LambdaQueryWrapper<InternshipRecord> wrapper = new LambdaQueryWrapper<>();
-        
-        // Filter by status if provided
-        if (status != null && !status.isEmpty()) {
-            if ("active".equals(status)) {
-                wrapper.eq(InternshipRecord::getStatus, 1); // 1=实习中
-            } else if ("completed".equals(status)) {
-                wrapper.eq(InternshipRecord::getStatus, 2); // 2=已结束
-            }
-        }
-        
-        wrapper.orderByDesc(InternshipRecord::getCreatedAt);
-        
-        return internshipRecordMapper.selectPage(pageParam, wrapper);
+    public IPage<InternshipStudentDTO> getInternshipStudents(String status, int page, int size) {
+        Page<InternshipStudentDTO> pageParam = new Page<>(page, size);
+        return internshipRecordMapper.selectEnrichedInternshipStudents(pageParam, status);
     }
 
     /**
      * Get pending contracts for audit
      * Requirements: 24.1-24.7
      */
-    public IPage<InternshipOffer> getPendingContracts(int page, int size) {
-        Page<InternshipOffer> pageParam = new Page<>(page, size);
-        LambdaQueryWrapper<InternshipOffer> wrapper = new LambdaQueryWrapper<>();
-        
-        // Filter by pending audit status
-        wrapper.eq(InternshipOffer::getCollegeAudit, 0); // 0=待审核
-        wrapper.eq(InternshipOffer::getStatus, 1); // 1=已接受 (student accepted)
-        wrapper.orderByAsc(InternshipOffer::getCreatedAt);
-        
-        return internshipOfferMapper.selectPage(pageParam, wrapper);
+    public IPage<ContractDTO> getPendingContracts(int page, int size) {
+        Page<ContractDTO> pageParam = new Page<>(page, size);
+        return internshipOfferMapper.selectPendingContracts(pageParam);
     }
 
     /**

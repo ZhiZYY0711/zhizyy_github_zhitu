@@ -33,19 +33,30 @@ const CollegeDashboard = () => {
   const [trends, setTrends] = useState<TrendData | null>(null);
 
   useEffect(() => {
-    fetchEmploymentStats().then(setStats);
-    fetchTrends().then(setTrends);
+    fetchEmploymentStats().then(data => {
+      console.log('Employment stats received:', data);
+      setStats(data);
+    }).catch(err => {
+      console.error('Failed to fetch employment stats:', err);
+    });
+    
+    fetchTrends().then(data => {
+      console.log('Trends data received:', data);
+      setTrends(data);
+    }).catch(err => {
+      console.error('Failed to fetch trends:', err);
+    });
   }, []);
 
-  const trendChartData = trends
+  const trendChartData = trends?.labels
     ? trends.labels.map((label, i) => ({
         name: label,
-        实习率: Math.round(trends.series[0].data[i] * 100),
-        三方签约率: Math.round(trends.series[1].data[i] * 100),
+        实习率: Math.round((trends.series?.[0]?.data?.[i] ?? 0) * 100),
+        三方签约率: Math.round((trends.series?.[1]?.data?.[i] ?? 0) * 100),
       }))
     : [];
 
-  const industryData = stats?.top_industries.map(item => ({
+  const industryData = stats?.top_industries?.map(item => ({
     name: item.name,
     value: Math.round(item.ratio * 100),
   })) ?? [];
@@ -61,28 +72,28 @@ const CollegeDashboard = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="毕业生总数"
-          value={stats ? stats.total_graduates.toLocaleString() : '--'}
+          value={stats?.total_graduates != null ? stats.total_graduates.toLocaleString() : '--'}
           sub="本届"
           icon={Users}
           color="bg-green-500"
         />
         <StatCard
           title="就业率"
-          value={stats ? `${(stats.employment_rate * 100).toFixed(1)}%` : '--'}
+          value={stats?.employment_rate != null ? `${(stats.employment_rate * 100).toFixed(1)}%` : '--'}
           sub="已就业"
           icon={TrendingUp}
           color="bg-blue-500"
         />
         <StatCard
           title="实习率"
-          value={stats ? `${(stats.internship_rate * 100).toFixed(1)}%` : '--'}
+          value={stats?.internship_rate != null ? `${(stats.internship_rate * 100).toFixed(1)}%` : '--'}
           sub="在实习"
           icon={Briefcase}
           color="bg-orange-500"
         />
         <StatCard
           title="平均薪资"
-          value={stats ? `¥${stats.avg_salary.toLocaleString()}` : '--'}
+          value={stats?.avg_salary != null ? `¥${stats.avg_salary.toLocaleString()}` : '--'}
           sub="元/月"
           icon={DollarSign}
           color="bg-purple-500"
@@ -139,7 +150,7 @@ const CollegeDashboard = () => {
       </div>
 
       {/* Secondary stats */}
-      {stats && (
+      {stats?.flexible_employment_rate != null && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">补充指标</CardTitle>

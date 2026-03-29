@@ -88,29 +88,49 @@ export function getMockTrainingPlans(): TrainingPlan[] {
 }
 
 export function getMockInternshipStudents(): { records: InternshipStudent[] } {
-  const companies = ['字节跳动', '腾讯科技', '阿里巴巴', '华为技术', '百度', '美团'];
-  const positions = ['后端开发', '前端开发', '数据分析', '产品经理', '测试工程师'];
   const records: InternshipStudent[] = Array.from({ length: 12 }, (_, i) => ({
-    student_name: ['张三', '李四', '王五', '赵六', '陈七', '刘八', '孙九', '周十', '吴十一', '郑十二', '冯十三', '蒋十四'][i],
-    company: companies[i % 6],
-    position: positions[i % 5],
-    start_date: '2024-03-01',
-    mentor_name: `导师${i + 1}`,
-    last_report_time: `2024-05-${String(15 + (i % 10)).padStart(2, '0')}`,
-    status: i % 5 === 0 ? 'warning' : 'normal',
+    id: `ir_${10000 + i}`,
+    studentId: `${1000 + i}`,
+    enterpriseId: `${10 + i}`,
+    jobId: `${20 + i}`,
+    mentorId: `${60 + i}`,
+    teacherId: `${30 + i}`,
+    startDate: '2024-03-01',
+    endDate: i % 3 === 0 ? '2024-06-30' : null,
+    status: i % 3 === 0 ? 2 : 1,
+    createdAt: '2024-03-01T08:00:00Z',
+    updatedAt: '2024-06-30T08:00:00Z',
+    studentName: ['张三', '李四', '王五', '赵六', '陈七', '刘八', '孙九', '周十', '吴十一', '郑十二', '冯十三', '蒋十四'][i],
+    studentNo: `2021${String(1000 + i).slice(1)}`,
+    enterpriseName: ['字节跳动', '腾讯科技', '阿里巴巴', '华为技术', '百度', '美团'][i % 6],
+    jobTitle: ['后端开发', '前端开发', '数据分析', '产品经理', '测试工程师'][i % 5],
+    mentorName: `导师${i + 1}`,
+    teacherName: `指导教师${i + 1}`,
+    lastReportTime: i % 5 === 0 ? null : `2024-05-${String(15 + (i % 10)).padStart(2, '0')}T10:00:00Z`,
+    statusText: i % 5 === 0 ? 'warning' : (i % 3 === 0 ? 'completed' : 'normal'),
   }));
   return { records };
 }
 
-export function getMockContracts(): Contract[] {
-  return Array.from({ length: 6 }, (_, i) => ({
+export function getMockContracts() {
+  const content = Array.from({ length: 6 }, (_, i) => ({
     id: `contract_${i + 1}`,
-    student_name: ['张三', '李四', '王五', '赵六', '陈七', '刘八'][i],
-    company_name: ['字节跳动', '腾讯科技', '阿里巴巴', '华为技术', '百度', '美团'][i],
+    studentName: ['张三', '李四', '王五', '赵六', '陈七', '刘八'][i],
+    companyName: ['字节跳动', '腾讯科技', '阿里巴巴', '华为技术', '百度', '美团'][i],
     position: ['后端开发', '前端开发', '数据分析', '产品经理', '测试工程师', '运维工程师'][i],
-    submit_time: `2024-05-${String(10 + i).padStart(2, '0')}`,
-    status: i < 3 ? 'pending' : i === 3 ? 'approved' : 'rejected',
+    submitTime: `2024-05-${String(10 + i).padStart(2, '0')}`,
+    status: (i < 3 ? 'pending' : i === 3 ? 'approved' : 'rejected') as Contract['status'],
   }));
+
+  return {
+    content,
+    totalElements: content.length,
+    totalPages: 1,
+    number: 0,
+    size: 10,
+    first: true,
+    last: true,
+  };
 }
 
 export function getMockEnterprises(): { records: CooperativeEnterprise[] } {

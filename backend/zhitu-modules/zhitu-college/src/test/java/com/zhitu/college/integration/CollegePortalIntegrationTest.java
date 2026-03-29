@@ -152,7 +152,7 @@ class CollegePortalIntegrationTest {
     @WithMockUser(username = "testcollege", roles = "COLLEGE")
     @DisplayName("GET /college/students - Should return paginated students")
     void testGetStudents_Success() throws Exception {
-        mockMvc.perform(get("/api/user/v1/college/students")
+        mockMvc.perform(get("/api/college/v1/students")
                         .param("page", "1")
                         .param("size", "10"))
                 .andExpect(status().isOk())
@@ -165,7 +165,7 @@ class CollegePortalIntegrationTest {
     @WithMockUser(username = "testcollege", roles = "COLLEGE")
     @DisplayName("GET /college/students - Should filter by keyword")
     void testGetStudents_FilterByKeyword() throws Exception {
-        mockMvc.perform(get("/api/user/v1/college/students")
+        mockMvc.perform(get("/api/college/v1/students")
                         .param("keyword", "Test")
                         .param("page", "1")
                         .param("size", "10"))
@@ -540,7 +540,7 @@ class CollegePortalIntegrationTest {
         String[] endpoints = {
                 "/api/portal-college/v1/dashboard/stats?year=2024",
                 "/api/portal-college/v1/dashboard/trends?dimension=month",
-                "/api/user/v1/college/students",
+                "/api/college/v1/students",
                 "/api/training/v1/college/plans",
                 "/api/internship/v1/college/students",
                 "/api/portal-college/v1/crm/enterprises",
@@ -598,7 +598,7 @@ class CollegePortalIntegrationTest {
         int[] pageSizes = {5, 10, 20, 50};
 
         for (int size : pageSizes) {
-            mockMvc.perform(get("/api/user/v1/college/students")
+            mockMvc.perform(get("/api/college/v1/students")
                             .param("page", "1")
                             .param("size", String.valueOf(size)))
                     .andExpect(status().isOk())
